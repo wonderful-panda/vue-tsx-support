@@ -1,0 +1,20 @@
+{
+  "name": "vue-tsx-support",
+  "version": "0.0.1",
+  "description": "TSX (JSX for TypeScript) support library for Vue",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wonderful-panda/vue-tsx-support.git"
+  },
+  "keywords": ["Vue", "TypeScript", "JSX", "TSX"],
+  "author": "Iwata Hidetaka <iwata0303@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wonderful-panda/vue-tsx-support/issues"
+  },
+  "homepage": "https://github.com/wonderful-panda/vue-tsx-support#readme"
+}

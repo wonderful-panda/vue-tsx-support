@@ -1,0 +1,4 @@
+* text=auto
+.editorconfig eol=lf
+.gitattributes eol=lf
+*.json eol=lf
