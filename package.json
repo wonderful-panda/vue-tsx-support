@@ -2,19 +2,40 @@
   "name": "vue-tsx-support",
   "version": "0.0.1",
   "description": "TSX (JSX for TypeScript) support library for Vue",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "scripts": {
+    "copy-dts": "cpx src/*.d.ts lib",
+    "copy-dts:watch": "cpx src/*.d.ts lib -w",
+    "tsc": "tsc",
+    "tsc:watch": "tsc -w",
+    "build": "npm-run-all copy-dts tsc",
+    "watch": "npm-run-all --parallel copy-dts:watch tsc:watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wonderful-panda/vue-tsx-support.git"
   },
-  "keywords": ["Vue", "TypeScript", "JSX", "TSX"],
+  "keywords": [
+    "Vue",
+    "TypeScript",
+    "JSX",
+    "TSX"
+  ],
   "author": "Iwata Hidetaka <iwata0303@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wonderful-panda/vue-tsx-support/issues"
   },
-  "homepage": "https://github.com/wonderful-panda/vue-tsx-support#readme"
+  "homepage": "https://github.com/wonderful-panda/vue-tsx-support#readme",
+  "devDependencies": {
+    "cpx": "^1.5.0",
+    "npm-run-all": "^4.0.2",
+    "tsc-test": "^0.1.3",
+    "typescript": "^2.4.2"
+  },
+  "peerDependencies": {
+    "vue": "^2.4.2"
+  }
 }
