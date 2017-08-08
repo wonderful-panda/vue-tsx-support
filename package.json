@@ -11,7 +11,8 @@
     "tsc:watch": "tsc -w",
     "build": "npm-run-all copy-dts tsc",
     "watch": "npm-run-all --parallel copy-dts:watch tsc:watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test-tsc": "tsc-test -p test/tsc/tsconfig.json",
+    "test": "npm-run-all test-tsc"
   },
   "repository": {
     "type": "git",
