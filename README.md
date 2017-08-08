@@ -50,6 +50,8 @@ const Greet3 = tsx.createComponent<{}, Events>({
 <Greet2 text="foo" important={ true } />;
 // OK
 <Greet2 text="foo" nativeOnClick={ e => console.log(e.target) } />;
+// OK: Some reserved attributes are available by default
+<Greet2 ref="greet" id="greet" class="header-large" text="foo" />;
 // NG: `text` is required
 <Greet2 />;
 // NG: `text` must be string
