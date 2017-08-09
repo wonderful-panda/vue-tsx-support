@@ -5,91 +5,143 @@ TSX (JSX for TypeScript) support library for Vue
 
 ## Usage
 
+After this library imported, only Components with attributes `_tsxattrs` can be used in JSX syntax.
+
+Here are some ways to make your components working.
+
 ### Standard component
+
+If you use `Vue.extend()` to write component, just use `createCompnent` instead of `Vue.extend`.
 
 ```typescript
 import Vue from "vue";
 import * as tsx from "vue-tsx-support";
 
-// Use createComponent instead of Vue.extend to create tsx-ready component
-const Greet = tsx.createComponent({
-    name: "Greet",
+const MyComponent = tsx.createComponent({
     template: "<span>Hello</span>"
 });
-
-// If your component has props, specify them as a type parameter
-interface Props { text: string; important?: boolean }
-const Greet2 = tsx.createComponent<Props>({
-    name: "Greet2",
-    props: { text: String, important: Boolean },
-    template: `
-        <span :class="this.important ? 'label-important' : 'label-normal'">
-            {{ text }}
-        </span>`
-});
-
-// And if your component has own events, specify them as a second type parameter
-interface Events { onOk: string; onCancel: string; } // member names must be prefixed by 'on'
-const Greet3 = tsx.createComponent<{}, Events>({
-    name: "Greet3",
-    template: `
-        <button @click="$emit('ok', 'OK clicked!')">OK</button>
-        <button @click="$emit('cancel', 'CANCEL clicked!')">CANCEL</button>
-});
-
-// Now, TypeScript compiler knows what attributes each components have.
-
-// OK
-<Greet />;
-// OK: attributes are not checked when no type parameters specified
-<Greet text="foo" />;
-
-// OK
-<Greet2 text="foo" />;
-// OK
-<Greet2 text="foo" important={ true } />;
-// OK
-<Greet2 text="foo" nativeOnClick={ e => console.log(e.target) } />;
-// OK: Some reserved attributes are available by default
-<Greet2 ref="greet" id="greet" class="header-large" text="foo" />;
-// NG: `text` is required
-<Greet2 />;
-// NG: `text` must be string
-<Greet2 text={ 1 } />;
-
-
-// OK
-<Greet3 text="foo" onOk={ val => console.log(val) } />;
-// NG: argument of onOk handler must be string
-<Greet3 text="foo" onOk={ (val: number) => console.log(val) } />;
 ```
 
-### Using `vue-class-component`
+And you can use it in JSX syntax, but no attributes are checked statically yet.
+
+```jsx
+// MyComponent has not props 'foo' nor 'bar', but this code does not cause compilation error.
+<MyComponent foo="a" bar={ 1 } />
+```
+
+If your component has props, you can declare it by type parameter
+
+```typescript
+import Vue from "vue";
+import * as tsx from "vue-tsx-support";
+
+interface Props {
+    text: string;           // required prop
+    important?: boolean;    // opitonal prop
+}
+
+const MyComponent = tsx.createComponent<Props>({
+    props: {
+        text: { type: String, required: true },
+        important: Boolean
+    },
+    template: "<span :class='className'>{{ text }}</span>",
+    computed: {
+        className() {
+            return this.important ? "label-important" : "label-normal";
+        }
+    }
+});
+```
+
+If your component also has own events, you can declare it by second type parameter
+
+```typescript
+import Vue from "vue";
+import * as tsx from "vue-tsx-support";
+
+interface Props {
+    text: string;           // required prop
+    important?: boolean;    // opitonal prop
+}
+interface Events {
+    // member name : event name prefixed by 'on'
+    // member type : event parameter type
+    onOk: MouseEvent;
+    onCancel: MouseEvent;
+}
+
+const MyComponent2 = tsx.createComponent<Props, Events>({
+    props: {
+        text: { type: String, required: true }
+    },
+    template: `
+        <div>
+            <span>{{ text }}</span>
+            <button onClick='$emit("ok", $event)'>OK</button>
+            <button onClick='$emit("cancel", $event)'>CANCEL</button>
+        </div>
+    `
+});
+```
+
+Now, TypeScript compiler knows what props your component have.
+
+```jsx
+// OK
+<MyComponent text="Hello" />;
+<MyComponent text="Hello" important={ true } />;
+<MyComponent2 text="Hello" onOk={ () => console.log("ok") } onCancel={ () => console.log("cancel") } />;
+
+// OK: Some attributes are available by default. e.g. 'id', 'class', 'ref', ...
+<MyComponent text="Hello" id="my-id" class="header-item" />;
+
+// OK: native dom event handlers can be specified, too
+<MyComponent text="Hello" nativeOnClick={ () => console.log("clicked") } />;
+
+// ERROR: required prop 'text' is not specified
+<MyComponent />;
+
+// ERROR: type of 'text' is not string
+<MyComponent text={ 1 }/>;
+
+// ERROR: 'unknownProp' is not prop of MyComponent
+<MyComponent text={ 1 } unknownProp={ 0 }/>;
+
+// ERROR: argument type of `onOk` handler is not MouseEvent
+<MyComponent2 text="Hello" onOk={ (e: KeyboardEvent) => console.log(e.keyCode) } />;
+```
+
+### Using with vue-class-component
+
+If you use `vue-class-component`, use `tsx.Component` instead of `Vue` as a super class
 
 ```typescript
 import Vue from "vue";
 import Component from "vue-class-component";
 import * as tsx from "vue-tsx-support";
 
-// Extend from tsx.Component instead of Vue to create tsx-ready component by vue-class-component
 interface Props = { text: string };
 interface Events = { onOk: string };
 @Component({
     props: { text: String },
     template: `<span @click="onClick">{{ text }}</span>`,
 })
-class Greet extends tsx.Component<Props, Events> {
+class MyComponent extends tsx.Component<Props, Events> {
     onClick() {
         this.$emit("ok", "clicked!");
     }
 }
+```
 
-// Or just add `_tsxattrs` field by yourself
+Or, add `_tsxattrs` field to your component.
+
+```typescript
 @Component({
     props: { text: String },
     template: `<span @click="onClick">{{ text }}</span>`,
 })
-class Greet2 extends Vue {
+class MyComponent extends Vue {
     _tsxattrs: tsx.TsxCompnentAttrs<Props, Events>;
 
     onClick() {
@@ -98,21 +150,26 @@ class Greet2 extends Vue {
 }
 ```
 
-### Add types to existing components
+### Make 3rd-party components working
+
+If you want to use component provided by 3rd-party libraries, you can make it working by `tsx.convert`
+
 ```typescript
 import Vue from "vue";
 import Component from "vue-class-component";
 import * as tsx from "vue-tsx-support";
 
-// If you want to use 3rd-party component, you can make it tsx-ready by `convert`
+import { SomeComponent as SomeComponent_ } from "third-party-library";
 
-import { Greet as Greet_ } from "greet-component";
-const UntypedGreet = tsx.convert(Greet_);  // Without type information. any attributes are acceptable.
+const SomeComponent = tsx.convert(SomeCompnent_);
+```
 
-// If you want to specify types, use `of`, and then `convert`.
-interface Props { text: string; important?: boolean }
-interface Events { onOk: string; onCancel: string; }
-const TypedGreet = tsx.of<Props, Events>().convert(Greet_);
+You can specify type parameters by `tsx.of` like below
+
+```typescript
+interface Props = { text: string };
+interface Events = { onOk: string };
+const SomeComponent = tsx.of<Props, Events>().convert(SomeCompnent_);
 ```
 
 ## LICENSE
