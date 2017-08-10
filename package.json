@@ -3,14 +3,10 @@
   "version": "0.0.1",
   "description": "TSX (JSX for TypeScript) support library for Vue",
   "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
+  "typings": "types/index.d.ts",
   "scripts": {
-    "copy-dts": "cpx src/*.d.ts lib",
-    "copy-dts:watch": "cpx src/*.d.ts lib -w",
-    "tsc": "tsc",
-    "tsc:watch": "tsc -w",
-    "build": "npm-run-all copy-dts tsc",
-    "watch": "npm-run-all --parallel copy-dts:watch tsc:watch",
+    "build": "tsc",
+    "watch": "tsc -w",
     "test-tsc": "tsc-test -p test/tsc/tsconfig.json",
     "test": "npm-run-all test-tsc"
   },
@@ -31,7 +27,6 @@
   },
   "homepage": "https://github.com/wonderful-panda/vue-tsx-support#readme",
   "devDependencies": {
-    "cpx": "^1.5.0",
     "npm-run-all": "^4.0.2",
     "tsc-test": "^0.1.3",
     "typescript": "^2.4.2"
