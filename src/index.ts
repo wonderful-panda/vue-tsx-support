@@ -1,4 +1,5 @@
 ///<reference path="../types/base.d.ts" />
+///<reference path="../types/vue.d.ts" />
 import Vue from "vue";
 
 export type TsxComponent<V extends Vue, Props, Events> = VueTsx.Constructor<V & {
