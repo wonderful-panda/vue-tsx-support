@@ -49,19 +49,21 @@ declare global {
             // TODO: Add other events
         }
 
-        type TsxComponentAttrs<Props, Events = {}> = (
+        type TsxComponentAttrs<Props = {}, Events = {}> = (
             { props: Partial<Props> } &
             Partial<Props> &
             Vue.VNodeData &
             EventHandlers<Events> &
             EventHandlers<ElementEventsNativeOn> &
-            AddtionalAttrs
+            AddtionalAttrs &
+            { [name: string]: any } // allow unknown property
         ) | (
             Props &
             Vue.VNodeData &
             EventHandlers<Events> &
             EventHandlers<ElementEventsNativeOn> &
-            AddtionalAttrs
+            AddtionalAttrs &
+            { [name: string]: any } // allow unknown property
         );
     }
 }

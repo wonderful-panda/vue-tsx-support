@@ -8,7 +8,7 @@ export type TsxComponent<V extends Vue, Props, Events> = VueTsx.Constructor<V & 
 /**
  * Add TSX-support to existing component factory
  */
-export function convert<V extends Vue>(component: VueTsx.Constructor<V>): TsxComponent<V, any, {}> {
+export function convert<V extends Vue>(component: VueTsx.Constructor<V>): TsxComponent<V, {}, {}> {
     return component as any;
 }
 
@@ -29,10 +29,10 @@ export function of<Props, Events = {}>(): { convert: <V extends Vue>(component: 
 /**
  * Create component from component options (Compatible with Vue.extend)
  */
-export function createComponent<Props = any, Events = {}>(opts: VueTsx.ComponentOptions<Props> | Vue.FunctionalComponentOptions): TsxComponent<Vue, Props, Events> {
+export function createComponent<Props = {}, Events = {}>(opts: VueTsx.ComponentOptions<Props> | Vue.FunctionalComponentOptions): TsxComponent<Vue, Props, Events> {
     return Vue.extend(opts) as any;
 }
 
-export class Component<Props = any, Events = {}> extends Vue {
+export class Component<Props = {}, Events = {}> extends Vue {
     _tsxattrs: VueTsx.TsxComponentAttrs<Props, Events>;
 }

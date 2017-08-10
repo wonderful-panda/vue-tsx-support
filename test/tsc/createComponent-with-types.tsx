@@ -28,7 +28,7 @@ const Test = tsx.createComponent<{ name: string, value?: string }, { onOk: void 
  * Failure expected
  */
 // unknown prop
-<Test name="foo" unknown="bar" />;  //// TS2339: Property 'unknown' does not exist
+<Test name="foo" unknown="bar" />;
 
 // type mismatch of known prop
 <Test name={ 1 } />; //// TS2322: '1' is not assignable to type 'string'
