@@ -30,6 +30,9 @@ const Test = tsx.of<Props, Events>().convert(
 
 <Test name="foo" nativeOnKeydown={ e => console.log(e.keyCode) } />;
 
+// Unknows props are allowed
+<Test name="foo" value="bar" unknown="baz" />;
+
 /**
  * Will fail
  */

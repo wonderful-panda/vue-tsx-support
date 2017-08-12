@@ -39,6 +39,9 @@ const Test = tsx.createComponent<{ name: string, value?: string }, { onOk: void 
 // type mismatch of event
 <Test name="foo" onOk={ (arg: string) => console.log(arg) } />; //// TS2322: Type 'void' is not assignable to type 'string'
 
+// type mismatch of native event
+<Test name="foo" nativeOnClick={ (e: string) => console.log(e) } />; //// TS2322: Type 'Event' is not assignable to type 'string'.
+
 // type mismatch of props in JSX spread
 <Test { ...{ props: { foo: "foo" } } } />; //// TS2322
 
