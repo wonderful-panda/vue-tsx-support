@@ -2,6 +2,8 @@
 ///<reference path="../types/vue.d.ts" />
 import Vue from "vue";
 
+export type TsxComponentAttrs<Props = {}, Events = {}> = VueTsx.TsxComponentAttrs<Props, Events>;
+
 export type TsxComponent<V extends Vue, Props, Events> = VueTsx.Constructor<V & {
     _tsxattrs: VueTsx.TsxComponentAttrs<Props, Events>
 }>;
