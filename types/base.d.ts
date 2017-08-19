@@ -1,3 +1,4 @@
+import "./dom";
 import Vue from "vue";
 
 declare global {
@@ -10,6 +11,11 @@ declare global {
 
         interface ElementAttributesProperty {
             _tsxattrs: any;
+        }
+
+        interface IntrinsicElements extends VueTsx.IntrinsicElements {
+            // allow unknown elements
+            [name: string]: any;
         }
     }
 
@@ -31,39 +37,32 @@ declare global {
             [K in keyof E]?: (payload: E[K]) => void;
         }
 
-        interface ElementEvents {
-            click: Event;
-            dblclick: Event;
-            keydown: KeyboardEvent;
-            keyup: KeyboardEvent;
-            keypress: KeyboardEvent;
-            // TODO: Add other events
-        }
-
-        interface ElementEventsNativeOn {
-            nativeOnClick: Event;
-            nativeOnDblclick: Event;
-            nativeOnKeydown: KeyboardEvent;
-            nativeOnKeyup: KeyboardEvent;
-            nativeOnKeypress: KeyboardEvent;
-            // TODO: Add other events
-        }
-
         type TsxComponentAttrs<Props = {}, Events = {}> = (
             { props: Partial<Props> } &
             Partial<Props> &
             Vue.VNodeData &
             EventHandlers<Events> &
-            EventHandlers<ElementEventsNativeOn> &
+            EventHandlers<VueTsxDOM.EventsNativeOn> &
             AddtionalAttrs &
             { [name: string]: any } // allow unknown property
         ) | (
             Props &
             Vue.VNodeData &
             EventHandlers<Events> &
-            EventHandlers<ElementEventsNativeOn> &
+            EventHandlers<VueTsxDOM.EventsNativeOn> &
             AddtionalAttrs &
             { [name: string]: any } // allow unknown property
         );
+
+        type ElementAttrs<T> = (
+            T &
+            Vue.VNodeData &
+            EventHandlers<VueTsxDOM.EventsOn> &
+            { [name: string]: any } // allow unknown property
+        );
+
+        type IntrinsicElements = {
+            [K in keyof VueTsxDOM.IntrinsicElementAttributes]: ElementAttrs<VueTsxDOM.IntrinsicElementAttributes[K]>
+        };
     }
 }
