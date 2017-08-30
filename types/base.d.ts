@@ -20,7 +20,12 @@ declare global {
     }
 
     namespace VueTsx {
-        interface AddtionalAttrs {
+        interface ComponentAdditionalAttrs {
+            // extension point.
+            id?: string;
+        }
+        interface ElementAdditionalAttrs {
+            // extension point.
         }
 
         type Constructor<T> = new (...args: any[]) => T;
@@ -29,36 +34,28 @@ declare global {
         type PropsDefinition<PropKeys extends string> = {
             [K in PropKeys]: Vue.PropOptions | PropType;
         };
-        type ComponentOptions<Props> = Vue.ComponentOptions<Vue> & {
-            props?: PropsDefinition<keyof Props> | string[]
-        };
 
         type EventHandlers<E> = {
             [K in keyof E]?: (payload: E[K]) => void;
         }
 
-        type TsxComponentAttrs<Props = {}, Events = {}> = (
-            { props: Partial<Props> } &
-            Partial<Props> &
+        type TsxComponentAttrs<Props extends object = {}, Events = {}> = (
+            { props: Props } &
             Vue.VNodeData &
             EventHandlers<Events> &
-            EventHandlers<VueTsxDOM.EventsNativeOn> &
-            AddtionalAttrs &
-            { [name: string]: any } // allow unknown property
+            ComponentAdditionalAttrs
         ) | (
             Props &
             Vue.VNodeData &
             EventHandlers<Events> &
-            EventHandlers<VueTsxDOM.EventsNativeOn> &
-            AddtionalAttrs &
-            { [name: string]: any } // allow unknown property
+            ComponentAdditionalAttrs
         );
 
         type ElementAttrs<T> = (
             T &
             Vue.VNodeData &
             EventHandlers<VueTsxDOM.EventsOn> &
-            { [name: string]: any } // allow unknown property
+            ElementAdditionalAttrs
         );
 
         type IntrinsicElements = {

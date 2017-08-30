@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "es5",
     "jsx": "preserve",
     "module": "commonjs",
@@ -9,10 +10,13 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
-    "inlineSourceMap": true
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+    "experimentalDecorators": true,
+    "paths": {
+      "vue-tsx-support": ["../../.."],
+      "vue-tsx-support/*": ["../../../*"]
+    },
+    "include": [
+      "*.tsx"
+    ]
+  }
 }
