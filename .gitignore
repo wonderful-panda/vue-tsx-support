@@ -59,4 +59,4 @@ typings/
 
 # project specific
 lib
-types
+types/index.d.ts
