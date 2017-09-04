@@ -31,9 +31,6 @@ declare global {
         type Constructor<T> = new (...args: any[]) => T;
 
         type PropType = Constructor<any> | Constructor<any>[] | null;
-        type PropsDefinition<PropKeys extends string> = {
-            [K in PropKeys]: Vue.PropOptions | PropType;
-        };
 
         type EventHandlers<E> = {
             [K in keyof E]?: (payload: E[K]) => void;
