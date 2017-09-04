@@ -4,7 +4,7 @@ import Vue from "vue";
 
 export type TsxComponentAttrs<Props extends object = {}, Events = {}> = VueTsx.TsxComponentAttrs<Props, Events>;
 
-export type TsxComponent<V extends Vue, Props extends object, Events> = VueTsx.Constructor<V & {
+export type TsxComponent<V extends Vue, Props extends object, Events> = typeof Vue & VueTsx.Constructor<V & {
     _tsxattrs: VueTsx.TsxComponentAttrs<Props, Events>
 }>;
 
