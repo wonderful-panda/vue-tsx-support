@@ -1,4 +1,5 @@
 import "./dom";
+import "./builtin-components";
 import Vue from "vue";
 
 declare global {
@@ -16,6 +17,11 @@ declare global {
         interface IntrinsicElements extends VueTsx.IntrinsicElements {
             // allow unknown elements
             [name: string]: any;
+
+            // builtin components
+            transition: VueTsx.TsxComponentAttrs<VueTsxBuiltin.TransitionProps>;
+            "transition-group": VueTsx.TsxComponentAttrs<VueTsxBuiltin.TransitionGroupProps>;
+            "keep-alive": VueTsx.TsxComponentAttrs<VueTsxBuiltin.KeepAliveProps>;
         }
     }
 
