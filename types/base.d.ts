@@ -38,6 +38,7 @@ declare global {
 
         type TsxComponentAttrs<Props extends object = {}, Events = {}> = (
             { props: Props } &
+            Partial<Props> &
             Vue.VNodeData &
             EventHandlers<Events> &
             ComponentAdditionalAttrs
