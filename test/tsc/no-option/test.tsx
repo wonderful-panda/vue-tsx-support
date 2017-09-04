@@ -11,6 +11,10 @@ function intrinsicElements() {
     // OK
     <div id="foo" />;
     // OK
+    <div ref="foo" key="foo" />;
+    // OK
+    <div { ...{ attrs: { min: 0, max: 100 } } } />;
+    // OK
     <input type="number" min={ 0 } max={ 100 } required />;
     // OK
     <a href="example.com" />;
@@ -47,6 +51,8 @@ function standardComponent() {
     <MyComponent { ...{ props: { a: "value" } } } />;
     // OK
     <MyComponent nativeOn-click={ noop } />;
+    // OK: unknown attributes are allowed in JSX spread.
+    <MyComponent { ...{ attrs: { min: 0, max: 100 } } } />;
 
     // NG: prop
     <MyComponent a="value" />;      //// TS2339: Property 'a' does not exist

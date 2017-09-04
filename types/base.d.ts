@@ -26,6 +26,16 @@ declare global {
     }
 
     namespace VueTsx {
+        interface VNodeData {
+            class?: Vue.VNodeData["class"];
+            staticClass?: Vue.VNodeData["staticClass"];
+            style?: Vue.VNodeData["style"];
+            key?: Vue.VNodeData["key"];
+            ref?: Vue.VNodeData["ref"];
+            refInFor?: boolean;
+            slot?: Vue.VNodeData["slot"];
+            scopedSlots?: Vue.VNodeData["scopedSlots"];
+        }
         interface ComponentAdditionalAttrs {
             // extension point.
             id?: string;
@@ -45,19 +55,19 @@ declare global {
         type TsxComponentAttrs<Props extends object = {}, Events = {}> = (
             { props: Props } &
             Partial<Props> &
-            Vue.VNodeData &
+            VNodeData &
             EventHandlers<Events> &
             ComponentAdditionalAttrs
         ) | (
             Props &
-            Vue.VNodeData &
+            VNodeData &
             EventHandlers<Events> &
             ComponentAdditionalAttrs
         );
 
         type ElementAttrs<T> = (
             T &
-            Vue.VNodeData &
+            VNodeData &
             EventHandlers<VueTsxDOM.EventsOn> &
             ElementAdditionalAttrs
         );
