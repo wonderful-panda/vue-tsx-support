@@ -52,7 +52,7 @@ declare global {
             [K in keyof E]?: (payload: E[K]) => void;
         }
 
-        type TsxComponentAttrs<Props extends object = {}, Events = {}> = (
+        type TsxComponentAttrs<Props = {}, Events = {}> = (
             { props: Props } &
             Partial<Props> &
             VNodeData &

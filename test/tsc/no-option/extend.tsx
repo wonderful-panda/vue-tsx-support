@@ -1,0 +1,80 @@
+import Vue from "vue";
+import * as vuetsx from "vue-tsx-support";
+import component from "vue-class-component";
+
+const noop = () => {};
+
+interface Props {
+    foo: string;
+}
+
+interface Events {
+    onOk: void;
+}
+
+interface Props2 {
+    bar: string;
+}
+
+interface Events2 {
+    onErr: string;
+}
+
+const a = { foo: 1, bar: "" };
+
+function by_createComponent() {
+    const Base = vuetsx.createComponent<Props, Events>({});
+
+    // NG
+    <Base />;   //// TS2322: 'foo' is missing
+    // OK
+    <Base foo="foo" onOk={ noop } />;
+    // NG
+    <Base foo="foo" bar="bar" />;   //// TS2339: Property 'bar' does not exist
+    // NG
+    <Base foo="foo" onErr={ noop } />;   //// TS2339: Property 'onErr' does not exist
+
+    /* add more attributes */
+    const Extend = vuetsx.ofType<Props2, Events2>().extend(Base);
+    // OK
+    <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
+    // NG
+    <Extend foo="foo" />;   //// TS2322: 'bar' is missing
+    // NG
+    <Extend bar="bar" />;   //// TS2322: 'foo' is missing
+
+}
+
+function by_convert() {
+    const Base = vuetsx.ofType<Props, Events>().convert(Vue.extend({}));
+
+    /* add more attributes */
+    const Extend = vuetsx.ofType<Props2, Events2>().extend(Base);
+    // OK
+    <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
+    // NG
+    <Extend foo="foo" />;   //// TS2322: 'bar' is missing
+    // NG
+    <Extend bar="bar" />;   //// TS2322: 'foo' is missing
+}
+
+function by_class() {
+    class Base extends vuetsx.Component<Props, Events> {
+        someProp: string;
+        someMethod() {
+        }
+    }
+
+    /* add more attributes */
+    const Extend = vuetsx.ofType<Props2, Events2>().extend(Base);
+    // OK
+    <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
+    // NG
+    <Extend foo="foo" />;   //// TS2322: 'bar' is missing
+    // NG
+    <Extend bar="bar" />;   //// TS2322: 'foo' is missing
+
+    // Extend inherits prototype of Base.
+    const ext = new Extend();
+    console.log(ext.someProp, ext.someMethod());
+}
