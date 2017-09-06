@@ -44,10 +44,6 @@ declare global {
             // extension point.
         }
 
-        type Constructor<T> = new (...args: any[]) => T;
-
-        type PropType = Constructor<any> | Constructor<any>[] | null;
-
         type EventHandlers<E> = {
             [K in keyof E]?: (payload: E[K]) => void;
         }
