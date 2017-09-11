@@ -4,7 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "declaration": true,
-    "declarationDir": "./types",
+    "declarationDir": "./lib",
     "outDir": "./lib",
     "strict": true,
     "noUnusedParameters": true,

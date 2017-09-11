@@ -46,4 +46,3 @@ const factoryImpl = {
 export function ofType<Props, Events = {}>(): Factory<Props, Events> {
     return factoryImpl;
 }
-
