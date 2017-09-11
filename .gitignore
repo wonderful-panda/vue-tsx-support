@@ -60,3 +60,4 @@ typings/
 # project specific
 lib
 types/index.d.ts
+types/modifiers.d.ts
