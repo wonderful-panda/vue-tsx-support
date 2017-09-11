@@ -43,6 +43,14 @@ function by_createComponent() {
     // NG
     <Extend bar="bar" />;   //// TS2322: 'foo' is missing
 
+    const WithNativeOn = vuetsx.withNativeOn(Base);
+    <WithNativeOn foo="foo" nativeOnClick={ noop } />;
+
+    const WithHtmlAttrs = vuetsx.withHtmlAttrs(Base);
+    <WithHtmlAttrs foo="foo" accesskey="foo" />;
+
+    const WithUnknownProps = vuetsx.withUnknownProps(Base);
+    <WithUnknownProps foo="foo" unknown="foo" />;
 }
 
 function by_convert() {
@@ -56,6 +64,15 @@ function by_convert() {
     <Extend foo="foo" />;   //// TS2322: 'bar' is missing
     // NG
     <Extend bar="bar" />;   //// TS2322: 'foo' is missing
+
+    const WithNativeOn = vuetsx.withNativeOn(Base);
+    <WithNativeOn foo="foo" nativeOnClick={ noop } />;
+
+    const WithHtmlAttrs = vuetsx.withHtmlAttrs(Base);
+    <WithHtmlAttrs foo="foo" accesskey="foo" />;
+
+    const WithUnknownProps = vuetsx.withUnknownProps(Base);
+    <WithUnknownProps foo="foo" unknown="foo" />;
 }
 
 function by_class() {
@@ -77,4 +94,16 @@ function by_class() {
     // Extend inherits prototype of Base.
     const ext = new Extend();
     console.log(ext.someProp, ext.someMethod());
+
+    const WithNativeOn = vuetsx.withNativeOn(Base);
+    <WithNativeOn foo="foo" nativeOnClick={ noop } />;
+    console.log(new WithNativeOn().someProp);
+
+    const WithHtmlAttrs = vuetsx.withHtmlAttrs(Base);
+    <WithHtmlAttrs foo="foo" accesskey="foo" />;
+    console.log(new WithHtmlAttrs().someProp);
+
+    const WithUnknownProps = vuetsx.withUnknownProps(Base);
+    <WithUnknownProps foo="foo" unknown="foo" />;
+    console.log(new WithUnknownProps().someProp);
 }

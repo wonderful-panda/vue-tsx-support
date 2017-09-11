@@ -46,3 +46,23 @@ const factoryImpl = {
 export function ofType<Props, Events = {}>(): Factory<Props, Events> {
     return factoryImpl;
 }
+
+
+export function withNativeOn<V extends Vue, P, E>(componentType: TsxComponent<V, P, E>): TsxComponent<V, P, E & VueTsxDOM.EventsNativeOn>;
+export function withNativeOn<P, E, C extends Component<P, E>>(componentType: VueClass<C & Component<P, E>>): TsxComponent<C, P, E & VueTsxDOM.EventsNativeOn>;
+export function withNativeOn(componentType: any): any {
+    return componentType;
+}
+
+export function withHtmlAttrs<V extends Vue, P, E>(componentType: TsxComponent<V, P, E>): TsxComponent<V, P & VueTsxDOM.AllHTMLAttributes, E>;
+export function withHtmlAttrs<P, E, C extends Component<P, E>>(componentType: VueClass<C & Component<P, E>>): TsxComponent<C, P & VueTsxDOM.AllHTMLAttributes, E>;
+export function withHtmlAttrs(componentType: any): any {
+    return componentType;
+}
+
+export function withUnknownProps<V extends Vue, P, E>(componentType: TsxComponent<V, P, E>): TsxComponent<V, P & { [key: string]: any }, E>;
+export function withUnknownProps<P, E, C extends Component<P, E>>(componentType: VueClass<C & Component<P, E>>): TsxComponent<C, P & { [key: string]: any }, E>;
+export function withUnknownProps(componentType: any): any {
+    return componentType;
+}
+
