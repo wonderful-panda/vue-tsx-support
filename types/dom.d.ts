@@ -31,6 +31,8 @@ declare namespace VueTsxDOM {
         spellcheck?: boolean;
         tabindex?: number;
         title?: string;
+
+        role?: string;
     }
 
     interface AnchorHTMLAttributes extends HTMLAttributes {
@@ -116,7 +118,7 @@ declare namespace VueTsxDOM {
 
     interface FormHTMLAttributes extends HTMLAttributes {
         acceptcharset?: string;
-        action?: boolean;
+        action?: string;
         autocomplete?: string;
         enctype?: string;
         method?: string;
