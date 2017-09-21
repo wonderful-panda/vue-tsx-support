@@ -1,30 +1,7 @@
 import "./dom";
-import "./builtin-components";
 import Vue from "vue";
 
 declare global {
-    namespace JSX {
-        interface Element extends Vue.VNode {
-        }
-
-        interface ElementClass extends Vue {
-        }
-
-        interface ElementAttributesProperty {
-            _tsxattrs: any;
-        }
-
-        interface IntrinsicElements extends VueTsx.IntrinsicElements {
-            // allow unknown elements
-            [name: string]: any;
-
-            // builtin components
-            transition: VueTsx.TsxComponentAttrs<VueTsxBuiltin.TransitionProps>;
-            "transition-group": VueTsx.TsxComponentAttrs<VueTsxBuiltin.TransitionGroupProps>;
-            "keep-alive": VueTsx.TsxComponentAttrs<VueTsxBuiltin.KeepAliveProps>;
-        }
-    }
-
     namespace VueTsx {
         interface VNodeData {
             class?: Vue.VNodeData["class"];
@@ -67,6 +44,16 @@ declare global {
             EventHandlers<VueTsxDOM.EventsOn> &
             ElementAdditionalAttrs
         );
+
+        interface Element extends Vue.VNode {
+        }
+
+        interface ElementClass extends Vue {
+        }
+
+        interface ElementAttributesProperty {
+            _tsxattrs: any;
+        }
 
         type IntrinsicElements = {
             [K in keyof VueTsxDOM.IntrinsicElementAttributes]: ElementAttrs<VueTsxDOM.IntrinsicElementAttributes[K]>
