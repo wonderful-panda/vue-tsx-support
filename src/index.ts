@@ -1,3 +1,3 @@
-import "../types/enable-check";
+///<reference path="../types/enable-check.d.ts" />
 export * from "./api";
 
