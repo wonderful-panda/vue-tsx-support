@@ -709,6 +709,9 @@ declare namespace VueTsxDOM {
         // selection events
         select: Event;
 
+        // UI events
+        scroll: UIEvent;
+
         // touch events
         touchcancel: TouchEvent;
         touchend: TouchEvent;
@@ -808,6 +811,9 @@ declare namespace VueTsxDOM {
         // selection events
         onSelect: Event;
 
+        // UI events
+        onScroll: UIEvent;
+
         // touch events
         onTouchcancel: TouchEvent;
         onTouchend: TouchEvent;
@@ -906,6 +912,9 @@ declare namespace VueTsxDOM {
 
         // selection events
         nativeOnSelect: Event;
+
+        // UI events
+        nativeOnScroll: UIEvent;
 
         // touch events
         nativeOnTouchcancel: TouchEvent;
