@@ -69,25 +69,41 @@ interface Props {
     b?: number;
 }
 
+interface Events {
+    onChange: string;
+}
+
+interface ScopedSlots {
+    default: { ssprops: string }
+}
+
 /*
  * ofType and convert
  */
 function convert() {
-    const MyComponent = vuetsx.ofType<Props>().convert(Vue.extend({}));
+    const MyComponent1 = vuetsx.ofType<Props, Events>().convert(Vue.extend({}));
+    const MyComponent2 = vuetsx.ofType<Props, Events, ScopedSlots>().convert(Vue.extend({}));
 
     // NG: `a` is required
-    <MyComponent />;    //// TS2322: 'a' is missing
+    <MyComponent1 />;    //// TS2322: 'a' is missing
 
     // OK
-    <MyComponent a="foo" />;
+    <MyComponent1 a="foo" b={ 0 } />;
     // OK
-    <MyComponent a="foo" b={ 0 } />;
+    <MyComponent1 a="foo" b={ 0 } onChange={ value => console.log(value.toUpperCase()) } />;
     // NG: `c` is not defined
-    <MyComponent a="foo" c="bar" />;  //// TS2339: 'c' does not exist
+    <MyComponent1 a="foo" c="bar" />;  //// TS2339: 'c' does not exist
     // NG: `a` must be string
-    <MyComponent a={ 0 } />;          //// TS2322: '0' is not assignable
+    <MyComponent1 a={ 0 } />;          //// TS2322: '0' is not assignable
     // NG: `b` must be number
-    <MyComponent a="foo" b="bar" />;  //// TS2322: '"bar"' is not assignable
+    <MyComponent1 a="foo" b="bar" />;  //// TS2322: '"bar"' is not assignable
+
+    // OK
+    <MyComponent2 a="foo" scopedSlots={{ default: props => props.ssprops }} />;
+    // NG
+    <MyComponent2 a="foo" scopedSlots={{}} />;   //// TS2322: 'default' is missing
+    // NG
+    <MyComponent2 a="foo" scopedSlots={{ default: props => props.xxx }} />;   //// TS2339: 'xxx' does not exist
 }
 
 /*
@@ -117,7 +133,23 @@ function createComponent() {
  */
 function vueClassComponent() {
     @component
-    class MyComponent extends vuetsx.Component<Props> {}
+    class MyComponent extends vuetsx.Component<Props, Events> {
+    }
+
+    @component
+    class MyComponent2 extends vuetsx.Component<Props, Events, ScopedSlots> {
+        render() {
+            return <div>{ this.$scopedSlots.default({ ssprops: "foo" }) }</div>;
+        }
+    }
+
+    @component
+    class MyComponent3 extends vuetsx.Component<Props, Events, ScopedSlots> {
+        render() {
+            return <div>{ this.$scopedSlots.default({ ssprops: 1 }) }</div>;    //// TS2345: 'number' is not assignable
+        }
+    }
+
 
     // NG: `a` is required
     <MyComponent />;    //// TS2322: 'a' is missing
@@ -125,12 +157,23 @@ function vueClassComponent() {
     // OK
     <MyComponent a="foo" />;
     // OK
-    <MyComponent a="foo" b={ 0 } />;
+    <MyComponent a="foo" b={ 0 } scopedSlots={{ default: p => p.ssprops }} />;
+    // OK
+    <MyComponent a="foo" scopedSlots={{ default: p => [<span>{ p.ssprops }</span>] }} />;
+
     // NG: `c` is not defined
     <MyComponent a="foo" c="bar" />;  //// TS2339: 'c' does not exist
     // NG: `a` must be string
     <MyComponent a={ 0 } />;          //// TS2322: '0' is not assignable
     // NG: `b` must be number
     <MyComponent a="foo" b="bar" />;  //// TS2322: '"bar"' is not assignable
+
+    // OK
+    <MyComponent2 a="foo" scopedSlots={{ default: p => p.ssprops }} />;
+    // OK (unfortunately)
+    <MyComponent2 a="foo" />;
+    // NG
+    <MyComponent2 a="foo" scopedSlots={{ default: p => p.xxx }} />;   //// TS2339: 'xxx' does not exist
+
 }
 

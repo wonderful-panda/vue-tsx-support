@@ -13,6 +13,12 @@ declare global {
             slot?: Vue.VNodeData["slot"];
             scopedSlots?: Vue.VNodeData["scopedSlots"];
         }
+        type ScopedSlots<T> = {
+            [K in keyof T]: (props: T[K]) => Vue.VNodeChildrenArrayContents | string;
+        } & {
+            [name: string]: (props: any) => Vue.VNodeChildrenArrayContents | string;
+        };
+
         interface ComponentAdditionalAttrs {
             // extension point.
             id?: string;
@@ -25,16 +31,18 @@ declare global {
             [K in keyof E]?: (payload: E[K]) => void;
         }
 
-        type TsxComponentAttrs<Props = {}, Events = {}> = (
-            { props: Props } &
-            Partial<Props> &
+        type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> = (
+            { props: TProps } &
+            Partial<TProps> &
             VNodeData &
-            EventHandlers<Events> &
+            { scopedSlots?: ScopedSlots<TScopedSlots> } &
+            EventHandlers<TEvents> &
             ComponentAdditionalAttrs
         ) | (
-            Props &
+            TProps &
             VNodeData &
-            EventHandlers<Events> &
+            { scopedSlots?: ScopedSlots<TScopedSlots> } &
+            EventHandlers<TEvents> &
             ComponentAdditionalAttrs
         );
 
