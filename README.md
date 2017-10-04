@@ -1,5 +1,8 @@
+[![Build Status](https://travis-ci.org/wonderful-panda/vue-tsx-support.svg?branch=master)](https://travis-ci.org/wonderful-panda/vue-tsx-support)
+
 # vue-tsx-support (EXPERIMENTAL)
 TSX (JSX for TypeScript) support library for Vue
+
 
 ## Setup
 
