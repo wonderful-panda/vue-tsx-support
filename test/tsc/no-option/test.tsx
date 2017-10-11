@@ -1,3 +1,4 @@
+import "vue-tsx-support/enable-check";
 import * as vuetsx from "vue-tsx-support";
 import component from "vue-class-component";
 import Vue from "vue";

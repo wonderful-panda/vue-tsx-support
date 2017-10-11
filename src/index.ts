@@ -1,3 +1,5 @@
-///<reference path="../types/enable-check.d.ts" />
 export * from "./api";
+
+import * as m from "./modifiers";
+export const modifiers = m;
 

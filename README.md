@@ -1,17 +1,24 @@
 [![Build Status](https://travis-ci.org/wonderful-panda/vue-tsx-support.svg?branch=master)](https://travis-ci.org/wonderful-panda/vue-tsx-support)
 
-# vue-tsx-support (EXPERIMENTAL)
+# vue-tsx-support
 TSX (JSX for TypeScript) support library for Vue
 
+## Caution: BREAKING CHANGE
+v0.4.0:
+    The way to enable compiler check has changed. See [Install and enable](#Install-and-enable)
 
-## Setup
+## Install and enable
 
-To enable this library, import this somewhere.
+Install from npm:
+
+```
+npm install vue-tsx-support -S
+```
+
+And import `vue-tsx-support/enable-check.d.ts` somewhere to enable compiler check. (**CHANGED since v0.4.0**)
 
 ```typescript
-import "vue-tsx-support"
-// OR
-///<reference types="vue-tsx-support" />
+import "vue-tsx-support/enable-check"
 ```
 
 ## Using intrinsic elements

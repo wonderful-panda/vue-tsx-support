@@ -1,4 +1,4 @@
-import * as vuetsx from "vue-tsx-support/lib/api";
+import * as vuetsx from "vue-tsx-support";
 import Vue from "vue";
 
 const noop = () => {};

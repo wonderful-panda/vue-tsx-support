@@ -1,6 +1,6 @@
-import "./base";
-import "./builtin-components";
-import "./vue";
+import "./types/base";
+import "./types/builtin-components";
+import "./types/vue";
 
 declare global {
     namespace JSX {

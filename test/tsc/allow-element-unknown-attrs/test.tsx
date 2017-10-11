@@ -1,3 +1,4 @@
+import "vue-tsx-support/enable-check";
 import * as vuetsx from "vue-tsx-support";
 import "vue-tsx-support/options/allow-element-unknown-attrs";
 import Vue from "vue";
