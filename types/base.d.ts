@@ -1,27 +1,20 @@
 import "./dom";
-import Vue from "vue";
+import Vue, { VNode, VNodeData, VNodeChildrenArrayContents } from "vue";
 
 declare global {
     namespace VueTsx {
-        interface VNodeData {
-            class?: Vue.VNodeData["class"];
-            staticClass?: Vue.VNodeData["staticClass"];
-            style?: Vue.VNodeData["style"];
-            key?: Vue.VNodeData["key"];
-            ref?: Vue.VNodeData["ref"];
-            refInFor?: boolean;
-            slot?: Vue.VNodeData["slot"];
-            scopedSlots?: Vue.VNodeData["scopedSlots"];
-        }
+        type KnownAttrs = Pick<VNodeData, "class" | "staticClass" | "style" | "key" | "ref" | "slot" | "scopedSlots" > & {
+            id?: string,
+            refInFor?: boolean
+        };
         type ScopedSlots<T> = {
-            [K in keyof T]: (props: T[K]) => Vue.VNodeChildrenArrayContents | string;
+            [K in keyof T]: (props: T[K]) => VNodeChildrenArrayContents | string;
         } & {
-            [name: string]: (props: any) => Vue.VNodeChildrenArrayContents | string;
+            [name: string]: (props: any) => VNodeChildrenArrayContents | string;
         };
 
         interface ComponentAdditionalAttrs {
             // extension point.
-            id?: string;
         }
         interface ElementAdditionalAttrs {
             // extension point.
@@ -34,13 +27,13 @@ declare global {
         type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> = (
             { props: TProps } &
             Partial<TProps> &
-            VNodeData &
+            KnownAttrs &
             { scopedSlots?: ScopedSlots<TScopedSlots> } &
             EventHandlers<TEvents> &
             ComponentAdditionalAttrs
         ) | (
             TProps &
-            VNodeData &
+            KnownAttrs &
             { scopedSlots?: ScopedSlots<TScopedSlots> } &
             EventHandlers<TEvents> &
             ComponentAdditionalAttrs
@@ -48,12 +41,12 @@ declare global {
 
         type ElementAttrs<T> = (
             T &
-            VNodeData &
+            KnownAttrs &
             EventHandlers<VueTsxDOM.EventsOn> &
             ElementAdditionalAttrs
         );
 
-        interface Element extends Vue.VNode {
+        interface Element extends VNode {
         }
 
         interface ElementClass extends Vue {

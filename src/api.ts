@@ -1,5 +1,5 @@
 ///<reference path="../types/base.d.ts" />
-import Vue from "vue";
+import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 
 export type VueClass<T> = {
     new (...args: any[]): T;
@@ -20,8 +20,8 @@ export class Component<TProps, TEvents = {}, TScopedSlots = {}> extends Vue {
 /**
  * Create component from component options (Compatible with Vue.extend)
  */
-export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(opts: Vue.ComponentOptions<Vue> | Vue.FunctionalComponentOptions): TsxComponent<Vue, TProps, TEvents, TScopedSlots> {
-    return Vue.extend(opts) as any;
+export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(opts: ComponentOptions<Vue> | FunctionalComponentOptions): TsxComponent<Vue, TProps, TEvents, TScopedSlots> {
+    return Vue.extend(opts as any) as any;
 }
 
 export interface Factory<TProps, TEvents, TScopedSlots> {
