@@ -2,10 +2,10 @@
 
 // Add definitions of `router-link` and `router-view`
 
-import VueRouter from "vue-router";
+import { Location } from "vue-router";
 
 interface RouterLinkProps {
-    to: string | VueRouter.Location;
+    to: string | Location;
     tag?: string;
     exact?: boolean;
     append?: boolean;
