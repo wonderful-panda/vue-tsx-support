@@ -6,11 +6,11 @@ export type VueClass<T> = {
     prototype: T;
 } & typeof Vue;
 
-export declare interface TSXRenderContext<Props> extends RenderContext {
+export interface TSXRenderContext<Props> extends RenderContext {
    props: Props;
 }
     
-export declare type TsxFunctionalComponentOptions<Props> =
+export type TsxFunctionalComponentOptions<Props> =
     FunctionalComponentOptions<Props> &
     { render(this: undefined, createElement: CreateElement, context: TSXRenderContext<Props>): VNode };
 
@@ -28,7 +28,7 @@ export class Component<TProps, TEvents = {}, TScopedSlots = {}> extends Vue {
 /**
  * Create component from component options (Compatible with Vue.extend)
  */
-export declare function functionalComponent<TProps>(opts: TsxFunctionalComponentOptions<TProps>): TsxComponent<Vue, TProps>;
+export function functionalComponent<TProps>(opts: TsxFunctionalComponentOptions<TProps>): TsxComponent<Vue, TProps>;
 
 export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(opts: ComponentOptions<Vue>): TsxComponent<Vue, TProps, TEvents, TScopedSlots> {
     return Vue.extend(opts as any) as any;
