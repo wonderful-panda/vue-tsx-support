@@ -1,10 +1,18 @@
 ///<reference path="../types/base.d.ts" />
-import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
+import Vue, { ComponentOptions, FunctionalComponentOptions, CreateElement, VNode, RenderContext } from "vue";
 
 export type VueClass<T> = {
     new (...args: any[]): T;
     prototype: T;
 } & typeof Vue;
+
+export declare interface TSXRenderContext<Props> extends RenderContext {
+   props: Props;
+}
+    
+export declare type TsxFunctionalComponentOptions<Props> =
+    FunctionalComponentOptions<Props> &
+    { render(this: undefined, createElement: CreateElement, context: TSXRenderContext<Props>): VNode };
 
 export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> = VueTsx.TsxComponentAttrs<TProps, TEvents, TScopedSlots>;
 
@@ -20,7 +28,9 @@ export class Component<TProps, TEvents = {}, TScopedSlots = {}> extends Vue {
 /**
  * Create component from component options (Compatible with Vue.extend)
  */
-export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(opts: ComponentOptions<Vue> | FunctionalComponentOptions): TsxComponent<Vue, TProps, TEvents, TScopedSlots> {
+export declare function functionalComponent<TProps>(opts: TsxFunctionalComponentOptions<TProps>): TsxComponent<Vue, TProps>;
+
+export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(opts: ComponentOptions<Vue>): TsxComponent<Vue, TProps, TEvents, TScopedSlots> {
     return Vue.extend(opts as any) as any;
 }
 
