@@ -1,5 +1,7 @@
 ///<reference path="../types/base.d.ts" />
 import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
+import { ExtendedVue, CombinedVueInstance, VueConstructor } from "vue/types/vue";
+import { RecordPropsDefinition, ThisTypedComponentOptionsWithRecordProps } from "vue/types/options";
 
 export type VueClass<T> = {
     new (...args: any[]): T;
@@ -8,9 +10,11 @@ export type VueClass<T> = {
 
 export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> = VueTsx.TsxComponentAttrs<TProps, TEvents, TScopedSlots>;
 
-export type TsxComponent<V extends Vue, TProps = {}, TEvents = {}, TScopedSlots = {}> = VueClass<V & {
-    _tsxattrs: TsxComponentAttrs<TProps, TEvents, TScopedSlots>
-}>;
+export type TsxComponentInstance<Props, EventsWithOn, ScopedSlotArgs> = {
+    _tsxattrs: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs>,
+}
+
+export type TsxComponent<V extends Vue, TProps = {}, TEvents = {}, TScopedSlots = {}> = VueClass<V & TsxComponentInstance<TProps, TEvents, TScopedSlots>>;
 
 export class Component<TProps, TEvents = {}, TScopedSlots = {}> extends Vue {
     _tsxattrs: TsxComponentAttrs<TProps, TEvents, TScopedSlots>;
@@ -48,7 +52,6 @@ export function ofType<TProps, TEvents = {}, TScopedSlots = {}>(): Factory<TProp
     return factoryImpl;
 }
 
-
 export function withNativeOn<V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<V, P, E & VueTsxDOM.EventsNativeOn, S>;
 export function withNativeOn<P, E, S, C extends Component<P, E, S>>(componentType: VueClass<C & Component<P, E, S>>): TsxComponent<C, P, E & VueTsxDOM.EventsNativeOn, S>;
 export function withNativeOn(componentType: any): any {
@@ -66,4 +69,51 @@ export function withUnknownProps<P, E, S, C extends Component<P, E, S>>(componen
 export function withUnknownProps(componentType: any): any {
     return componentType;
 }
+
+/**
+ * Experimental support for new typings introduced from Vue 2.5
+ * Depending on some private types of vue, which may be changed by upgrade :(
+ */
+
+export type PropsForOutside<PropsForInside, RequiredPropNames extends keyof PropsForInside> =
+    { [K in RequiredPropNames]: PropsForInside[K] } & Partial<PropsForInside>;
+
+export interface ComponentFactory<EventsWithOn, ScopedSlotArgs, AdditionalThisAttrs> {
+    create<Props, V extends Vue = Vue>(
+        definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>
+    ): ExtendedVue<TsxComponentInstance<Partial<Props>, EventsWithOn, ScopedSlotArgs> & Vue, {}, {}, {}, Props>;
+
+    create<Props, RequiredPropNames extends keyof Props = never, V extends Vue = Vue>(
+        definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>,
+        requiredPropsNames?: RequiredPropNames[]
+    ): ExtendedVue<TsxComponentInstance<PropsForOutside<Props, RequiredPropNames>, EventsWithOn, ScopedSlotArgs> & Vue, {}, {}, {}, Props>;
+
+    create<Data, Methods, Computed, Props, V extends Vue = Vue>(
+        options: ThisTypedComponentOptionsWithRecordProps<V & AdditionalThisAttrs & Vue, Data, Methods, Computed, Props>,
+        base?: V
+    ): ExtendedVue<TsxComponentInstance<Partial<Props>, EventsWithOn, ScopedSlotArgs> & Vue, Data, Methods, Computed, Props>;
+
+    create<Data, Methods, Computed, Props, RequiredPropNames extends keyof Props = never, V extends Vue = Vue>(
+        options: ThisTypedComponentOptionsWithRecordProps<V & AdditionalThisAttrs & Vue, Data, Methods, Computed, Props>,
+        requiredPropsNames?: RequiredPropNames[],
+        base?: V
+    ): ExtendedVue<TsxComponentInstance<PropsForOutside<Props, RequiredPropNames>, EventsWithOn, ScopedSlotArgs> & Vue, Data, Methods, Computed, Props>;
+}
+
+export const componentFactory: ComponentFactory<{}, {}, {}> = {
+    create(arg: any, _requiredPropsName?: string[], base?: typeof Vue): any {
+        return (base || Vue).extend(arg);
+    }
+}
+
+export function componentFactoryOf<EventsWithOn = {}, ScopedSlotArgs = {}>()
+    : ComponentFactory<EventsWithOn, ScopedSlotArgs, { $scopedSlots: VueTsx.ScopedSlots<ScopedSlotArgs> }> {
+    return componentFactory as any;
+}
+
+/**
+ * Shorthand of `componentFactory.create`
+ */
+export const component = componentFactory.create;
+
 
