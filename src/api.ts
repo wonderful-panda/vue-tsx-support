@@ -26,7 +26,7 @@ export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(opts: C
 
 export interface Factory<TProps, TEvents, TScopedSlots> {
     convert<V extends Vue>(componentType: VueClass<V>): TsxComponent<V, TProps, TEvents, TScopedSlots>;
-    extend: {
+    extendFrom: {
         <V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<V, P & TProps, E & TEvents, S & TScopedSlots>;
         <P, E, S, C extends Component<P, E, S>>(componentType: VueClass<C & Component<P, E, S>>): TsxComponent<C, P & TProps, E & TEvents, S & TScopedSlots>;
     }
@@ -34,7 +34,7 @@ export interface Factory<TProps, TEvents, TScopedSlots> {
 
 const factoryImpl = {
     convert: (c: any) => c,
-    extend: (c: any) => c
+    extendFrom: (c: any) => c
 };
 
 /**

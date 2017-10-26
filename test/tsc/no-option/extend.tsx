@@ -35,7 +35,7 @@ function by_createComponent() {
     <Base foo="foo" onErr={ noop } />;   //// TS2339: Property 'onErr' does not exist
 
     /* add more attributes */
-    const Extend = vuetsx.ofType<Props2, Events2>().extend(Base);
+    const Extend = vuetsx.ofType<Props2, Events2>().extendFrom(Base);
     // OK
     <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
     // NG
@@ -57,7 +57,7 @@ function by_convert() {
     const Base = vuetsx.ofType<Props, Events>().convert(Vue.extend({}));
 
     /* add more attributes */
-    const Extend = vuetsx.ofType<Props2, Events2>().extend(Base);
+    const Extend = vuetsx.ofType<Props2, Events2>().extendFrom(Base);
     // OK
     <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
     // NG
@@ -83,7 +83,7 @@ function by_class() {
     }
 
     /* add more attributes */
-    const Extend = vuetsx.ofType<Props2, Events2>().extend(Base);
+    const Extend = vuetsx.ofType<Props2, Events2>().extendFrom(Base);
     // OK
     <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
     // NG
