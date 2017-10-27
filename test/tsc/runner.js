@@ -6,12 +6,14 @@ const projects = glob.sync(path.join(__dirname, "**/tsconfig.json"));
 const errors = [];
 projects.forEach(p => {
     const tester = Tester.fromConfigFile(p);
+    let failed = false;
     tester.testAll((fileName, failures) => {
         if (failures.length > 0) {
             errors.push([fileName, formatFailureMessage(...failures)]);
+            failed = true;
         }
     });
-    if (errors.length > 0) {
+    if (failed) {
         console.info("NG:", p);
     }
     else {

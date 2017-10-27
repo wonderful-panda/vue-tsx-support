@@ -1,22 +1,8 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "target": "es5",
-    "jsx": "preserve",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noEmit": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "paths": {
-      "vue-tsx-support": ["../../.."],
-      "vue-tsx-support/*": ["../../../*"]
-    },
-    "include": [
-      "*.tsx"
-    ]
-  }
+  "extends": "../base",
+  "include": [
+    "*.tsx",
+    "../../../enable-check.d.ts",
+    "../../../options/enable-nativeon.d.ts"
+  ]
 }

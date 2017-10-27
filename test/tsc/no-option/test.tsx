@@ -1,4 +1,3 @@
-import "vue-tsx-support/enable-check";
 import * as vuetsx from "vue-tsx-support";
 import component from "vue-class-component";
 import Vue from "vue";
@@ -175,6 +174,5 @@ function vueClassComponent() {
     <MyComponent2 a="foo" />;
     // NG
     <MyComponent2 a="foo" scopedSlots={{ default: p => p.xxx }} />;   //// TS2339: 'xxx' does not exist
-
 }
 

@@ -1,6 +1,4 @@
-import "vue-tsx-support/enable-check";
 import * as vuetsx from "vue-tsx-support";
-import "vue-tsx-support/options/enable-html-attrs";
 import Vue from "vue";
 
 const noop = () => {};
