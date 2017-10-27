@@ -4,6 +4,8 @@
 TSX (JSX for TypeScript) support library for Vue
 
 ## Caution: BREAKING CHANGE
+v0.5.0:
+    Rename `extend` to `extendFrom` (undocumented api)
 v0.4.0:
     The way to enable compiler check has changed. See [Install and enable](#Install-and-enable)
 
