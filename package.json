@@ -7,6 +7,7 @@
   "scripts": {
     "build": "webpack",
     "watch": "webpack -w",
+    "lint:fix": "prettier --write \"{src,options}/**/*.ts\"",
     "test": "node test/tsc/runner.js"
   },
   "repository": {
@@ -28,15 +29,20 @@
   "devDependencies": {
     "glob": "^7.1.2",
     "npm-run-all": "^4.0.2",
+    "prettier": "^1.7.4",
     "ts-loader": "^2.3.7",
     "tsc-test": "^0.1.5",
     "typescript": "^2.4.2",
-    "vue": "^2.3.0",
-    "vue-class-component": "^5.0.2",
+    "vue": "^2.5.2",
+    "vue-class-component": "^6.0.0",
     "vue-router": "^2.5.0",
     "webpack": "^3.6.0"
   },
   "peerDependencies": {
     "vue": "^2.3.0"
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "printWidth": 100
   }
 }
