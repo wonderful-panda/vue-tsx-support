@@ -3,15 +3,47 @@
 # vue-tsx-support
 TSX (JSX for TypeScript) support library for Vue
 
-## Caution: BREAKING CHANGE
-v1.0.0:
-- Support Vue >= 2.5 only.
-- `createComponent` is deprecated. use [componentFactory](#componentfactory) or [component](#component) instead.
+## Table of contents
 
-v0.5.0:
-- Rename `extend` to `extendFrom` (undocumented api)
-v0.4.0:
-- The way to enable compiler check has changed. See [Install and enable](#Install-and-enable)
+<!-- toc -->
+
+- [Caution: BREAKING CHANGE](#caution-breaking-change)
+- [Install and enable](#install-and-enable)
+- [Using intrinsic elements](#using-intrinsic-elements)
+- [Using custom component](#using-custom-component)
+  * [available APIs to add type information](#available-apis-to-add-type-information)
+    + [componentFactory](#componentfactory)
+      - [Usage](#usage)
+    + [component](#component)
+    + [componentFactoryOf](#componentfactoryof)
+      - [Usage](#usage-1)
+    + [Component](#component)
+      - [Usage](#usage-2)
+    + [ofType](#oftype)
+      - [Usage](#usage-3)
+  * [Other attributes](#other-attributes)
+    + [Native event listeners and dom properties](#native-event-listeners-and-dom-properties)
+    + [HTML attributes attached to the root element](#html-attributes-attached-to-the-root-element)
+- [Options](#options)
+  * [allow-element-unknown-attrs](#allow-element-unknown-attrs)
+  * [allow-unknown-props](#allow-unknown-props)
+  * [enable-html-attrs](#enable-html-attrs)
+  * [enable-nativeon](#enable-nativeon)
+  * [enable-vue-router](#enable-vue-router)
+- [LICENSE](#license)
+
+<!-- tocstop -->
+
+## Caution: BREAKING CHANGE
+- v1.0.0
+  - Support Vue >= 2.5 only.
+  - `createComponent` is deprecated. use [componentFactory](#componentfactory) or [component](#component) instead.
+
+- v0.5.0:
+  - Rename `extend` to `extendFrom` (undocumented api)
+
+- v0.4.0:
+  - The way to enable compiler check has changed. See [Install and enable](#Install-and-enable)
 
 ## Install and enable
 

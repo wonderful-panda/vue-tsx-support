@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
+    "update-readme": "markdown-toc -i README.md",
     "build": "webpack",
     "watch": "webpack -w",
     "lint:fix": "prettier --write \"{src,options}/**/*.ts\"",
@@ -28,6 +29,7 @@
   "homepage": "https://github.com/wonderful-panda/vue-tsx-support#readme",
   "devDependencies": {
     "glob": "^7.1.2",
+    "markdown-toc": "^1.2.0",
     "npm-run-all": "^4.0.2",
     "prettier": "^1.7.4",
     "ts-loader": "^2.3.7",
