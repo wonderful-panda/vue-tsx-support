@@ -4,10 +4,14 @@
 TSX (JSX for TypeScript) support library for Vue
 
 ## Caution: BREAKING CHANGE
+v1.0.0:
+- Support Vue >= 2.5 only.
+- `createComponent` is deprecated. use [componentFactory](#componentFactory) or [component](#component) instead.
+
 v0.5.0:
-    Rename `extend` to `extendFrom` (undocumented api)
+- Rename `extend` to `extendFrom` (undocumented api)
 v0.4.0:
-    The way to enable compiler check has changed. See [Install and enable](#Install-and-enable)
+- The way to enable compiler check has changed. See [Install and enable](#Install-and-enable)
 
 ## Install and enable
 
@@ -17,10 +21,26 @@ Install from npm:
 npm install vue-tsx-support -S
 ```
 
-And import `vue-tsx-support/enable-check.d.ts` somewhere to enable compiler check. (**CHANGED since v0.4.0**)
+And refer `vue-tsx-support/enable-check.d.ts` from somewhere to enable compiler check. (**CHANGED since v0.4.0**)
 
 ```typescript
+///<reference path="node_modules/vue-tsx-support/enable-check.d.ts" />
+// or
 import "vue-tsx-support/enable-check"
+```
+
+or in `tsconfig.json`
+
+```json
+{
+  compilerOptions: {
+    ...
+  },
+  include: [
+    ...,
+    "node_modules/vue-tsx-support/enable-check.d.ts"
+  ]
+}
 ```
 
 ## Using intrinsic elements
@@ -75,106 +95,270 @@ Below code will cause compilation error because compiler does not know
 <MyComponent text="foo" />;
 ```
 
-You must add types to the component, or enable `allow-unknown-props` option.
+You must add types to the component by apis memtions below, or enable `allow-unknown-props` option.
 
-### Adding types of the props
+### available APIs to add type information
 
-There are sevarel ways to add types to the component.
+#### componentFactory
 
-If you write your component with `Vue.extend`,
-use `vue-tsx-support.createComponent` instead :
+Create tsx-supported component from component options. (Partially compatible with `Vue.extend`)
 
-```typescript
-import * as vuetsx from "vue-tsx-support";
+##### Usage
 
-// define interface which represents props of component.
-interface MyComponentProps {
-    text: string;       // required prop
-    important?: string; // optional prop
-}
-
-const MyComponent = vuetsx.createComponent<MyComponentProps>({
+```jsx
+import * as tsx from "vue-tsx-support";
+const MyComponent = tsx.componentFactory.create({
     props: {
         text: { type: String, required: true },
         important: Boolean,
     },
-    /* ... */
+    computed: {
+        className(): string {
+            return this.important ? "label-important" : "label-normal";
+        }
+    },
+    methods: {
+        onClick(event) { this.$emit("ok", event); }
+    },
+    render(): VNode {
+        return <span class={this.className} onClick={this.onClick}>{this.text}</span>;
+    }
 });
 ```
 
+`componentFactory.create` can infer types of props from component options same as `Vue.extend`.
+In the above example, props type will be `{ text?: string, important?: boolean }`.
+
+NOTE: all props are regarded as optional even if `required: true` specified.
+
+```jsx
+// both `text` and `important` are regarded as optional
+// So below 3 cases are all valid.
+<MyComponent />;
+<MyComponent text="foo" />;
+<MyComponent important={true} />;
+```
+
+If you want to make some props required, you must specify required prop names as second parameter.
+
+```typescript
+import * as tsx from "vue-tsx-support";
+const MyComponent = tsx.componentFactory.create({
+    props: {
+        text: { type: String, required: true },
+        important: Boolean,
+    },
+    /* snip */
+}, ["text"]);
+```
+
+In the above example, props type will be `{ text: string, important?: boolean }`.
+
+```jsx
+// NG: `text` is required
+<MyComponent />;
+// OK: `important` is optional
+<MyComponent text="foo" />;
+// OK
+<MyComponent text="foo" important={true} />;
+```
+
+NOTE: shorthand props definition(like `props: ["foo", "bar"]`) is currently not supported.
+
+```typescript
+// Does not work
+import * as tsx from "vue-tsx-support";
+const MyComponent = tsx.componentFactory.create({
+    props: ["text", "important"],
+    /* snip */
+}, ["text"]);
+```
+
+#### component
+Shorthand of `componentFactory.create`
+
+```typescript
+import * as tsx from "vue-tsx-support";
+const MyComponent = tsx.component({
+    props: {
+        text: { type: String, required: true },
+        important: Boolean,
+    },
+    /* snip */
+});
+```
+
+#### componentFactoryOf
+Return componentFactory with additional types (events and scoped slots)
+
+##### Usage
+If your component has custom events, you may want to specify event listener.
+But below example does not work.
+
+```jsx
+import * as tsx from "vue-tsx-support";
+
+const MyComponent = tsx.component({
+    render(): VNode {
+        return <button onClick={this.$emit("ok")}>OK</button>;
+    }
+});
+
+// Compilation error: 'onOK' is not a property of MyComponent
+<MyComponent onOk={() => console.log("ok")} />;
+```
+
+In such situations, you must specify event types by `componentFactoryOf`
+
+```typescript
+import * as tsx from "vue-tsx-support";
+
+interface Events {
+    // all memebers must be prefixed by 'on'
+    onOk: void;
+    onError: { code: number, detail: string };
+}
+
+const MyComponent = tsx.componentFactoryOf<Events>().create({
+    render(): VNode {
+        return (
+            <div>
+              <button onClick={() => this.$emit("ok")}>OK</button>
+              <button onClick={() => this.$emit("error", { code: 9, detail: "unknown" })}>Raise Error</button>
+            </div>
+        );
+    }
+});
+
+// OK
+<MyComponent onOk={() => console.log("ok")} />;
+<MyComponent onError={p => console.log("ng", p.code, p.detail)} />;
+```
+
+You can also specify types of scoped slots if your component uses it.
+
+```typescript
+import * as tsx from "vue-tsx-support";
+
+interface ScopedSlots {
+    default: { text: string };
+}
+
+const MyComponent = tsx.componentFactoryOf<{}, ScopedSlots>().create({
+    props: {
+        text: String
+    },
+    render(): VNode {
+        // type of `$scopedSlots` is checked statically
+        return <div>
+                 { this.$scopedSlots.default({ text: this.text || "default text" }) }
+               </div>;
+    }
+});
+
+// type of `scopedSlots` is checked statically, too
+<MyComponent scopedSlots={{
+        default: p => [<span>p.text</span>]
+    }}
+/>;
+
+// NG: 'default' is missing in scopedSlots
+<MyComponent scopedSlots={{
+        defualt: p => [<span>p.text</span>]
+    }}
+/>;
+```
+
+#### Component
+Base class of class base component
+
+##### Usage
+
 If you write your component with `vue-class-component`,
-extend your component from `vue-tsx-support.Component` :
+you can it tsx-supported by extending from this class.
 
 ```typescript
 import component from "vue-class-component";
-import * as vuetsx from "vue-tsx-support";
+import * as tsx from "vue-tsx-support";
 
-interface MyComponentProps { /* ... */ }
+interface MyComponentProps {
+    text: string;
+    important?: boolean;
+}
 
-@component({ /* ... */ })
-class MyComponent extends vuetsx.Component<MyComponentProps> {
-    /* ... */
+@component({
+    props: {
+        text: { type: String, required: true },
+        important: Boolean
+    },
+    /* snip */
+})
+class MyComponent extends tsx.Component<MyComponentProps> {
+    /* snip */
 }
 ```
 
-If you can't modify original component definition, wrap it by `ofType` and `convert`:
+Unfortunately, you must write props interface and props definition separately.
+
+If you want, you can specify event types and scoped slot types as 2nd and 3rd type parameter
+
+```typescript
+import component from "vue-class-component";
+import * as tsx from "vue-tsx-support";
+
+interface MyComponentProps {
+    text: string;
+    important?: boolean;
+}
+
+interface Events {
+    onOk: void;
+    onError: { code: number, detail: string };
+}
+
+interface ScopedSlots {
+    default: { text: string };
+}
+
+
+@component({
+    props: {
+        text: { type: String, required: true },
+        important: Boolean
+    },
+    /* snip */
+})
+class MyComponent extends tsx.Component<MyComponentProps, Events, ScopedSlots> {
+    /* snip */
+}
+```
+
+#### ofType
+
+Make existing component tsx-supported.
+
+##### Usage
+
+If you can't modify existing component definition, wrap it by `ofType` and `convert`
 
 ```typescript
 import ThirdPartyComponent from "third-party-library";
-import * as vuetsx from "vue-tsx-support";
+import * as tsx from "vue-tsx-support";
 
 interface MyComponentProps { /* ... */ }
 
-const MyComponent = vuetsx.ofType<MyComponentProps>().convert(ThirdPartyComponent);
+const MyComponent = tsx.ofType<MyComponentProps>().convert(ThirdPartyComponent);
 ```
 
-Now, compiler knows about props of `MyComponent`, and can check them statically.
-
-```jsx
-// OK
-<MyComponent text="foo" />;
-// OK
-<MyComponent text="foo" important />;
-// OK: some attributes(e.g. 'ref', 'class', 'key') are defined by default
-<MyComponent text="foo" ref="mycomponent" class="my-class" />;
-
-// NG: because required prop `text` is not specified
-<MyComponent />;
-// NG: because type of `text` is not string
-<MyComponent text={ 1 } />;
-// NG: because `normal` is not a prop of MyComponent
-<MyComponent text="foo" normal={ true } />;
-```
-
-### Adding types of custom events
-
-Now, compiler knows about props of `MyComponent`, but this is not enough yet.
-
-`MyComponent` has custom event `ok`, and sometimes we must specify event listener like below.
-But this code can't be compiled.
-
-```jsx
-// NG: because `onOk` is not a prop of MyComponent
-<MyComponent text="foo" onOk={ e => console.log(e) } />;
-```
-
-If the component has custom events, you can specify event types as second type parameter,
-and above code will become compilable.
+Of course you can specify event types and scoped slot types if you want.
 
 ```typescript
-// define interface which represents component event types
-interface MyComponentEvents {
-    onOk: Event;    // key: event name prefixed by `on`, value: argument type
-}
-
-const MyComponent = vuetsx.createComponent<MyComponentProps, MyComponentEvents>({
-    /* ... */
-});
-
-// `vuetsx.Compnent` and `vuetsx.ofType` also accept second type parameter
+const MyComponent = tsx.ofType<MyComponentProps, Events, ScopedSlots>().convert(ThirdPartyComponent);
 ```
 
-## Native event listeners and dom properties
+### Other attributes
+
+#### Native event listeners and dom properties
 
 Sometimes you may want to specify native event listener or dom property to the component like below.
 But unfortunately, `vue-tsx-support` does not support this.
@@ -206,7 +390,7 @@ Or use JSX-spread style.
 
 For native events, there is an another solution. See `enable-nativeon` option.
 
-## HTML attributes attached to the root element
+#### HTML attributes attached to the root element
 
 And sometimes, you may want to specify HTML attributes to the component like below.
 But unfortunately, `vue-tsx-support` does not support this, too.
@@ -283,7 +467,6 @@ const MyComponent = vuetsx.createComponent<{ foo: string }>({ /* ... */ });
 ### enable-vue-router
 
 Add definitions of `router-link` and `router-view`
-
 
 
 ## LICENSE
