@@ -6,7 +6,7 @@ TSX (JSX for TypeScript) support library for Vue
 ## Caution: BREAKING CHANGE
 v1.0.0:
 - Support Vue >= 2.5 only.
-- `createComponent` is deprecated. use [componentFactory](#componentFactory) or [component](#component) instead.
+- `createComponent` is deprecated. use [componentFactory](#componentfactory) or [component](#component) instead.
 
 v0.5.0:
 - Rename `extend` to `extendFrom` (undocumented api)
@@ -33,12 +33,12 @@ or in `tsconfig.json`
 
 ```json
 {
-  compilerOptions: {
-    ...
+  "compilerOptions": {
+    "...snip...": "...snip..."
   },
-  include: [
-    ...,
-    "node_modules/vue-tsx-support/enable-check.d.ts"
+  "include": [
+    "node_modules/vue-tsx-support/enable-check.d.ts",
+    "...snip..."
   ]
 }
 ```
