@@ -2,17 +2,33 @@ export type EventFilter = (event: Event) => boolean;
 export type EventHandler<E extends Event> = (event: E) => void;
 
 export type ModifierName =
-    "esc" | "tab" | "enter" | "space" | "up" | "down" | "del" | "left" | "right" | "middle" |
-    "ctrl" | "shift" | "alt" | "meta" | "noctrl" | "noshift" | "noalt" | "nometa" |
-    "prevent" | "stop" | "self";
+    | "esc"
+    | "tab"
+    | "enter"
+    | "space"
+    | "up"
+    | "down"
+    | "del"
+    | "left"
+    | "right"
+    | "middle"
+    | "ctrl"
+    | "shift"
+    | "alt"
+    | "meta"
+    | "noctrl"
+    | "noshift"
+    | "noalt"
+    | "nometa"
+    | "prevent"
+    | "stop"
+    | "self";
 
-export type Modifiers = {
-    [K in ModifierName]: Modifier;
-}
+export type Modifiers = { [K in ModifierName]: Modifier };
 
 export interface Modifier extends Modifiers {
     <E extends Event>(handler: EventHandler<E>): EventHandler<E>;
-    (event: Event): void;       // Modifier itself can behave as EventHandler
+    (event: Event): void; // Modifier itself can behave as EventHandler
 }
 
 function handleEvent(event: Event, filters: EventFilter[], handler?: EventHandler<Event>) {
@@ -26,7 +42,12 @@ function handleEvent(event: Event, filters: EventFilter[], handler?: EventHandle
     }
 }
 
-function defineChildModifier(target: Function, currentFilters: EventFilter[], name: ModifierName, filter: EventFilter) {
+function defineChildModifier(
+    target: Function,
+    currentFilters: EventFilter[],
+    name: ModifierName,
+    filter: EventFilter
+) {
     Object.defineProperty(target, name, {
         get: function() {
             // call this getter at most once.
@@ -48,8 +69,7 @@ function createModifier(filters: EventFilter[]): Modifier {
         if (arg instanceof Function) {
             // EventHandler => EventHandler
             return (event: Event) => handleEvent(event, filters, arg);
-        }
-        else {
+        } else {
             // Event => void
             handleEvent(arg, filters);
             return;
@@ -85,8 +105,25 @@ function createModifier(filters: EventFilter[]): Modifier {
 
 const root = createModifier([]);
 export const {
-    esc, tab, enter, space, up, down, del, left, right, middle,
-    ctrl, shift, alt, meta, noctrl, noshift, noalt, nometa,
-    stop, prevent, self
+    esc,
+    tab,
+    enter,
+    space,
+    up,
+    down,
+    del,
+    left,
+    right,
+    middle,
+    ctrl,
+    shift,
+    alt,
+    meta,
+    noctrl,
+    noshift,
+    noalt,
+    nometa,
+    stop,
+    prevent,
+    self
 } = root;
-

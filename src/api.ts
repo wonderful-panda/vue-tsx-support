@@ -9,13 +9,19 @@ export type VueClass<T> = {
     prototype: T;
 } & typeof Vue;
 
-export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> = base.TsxComponentAttrs<TProps, TEvents, TScopedSlots>;
+export type TsxComponentAttrs<
+    TProps = {},
+    TEvents = {},
+    TScopedSlots = {}
+> = base.TsxComponentAttrs<TProps, TEvents, TScopedSlots>;
 
 export type TsxComponentInstance<Props, EventsWithOn, ScopedSlotArgs> = {
-    _tsxattrs: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs>,
-}
+    _tsxattrs: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs>;
+};
 
-export type TsxComponent<V extends Vue, TProps = {}, TEvents = {}, TScopedSlots = {}> = VueClass<V & TsxComponentInstance<TProps, TEvents, TScopedSlots>>;
+export type TsxComponent<V extends Vue, TProps = {}, TEvents = {}, TScopedSlots = {}> = VueClass<
+    V & TsxComponentInstance<TProps, TEvents, TScopedSlots>
+>;
 
 export class Component<TProps, TEvents = {}, TScopedSlots = {}> extends Vue {
     _tsxattrs: TsxComponentAttrs<TProps, TEvents, TScopedSlots>;
@@ -25,16 +31,27 @@ export class Component<TProps, TEvents = {}, TScopedSlots = {}> extends Vue {
 /**
  * Create component from component options (Compatible with Vue.extend)
  */
-export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(opts: ComponentOptions<Vue> | FunctionalComponentOptions): TsxComponent<Vue, TProps, TEvents, TScopedSlots> {
+export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(
+    opts: ComponentOptions<Vue> | FunctionalComponentOptions
+): TsxComponent<Vue, TProps, TEvents, TScopedSlots> {
     return Vue.extend(opts as any) as any;
 }
 
 export interface Factory<TProps, TEvents, TScopedSlots> {
-    convert<V extends Vue>(componentType: VueClass<V>): TsxComponent<V, TProps, TEvents, TScopedSlots>;
+    convert<V extends Vue>(
+        componentType: VueClass<V>
+    ): TsxComponent<V, TProps, TEvents, TScopedSlots>;
     extendFrom: {
-        <V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<V, P & TProps, E & TEvents, S & TScopedSlots>;
-        <P, E, S, C extends Component<P, E, S>>(componentType: VueClass<C & Component<P, E, S>>): TsxComponent<C, P & TProps, E & TEvents, S & TScopedSlots>;
-    }
+        <V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<
+            V,
+            P & TProps,
+            E & TEvents,
+            S & TScopedSlots
+        >;
+        <P, E, S, C extends Component<P, E, S>>(
+            componentType: VueClass<C & Component<P, E, S>>
+        ): TsxComponent<C, P & TProps, E & TEvents, S & TScopedSlots>;
+    };
 }
 
 const factoryImpl = {
@@ -49,24 +66,40 @@ const factoryImpl = {
  *  // Get TSX-supported component with props(`name`, `value`) and event(`onInput`)
  *  const NewComponent = tsx.ofType<{ name: string, value: string }, { onInput: string }>.convert(Component);
  */
-export function ofType<TProps, TEvents = {}, TScopedSlots = {}>(): Factory<TProps, TEvents, TScopedSlots> {
+export function ofType<TProps, TEvents = {}, TScopedSlots = {}>(): Factory<
+    TProps,
+    TEvents,
+    TScopedSlots
+> {
     return factoryImpl;
 }
 
-export function withNativeOn<V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<V, P, E & dom.EventsNativeOn, S>;
-export function withNativeOn<P, E, S, C extends Component<P, E, S>>(componentType: VueClass<C & Component<P, E, S>>): TsxComponent<C, P, E & dom.EventsNativeOn, S>;
+export function withNativeOn<V extends Vue, P, E, S>(
+    componentType: TsxComponent<V, P, E, S>
+): TsxComponent<V, P, E & dom.EventsNativeOn, S>;
+export function withNativeOn<P, E, S, C extends Component<P, E, S>>(
+    componentType: VueClass<C & Component<P, E, S>>
+): TsxComponent<C, P, E & dom.EventsNativeOn, S>;
 export function withNativeOn(componentType: any): any {
     return componentType;
 }
 
-export function withHtmlAttrs<V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<V, P & dom.AllHTMLAttributes, E, S>;
-export function withHtmlAttrs<P, E, S, C extends Component<P, E, S>>(componentType: VueClass<C & Component<P, E, S>>): TsxComponent<C, P & dom.AllHTMLAttributes, E, S>;
+export function withHtmlAttrs<V extends Vue, P, E, S>(
+    componentType: TsxComponent<V, P, E, S>
+): TsxComponent<V, P & dom.AllHTMLAttributes, E, S>;
+export function withHtmlAttrs<P, E, S, C extends Component<P, E, S>>(
+    componentType: VueClass<C & Component<P, E, S>>
+): TsxComponent<C, P & dom.AllHTMLAttributes, E, S>;
 export function withHtmlAttrs(componentType: any): any {
     return componentType;
 }
 
-export function withUnknownProps<V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<V, P & { [key: string]: any }, E, S>;
-export function withUnknownProps<P, E, S, C extends Component<P, E, S>>(componentType: VueClass<C & Component<P, E, S>>): TsxComponent<C, P & { [key: string]: any }, E, S>;
+export function withUnknownProps<V extends Vue, P, E, S>(
+    componentType: TsxComponent<V, P, E, S>
+): TsxComponent<V, P & { [key: string]: any }, E, S>;
+export function withUnknownProps<P, E, S, C extends Component<P, E, S>>(
+    componentType: VueClass<C & Component<P, E, S>>
+): TsxComponent<C, P & { [key: string]: any }, E, S>;
 export function withUnknownProps(componentType: any): any {
     return componentType;
 }
@@ -76,39 +109,97 @@ export function withUnknownProps(componentType: any): any {
  * Depending on some private types of vue, which may be changed by upgrade :(
  */
 
-export type PropsForOutside<PropsForInside, RequiredPropNames extends keyof PropsForInside> =
-    { [K in RequiredPropNames]: PropsForInside[K] } & Partial<PropsForInside>;
+export type PropsForOutside<PropsForInside, RequiredPropNames extends keyof PropsForInside> = {
+    [K in RequiredPropNames]: PropsForInside[K]
+} &
+    Partial<PropsForInside>;
 
 export interface ComponentFactory<EventsWithOn, ScopedSlotArgs, AdditionalThisAttrs> {
     create<Props, V extends Vue = Vue>(
         definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>
-    ): ExtendedVue<TsxComponentInstance<Partial<Props>, EventsWithOn, ScopedSlotArgs> & Vue, {}, {}, {}, Props>;
+    ): ExtendedVue<
+        TsxComponentInstance<Partial<Props>, EventsWithOn, ScopedSlotArgs> & Vue,
+        {},
+        {},
+        {},
+        Props
+    >;
 
     create<Props, RequiredPropNames extends keyof Props = never, V extends Vue = Vue>(
         definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>,
         requiredPropsNames?: RequiredPropNames[]
-    ): ExtendedVue<TsxComponentInstance<PropsForOutside<Props, RequiredPropNames>, EventsWithOn, ScopedSlotArgs> & Vue, {}, {}, {}, Props>;
+    ): ExtendedVue<
+        TsxComponentInstance<
+            PropsForOutside<Props, RequiredPropNames>,
+            EventsWithOn,
+            ScopedSlotArgs
+        > &
+            Vue,
+        {},
+        {},
+        {},
+        Props
+    >;
 
     create<Data, Methods, Computed, Props, V extends Vue = Vue>(
-        options: ThisTypedComponentOptionsWithRecordProps<V & AdditionalThisAttrs & Vue, Data, Methods, Computed, Props>,
+        options: ThisTypedComponentOptionsWithRecordProps<
+            V & AdditionalThisAttrs & Vue,
+            Data,
+            Methods,
+            Computed,
+            Props
+        >,
         base?: V
-    ): ExtendedVue<TsxComponentInstance<Partial<Props>, EventsWithOn, ScopedSlotArgs> & Vue, Data, Methods, Computed, Props>;
+    ): ExtendedVue<
+        TsxComponentInstance<Partial<Props>, EventsWithOn, ScopedSlotArgs> & Vue,
+        Data,
+        Methods,
+        Computed,
+        Props
+    >;
 
-    create<Data, Methods, Computed, Props, RequiredPropNames extends keyof Props = never, V extends Vue = Vue>(
-        options: ThisTypedComponentOptionsWithRecordProps<V & AdditionalThisAttrs & Vue, Data, Methods, Computed, Props>,
+    create<
+        Data,
+        Methods,
+        Computed,
+        Props,
+        RequiredPropNames extends keyof Props = never,
+        V extends Vue = Vue
+    >(
+        options: ThisTypedComponentOptionsWithRecordProps<
+            V & AdditionalThisAttrs & Vue,
+            Data,
+            Methods,
+            Computed,
+            Props
+        >,
         requiredPropsNames?: RequiredPropNames[],
         base?: V
-    ): ExtendedVue<TsxComponentInstance<PropsForOutside<Props, RequiredPropNames>, EventsWithOn, ScopedSlotArgs> & Vue, Data, Methods, Computed, Props>;
+    ): ExtendedVue<
+        TsxComponentInstance<
+            PropsForOutside<Props, RequiredPropNames>,
+            EventsWithOn,
+            ScopedSlotArgs
+        > &
+            Vue,
+        Data,
+        Methods,
+        Computed,
+        Props
+    >;
 }
 
 export const componentFactory: ComponentFactory<{}, {}, {}> = {
     create(arg: any, _requiredPropsName?: string[], base?: typeof Vue): any {
         return (base || Vue).extend(arg);
     }
-}
+};
 
-export function componentFactoryOf<EventsWithOn = {}, ScopedSlotArgs = {}>()
-    : ComponentFactory<EventsWithOn, ScopedSlotArgs, { $scopedSlots: base.ScopedSlots<ScopedSlotArgs> }> {
+export function componentFactoryOf<EventsWithOn = {}, ScopedSlotArgs = {}>(): ComponentFactory<
+    EventsWithOn,
+    ScopedSlotArgs,
+    { $scopedSlots: base.ScopedSlots<ScopedSlotArgs> }
+> {
     return componentFactory as any;
 }
 
@@ -116,5 +207,3 @@ export function componentFactoryOf<EventsWithOn = {}, ScopedSlotArgs = {}>()
  * Shorthand of `componentFactory.create`
  */
 export const component = componentFactory.create;
-
-

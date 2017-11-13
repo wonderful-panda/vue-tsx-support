@@ -7,4 +7,3 @@ declare module "vue-tsx-support/options/allow-element-unknown-attrs" {
         }
     }
 }
-

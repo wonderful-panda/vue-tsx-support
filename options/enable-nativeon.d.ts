@@ -4,6 +4,5 @@ import { EventsNativeOn } from "../types/dom";
 import { EventHandlers } from "../types/base";
 
 declare module "vue-tsx-support/types/base" {
-    export interface ComponentAdditionalAttrs extends EventHandlers<EventsNativeOn> {
-    }
+    export interface ComponentAdditionalAttrs extends EventHandlers<EventsNativeOn> {}
 }
