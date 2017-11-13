@@ -1,0 +1,16 @@
+{
+  "extends": "../base",
+  "compilerOptions": {
+    "declaration": true
+  },
+  "include": [
+    "*.tsx",
+    "../../../enable-check.d.ts",
+    "../../../options/allow-element-unknown-attrs.d.ts",
+    "../../../options/allow-unknown-props.d.ts",
+    "../../../options/enable-html-attrs.d.ts",
+    "../../../options/enable-nativeon.d.ts",
+    "../../../options/enable-vue-router.d.ts"
+  ]
+}
+
