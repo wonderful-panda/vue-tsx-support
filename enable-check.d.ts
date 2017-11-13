@@ -1,21 +1,21 @@
-import "./types/base";
-import "./types/builtin-components";
+import * as base from "./types/base";
+import * as builtin from "./types/builtin-components";
 import "./types/vue";
 
 declare global {
     namespace JSX {
-        interface Element extends VueTsx.Element {}
-        interface ElementClass extends VueTsx.ElementClass {}
-        interface ElementAttributesProperty extends VueTsx.ElementAttributesProperty {}
+        interface Element extends base.Element {}
+        interface ElementClass extends base.ElementClass {}
+        interface ElementAttributesProperty extends base.ElementAttributesProperty {}
 
-        interface IntrinsicElements extends VueTsx.IntrinsicElements {
+        interface IntrinsicElements extends base.IntrinsicElements {
             // allow unknown elements
             [name: string]: any;
 
             // builtin components
-            transition: VueTsx.TsxComponentAttrs<VueTsxBuiltin.TransitionProps>;
-            "transition-group": VueTsx.TsxComponentAttrs<VueTsxBuiltin.TransitionGroupProps>;
-            "keep-alive": VueTsx.TsxComponentAttrs<VueTsxBuiltin.KeepAliveProps>;
+            transition: base.TsxComponentAttrs<builtin.TransitionProps>;
+            "transition-group": base.TsxComponentAttrs<builtin.TransitionGroupProps>;
+            "keep-alive": base.TsxComponentAttrs<builtin.KeepAliveProps>;
         }
     }
 }

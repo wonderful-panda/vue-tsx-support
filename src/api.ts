@@ -1,14 +1,15 @@
-///<reference path="../types/base.d.ts" />
 import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 import { ExtendedVue, CombinedVueInstance, VueConstructor } from "vue/types/vue";
 import { RecordPropsDefinition, ThisTypedComponentOptionsWithRecordProps } from "vue/types/options";
+import * as base from "../types/base";
+import * as dom from "../types/dom";
 
 export type VueClass<T> = {
     new (...args: any[]): T;
     prototype: T;
 } & typeof Vue;
 
-export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> = VueTsx.TsxComponentAttrs<TProps, TEvents, TScopedSlots>;
+export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> = base.TsxComponentAttrs<TProps, TEvents, TScopedSlots>;
 
 export type TsxComponentInstance<Props, EventsWithOn, ScopedSlotArgs> = {
     _tsxattrs: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs>,
@@ -18,7 +19,7 @@ export type TsxComponent<V extends Vue, TProps = {}, TEvents = {}, TScopedSlots 
 
 export class Component<TProps, TEvents = {}, TScopedSlots = {}> extends Vue {
     _tsxattrs: TsxComponentAttrs<TProps, TEvents, TScopedSlots>;
-    $scopedSlots: VueTsx.ScopedSlots<TScopedSlots>;
+    $scopedSlots: base.ScopedSlots<TScopedSlots>;
 }
 
 /**
@@ -52,14 +53,14 @@ export function ofType<TProps, TEvents = {}, TScopedSlots = {}>(): Factory<TProp
     return factoryImpl;
 }
 
-export function withNativeOn<V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<V, P, E & VueTsxDOM.EventsNativeOn, S>;
-export function withNativeOn<P, E, S, C extends Component<P, E, S>>(componentType: VueClass<C & Component<P, E, S>>): TsxComponent<C, P, E & VueTsxDOM.EventsNativeOn, S>;
+export function withNativeOn<V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<V, P, E & dom.EventsNativeOn, S>;
+export function withNativeOn<P, E, S, C extends Component<P, E, S>>(componentType: VueClass<C & Component<P, E, S>>): TsxComponent<C, P, E & dom.EventsNativeOn, S>;
 export function withNativeOn(componentType: any): any {
     return componentType;
 }
 
-export function withHtmlAttrs<V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<V, P & VueTsxDOM.AllHTMLAttributes, E, S>;
-export function withHtmlAttrs<P, E, S, C extends Component<P, E, S>>(componentType: VueClass<C & Component<P, E, S>>): TsxComponent<C, P & VueTsxDOM.AllHTMLAttributes, E, S>;
+export function withHtmlAttrs<V extends Vue, P, E, S>(componentType: TsxComponent<V, P, E, S>): TsxComponent<V, P & dom.AllHTMLAttributes, E, S>;
+export function withHtmlAttrs<P, E, S, C extends Component<P, E, S>>(componentType: VueClass<C & Component<P, E, S>>): TsxComponent<C, P & dom.AllHTMLAttributes, E, S>;
 export function withHtmlAttrs(componentType: any): any {
     return componentType;
 }
@@ -107,7 +108,7 @@ export const componentFactory: ComponentFactory<{}, {}, {}> = {
 }
 
 export function componentFactoryOf<EventsWithOn = {}, ScopedSlotArgs = {}>()
-    : ComponentFactory<EventsWithOn, ScopedSlotArgs, { $scopedSlots: VueTsx.ScopedSlots<ScopedSlotArgs> }> {
+    : ComponentFactory<EventsWithOn, ScopedSlotArgs, { $scopedSlots: base.ScopedSlots<ScopedSlotArgs> }> {
     return componentFactory as any;
 }
 

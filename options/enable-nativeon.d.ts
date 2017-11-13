@@ -1,8 +1,9 @@
-///<reference path="../types/base.d.ts" />
-
 // Make enabled to specify native event listeners to the Vue component
 
-declare namespace VueTsx {
-    interface ComponentAdditionalAttrs extends VueTsx.EventHandlers<VueTsxDOM.EventsNativeOn> {
+import { EventsNativeOn } from "../types/dom";
+import { EventHandlers } from "../types/base";
+
+declare module "vue-tsx-support/types/base" {
+    export interface ComponentAdditionalAttrs extends EventHandlers<EventsNativeOn> {
     }
 }
