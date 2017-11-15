@@ -3,6 +3,9 @@
 import { EventsNativeOn } from "../types/dom";
 import { EventHandlers } from "../types/base";
 
-declare module "vue-tsx-support/types/base" {
-    export interface ComponentAdditionalAttrs extends EventHandlers<EventsNativeOn> {}
+// prettier-ignore
+declare global {
+    namespace VueTsx {
+        interface ComponentAdditionalAttrs extends EventHandlers<EventsNativeOn> {}
+    }
 }

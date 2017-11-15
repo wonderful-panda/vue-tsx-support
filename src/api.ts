@@ -2,8 +2,8 @@ import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 import { ExtendedVue, CombinedVueInstance, VueConstructor } from "vue/types/vue";
 import { RecordPropsDefinition, ThisTypedComponentOptionsWithRecordProps } from "vue/types/options";
 
-import { TsxComponentAttrs, ScopedSlots, ComponentAdditionalAttrs } from "../types/base";
-export { TsxComponentAttrs, ScopedSlots, ComponentAdditionalAttrs } from "../types/base";
+import { TsxComponentAttrs, ScopedSlots } from "../types/base";
+export { TsxComponentAttrs, ScopedSlots } from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 export { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 

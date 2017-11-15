@@ -1,6 +1,17 @@
 import * as dom from "./dom";
 import Vue, { VNode, VNodeData, VNodeChildrenArrayContents } from "vue";
 
+declare global {
+    namespace VueTsx {
+        export interface ComponentAdditionalAttrs {
+            // extension point.
+        }
+        export interface ElementAdditionalAttrs {
+            // extension point.
+        }
+    }
+}
+
 export type KnownAttrs = Pick<VNodeData, "class" | "staticClass" | "style" | "key" | "ref" | "slot" | "scopedSlots" > & {
     id?: string,
     refInFor?: boolean
@@ -10,13 +21,6 @@ export type ScopedSlots<T> = {
 } & {
     [name: string]: (props: any) => VNodeChildrenArrayContents | string;
 };
-
-export interface ComponentAdditionalAttrs {
-    // extension point.
-}
-export interface ElementAdditionalAttrs {
-    // extension point.
-}
 
 export type EventHandlers<E> = {
     [K in keyof E]?: (payload: E[K]) => void;
@@ -28,20 +32,20 @@ export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> = (
     KnownAttrs &
     { scopedSlots?: ScopedSlots<TScopedSlots> } &
     EventHandlers<TEvents> &
-    ComponentAdditionalAttrs
+    VueTsx.ComponentAdditionalAttrs
 ) | (
     TProps &
     KnownAttrs &
     { scopedSlots?: ScopedSlots<TScopedSlots> } &
     EventHandlers<TEvents> &
-    ComponentAdditionalAttrs
+    VueTsx.ComponentAdditionalAttrs
 );
 
 export type ElementAttrs<T> = (
     T &
     KnownAttrs &
     EventHandlers<dom.EventsOn> &
-    ElementAdditionalAttrs
+    VueTsx.ElementAdditionalAttrs
 );
 
 export interface Element extends VNode {

@@ -2,6 +2,9 @@
 
 import { AllHTMLAttributes } from "../types/dom";
 
-declare module "vue-tsx-support/types/base" {
-    export interface ComponentAdditionalAttrs extends AllHTMLAttributes {}
+// prettier-ignore
+declare global {
+    namespace VueTsx {
+        interface ComponentAdditionalAttrs extends AllHTMLAttributes {}
+    }
 }
