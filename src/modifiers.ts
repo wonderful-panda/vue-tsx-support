@@ -42,12 +42,7 @@ function handleEvent(event: Event, filters: EventFilter[], handler?: EventHandle
     }
 }
 
-function defineChildModifier(
-    target: Function,
-    currentFilters: EventFilter[],
-    name: ModifierName,
-    filter: EventFilter
-) {
+function defineChildModifier(target: Function, currentFilters: EventFilter[], name: ModifierName, filter: EventFilter) {
     Object.defineProperty(target, name, {
         get: function() {
             // call this getter at most once.
