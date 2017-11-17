@@ -109,11 +109,11 @@ export type PropsForOutside<PropsForInside, RequiredPropNames extends keyof Prop
     Partial<PropsForInside>;
 
 export interface ComponentFactory<EventsWithOn, ScopedSlotArgs, AdditionalThisAttrs> {
-    create<Props, V extends Vue = Vue>(
+    create<Props>(
         definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>
     ): ExtendedVue<TsxComponentInstance<Partial<Props>, EventsWithOn, ScopedSlotArgs> & Vue, {}, {}, {}, Props>;
 
-    create<Props, RequiredPropNames extends keyof Props = never, V extends Vue = Vue>(
+    create<Props, RequiredPropNames extends keyof Props = never>(
         definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>,
         requiredPropsNames?: RequiredPropNames[]
     ): ExtendedVue<
@@ -124,15 +124,14 @@ export interface ComponentFactory<EventsWithOn, ScopedSlotArgs, AdditionalThisAt
         Props
     >;
 
-    create<Data, Methods, Computed, Props, V extends Vue = Vue>(
+    create<Data, Methods, Computed, Props>(
         options: ThisTypedComponentOptionsWithRecordProps<
-            V & AdditionalThisAttrs & Vue,
+            AdditionalThisAttrs & Vue,
             Data,
             Methods,
             Computed,
             Props
-        >,
-        base?: V
+        >
     ): ExtendedVue<
         TsxComponentInstance<Partial<Props>, EventsWithOn, ScopedSlotArgs> & Vue,
         Data,
@@ -141,16 +140,15 @@ export interface ComponentFactory<EventsWithOn, ScopedSlotArgs, AdditionalThisAt
         Props
     >;
 
-    create<Data, Methods, Computed, Props, RequiredPropNames extends keyof Props = never, V extends Vue = Vue>(
+    create<Data, Methods, Computed, Props, RequiredPropNames extends keyof Props = never>(
         options: ThisTypedComponentOptionsWithRecordProps<
-            V & AdditionalThisAttrs & Vue,
+            AdditionalThisAttrs & Vue,
             Data,
             Methods,
             Computed,
             Props
         >,
-        requiredPropsNames?: RequiredPropNames[],
-        base?: V
+        requiredPropsNames?: RequiredPropNames[]
     ): ExtendedVue<
         TsxComponentInstance<PropsForOutside<Props, RequiredPropNames>, EventsWithOn, ScopedSlotArgs> & Vue,
         Data,
@@ -161,8 +159,8 @@ export interface ComponentFactory<EventsWithOn, ScopedSlotArgs, AdditionalThisAt
 }
 
 export const componentFactory: ComponentFactory<{}, {}, {}> = {
-    create(arg: any, _requiredPropsName?: string[], base?: typeof Vue): any {
-        return (base || Vue).extend(arg);
+    create(options: any): any {
+        return Vue.extend(options);
     }
 };
 
