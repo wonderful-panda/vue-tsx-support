@@ -8,9 +8,11 @@
     "update-readme": "markdown-toc -i README.md",
     "build": "webpack",
     "watch": "webpack -w",
-    "prettier": "prettier --list-different \"{src,options}/**/*.ts\"",
-    "prettier:fix": "prettier --write \"{src,options}/**/*.ts\"",
-    "test": "node test/tsc/runner.js"
+    "prettier": "prettier --list-different \"{src,options,test/mocha}/**/*.ts\"",
+    "prettier:fix": "prettier --write \"{src,options,test/mocha}/**/*.ts\"",
+    "mocha": "mocha-webpack --webpack-config test/mocha/webpack.config.js --require test/mocha/setup.js test/mocha/src/**/*.{ts,tsx}",
+    "tsc-test": "node test/tsc/runner.js",
+    "test": "npm-run-all prettier tsc-test mocha"
   },
   "repository": {
     "type": "git",
@@ -29,9 +31,24 @@
   },
   "homepage": "https://github.com/wonderful-panda/vue-tsx-support#readme",
   "devDependencies": {
+    "@types/mocha": "^2.2.44",
+    "@types/power-assert": "^1.4.29",
+    "babel-core": "^6.24.1",
+    "babel-helper-vue-jsx-merge-props": "^2.0.2",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-transform-vue-jsx": "^3.5.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-power-assert": "^1.0.0",
     "glob": "^7.1.2",
+    "jsdom": "^11.4.0",
+    "jsdom-global": "^3.0.2",
     "markdown-toc": "^1.2.0",
-    "npm-run-all": "^4.0.2",
+    "mocha": "^4.0.1",
+    "mocha-webpack": "^1.0.1",
+    "npm-run-all": "^4.1.2",
+    "power-assert": "^1.4.4",
     "prettier": "1.8.2",
     "ts-loader": "^2.3.7",
     "tsc-test": "^0.1.5",
@@ -39,7 +56,10 @@
     "vue": "^2.5.2",
     "vue-class-component": "^6.0.0",
     "vue-router": "^2.5.0",
-    "webpack": "^3.6.0"
+    "vue-template-compiler": "^2.5.2",
+    "vue-test-utils": "^1.0.0-beta.5",
+    "webpack": "^3.6.0",
+    "webpack-node-externals": "^1.6.0"
   },
   "peerDependencies": {
     "vue": "^2.5.2"
