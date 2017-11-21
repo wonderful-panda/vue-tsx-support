@@ -107,3 +107,44 @@ function by_class() {
     <WithUnknownProps foo="foo" unknown="foo" />;
     console.log(new WithUnknownProps().someProp);
 }
+
+function by_componentFactory() {
+    const Base = vuetsx.componentFactoryOf<Events>().create({
+        props: {
+            foo: String
+        },
+        computed: {
+            someProp(): string {
+                return "";
+            }
+        },
+        methods: {
+            someMethod() {}
+        }
+    }, ["foo"]);
+
+    /* add more attributes */
+    const Extend = vuetsx.ofType<Props2, Events2>().extendFrom(Base);
+    // OK
+    <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
+    // NG
+    <Extend foo="foo" />;   //// TS2322: 'bar' is missing
+    // NG
+    <Extend bar="bar" />;   //// TS2322: 'foo' is missing
+
+    // Extend inherits prototype of Base.
+    const ext = new Extend();
+    console.log(ext.someProp, ext.someMethod());
+
+    const WithNativeOn = vuetsx.withNativeOn(Base);
+    <WithNativeOn foo="foo" nativeOnClick={ noop } />;
+    console.log(new WithNativeOn().someProp);
+
+    const WithHtmlAttrs = vuetsx.withHtmlAttrs(Base);
+    <WithHtmlAttrs foo="foo" accesskey="foo" />;
+    console.log(new WithHtmlAttrs().someProp);
+
+    const WithUnknownProps = vuetsx.withUnknownProps(Base);
+    <WithUnknownProps foo="foo" unknown="foo" />;
+    console.log(new WithUnknownProps().someProp);
+}

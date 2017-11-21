@@ -1,4 +1,4 @@
-import { VNode } from "vue";
+import Vue, { VNode } from "vue";
 import * as tsx from "vue-tsx-support";
 
 function standardComponent() {
@@ -118,7 +118,7 @@ function componentFactoryOf() {
 
     /* checking type of scopedSlots */
     <MyComponent scopedSlots={{ content: p => p }} />;
-    <MyComponent scopedSlots={{ content: p => p, unknown: p => p }} />;
+    <MyComponent scopedSlots={{ content: p => p, unknown: (p: any) => p }} />;
     <MyComponent scopedSlots={{ content: (p: number) => p.toString() }} />; //// TS2322: 'string' is not assignable
     <MyComponent scopedSlots={{}} />;           //// TS2322: Property 'content' is missing
 
@@ -126,4 +126,94 @@ function componentFactoryOf() {
     <MyComponent onChange={_v => {}} />;
     <MyComponent onChange={(_v: number) => {}} />;
     <MyComponent onChange={(_v: string) => {}} />; //// TS2322: 'number' is not assignable
+}
+
+function extendFrom() {
+    /*
+     * extend from tsx component
+     */
+    const Base1 = tsx.component({
+        props: { foo: String },
+        computed: {
+            fooUpper(): string {
+                return this.foo.toUpperCase();
+            }
+        }
+    }, ["foo"]);
+
+    const Ext1 = tsx.extendFrom(Base1).create({
+        props: { bar: String },
+        render(): VNode {
+            return <div>{this.fooUpper + this.bar}</div>;
+        }
+    });
+
+    <Ext1 foo="a" bar="b" />;
+    <Ext1 bar="b" />;        //// TS2322: 'foo' is missing
+    <Ext1 foo="a" bar="b" baz="c" />;    //// TS2339: 'baz' does not exist
+
+    /*
+     * extend from class base tsx component
+     */
+    class Base2 extends tsx.Component<{ foo: string }, { onOk: string }> {
+        get fooUpper() {
+            return this.$props.foo.toUpperCase();
+        }
+    }
+
+    const Ext2 = tsx.extendFrom(Base2).create({
+        props: { bar: String },
+        render(): VNode {
+            return <div>{this.fooUpper + this.bar}</div>;
+        }
+    });
+
+    <Ext2 foo="a" bar="b" />;
+    <Ext2 bar="b" />;        //// TS2322: 'foo' is missing
+    <Ext2 foo="a" bar="b" baz="c" />;    //// TS2339: 'baz' does not exist
+
+    /*
+     * extend from standard component
+     */
+    const Base3 = Vue.extend({
+        data() {
+            return { foo: "fooValue" };
+        }
+    });
+
+    const Ext3 = tsx.extendFrom(Base3).create({
+        props: {
+            bar: String
+        },
+        render(): VNode {
+            return <span>{this.foo + this.bar}</span>;
+        }
+    });
+
+    <Ext3 />;
+    <Ext3 bar="b" />;
+    <Ext3 bar="b" baz="c" />;    //// TS2339: 'baz' does not exist
+
+
+    /*
+     * extend from standard class base component
+     */
+    class Base4 extends Vue {
+        get foo() {
+            return "fooValue";
+        }
+    }
+
+    const Ext4 = tsx.extendFrom(Base4).create({
+        props: {
+            bar: String
+        },
+        render(): VNode {
+            return <span>{this.foo + this.bar}</span>;
+        }
+    });
+
+    <Ext4 />;
+    <Ext4 bar="b" />;
+    <Ext4 bar="b" baz="c" />;    //// TS2339: 'baz' does not exist
 }

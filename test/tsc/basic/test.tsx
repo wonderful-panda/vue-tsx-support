@@ -157,9 +157,9 @@ function vueClassComponent() {
     // OK
     <MyComponent a="foo" />;
     // OK
-    <MyComponent a="foo" b={ 0 } scopedSlots={{ default: p => p.ssprops }} />;
+    <MyComponent a="foo" b={ 0 } scopedSlots={{ default: (p: any) => p.xxx }} />;
     // OK
-    <MyComponent a="foo" scopedSlots={{ default: p => [<span>{ p.ssprops }</span>] }} />;
+    <MyComponent a="foo" scopedSlots={{ default: (p: any) => [<span>{p.xxx}</span>] }} />;
 
     // NG: `c` is not defined
     <MyComponent a="foo" c="bar" />;  //// TS2339: 'c' does not exist
