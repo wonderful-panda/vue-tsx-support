@@ -26,7 +26,7 @@ function intrinsicElements() {
     <foo bar="bar" />;
 
     // NG
-    <div id={ 0 } />;   //// TS2322: Type '0' is not assignable to
+    <div id={ 0 } />;   //// TS2322: /Type '(0|number)' is not assignable to/
     // NG
     <div href="example.com" />; //// TS2339: Property 'href' does not exist
     // NG
@@ -94,9 +94,9 @@ function convert() {
     // NG: `c` is not defined
     <MyComponent1 a="foo" c="bar" />;  //// TS2339: 'c' does not exist
     // NG: `a` must be string
-    <MyComponent1 a={ 0 } />;          //// TS2322: '0' is not assignable
+    <MyComponent1 a={ 0 } />;          //// TS2322: /'(0|number)' is not assignable/
     // NG: `b` must be number
-    <MyComponent1 a="foo" b="bar" />;  //// TS2322: '"bar"' is not assignable
+    <MyComponent1 a="foo" b="bar" />;  //// TS2322: /'("bar"|string)' is not assignable/
 
     // OK
     <MyComponent2 a="foo" scopedSlots={{ default: props => props.ssprops }} />;
@@ -113,8 +113,7 @@ function createComponent() {
     const MyComponent = vuetsx.createComponent<Props>({});
 
     // NG: `a` is required
-    <MyComponent />;    //// TS2322: 'a' is missing
-
+    <MyComponent />;    //// TS2322
     // OK
     <MyComponent a="foo" />;
     // OK
@@ -122,9 +121,9 @@ function createComponent() {
     // NG: `c` is not defined
     <MyComponent a="foo" c="bar" />;  //// TS2339: 'c' does not exist
     // NG: `a` must be string
-    <MyComponent a={ 0 } />;          //// TS2322: '0' is not assignable
+    <MyComponent a={ 0 } />;          //// TS2322: /'(0|number)' is not assignable/
     // NG: `b` must be number
-    <MyComponent a="foo" b="bar" />;  //// TS2322: '"bar"' is not assignable
+    <MyComponent a="foo" b="bar" />;  //// TS2322: /'("bar"|string)' is not assignable/
 
 }
 
@@ -152,7 +151,7 @@ function vueClassComponent() {
 
 
     // NG: `a` is required
-    <MyComponent />;    //// TS2322: 'a' is missing
+    <MyComponent />;    //// TS2322
 
     // OK
     <MyComponent a="foo" />;
@@ -164,9 +163,9 @@ function vueClassComponent() {
     // NG: `c` is not defined
     <MyComponent a="foo" c="bar" />;  //// TS2339: 'c' does not exist
     // NG: `a` must be string
-    <MyComponent a={ 0 } />;          //// TS2322: '0' is not assignable
+    <MyComponent a={ 0 } />;          //// TS2322: /'(0|number)' is not assignable/
     // NG: `b` must be number
-    <MyComponent a="foo" b="bar" />;  //// TS2322: '"bar"' is not assignable
+    <MyComponent a="foo" b="bar" />;  //// TS2322: /'("bar"|string)' is not assignable/
 
     // OK
     <MyComponent2 a="foo" scopedSlots={{ default: p => p.ssprops }} />;

@@ -77,7 +77,7 @@ function by_convert() {
 
 function by_class() {
     class Base extends vuetsx.Component<Props, Events> {
-        someProp: string;
+        someProp: string = "foo";
         someMethod() {
         }
     }

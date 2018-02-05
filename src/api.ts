@@ -27,8 +27,8 @@ export type TsxComponent<
 > = VueConstructor<TsxComponentInstance<V, Props, EventsWithOn, ScopedSlotArgs> & AdditionalThisAttrs>;
 
 export class Component<Props, EventsWithOn = {}, ScopedSlotArgs = {}> extends Vue {
-    _tsxattrs: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs>;
-    $scopedSlots: ScopedSlots<ScopedSlotArgs>;
+    _tsxattrs: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs> = undefined as any;
+    $scopedSlots: ScopedSlots<ScopedSlotArgs> = undefined as any;
 }
 
 /**

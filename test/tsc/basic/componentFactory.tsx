@@ -23,9 +23,9 @@ function standardComponent() {
     /* NG */
     <MyComponent />;                    //// TS2322: Property 'foo' is missing
     <MyComponent foo="foo" />;          //// TS2322: Property 'bar' is missing
-    <MyComponent foo={0} bar={1} />;    //// TS2322: '0' is not assignable
-    <MyComponent foo="foo" bar="bar" />;        //// TS2322: '"bar"' is not assignable
-    <MyComponent foo="foo" bar={0} baz={1} />;  //// TS2322: '1' is not assignable
+    <MyComponent foo={0} bar={1} />;    //// TS2322: /'(0|number)' is not assignable/
+    <MyComponent foo="foo" bar="bar" />;        //// TS2322: /'("bar"|string)' is not assignable/
+    <MyComponent foo="foo" bar={0} baz={1} />;  //// TS2322: /'(1|number)' is not assignable/
     <MyComponent foo="foo" bar={0} unknown="unknown" />;    //// TS2339: Property 'unknown' does not exist
 }
 
@@ -51,9 +51,9 @@ function functionalComponent() {
     /* NG */
     <MyComponent />;                    //// TS2322: Property 'foo' is missing
     <MyComponent foo="foo" />;          //// TS2322: Property 'bar' is missing
-    <MyComponent foo={0} bar={1} />;    //// TS2322: '0' is not assignable
-    <MyComponent foo="foo" bar="bar" />;        //// TS2322: '"bar"' is not assignable
-    <MyComponent foo="foo" bar={0} baz={1} />;  //// TS2322: '1' is not assignable
+    <MyComponent foo={0} bar={1} />;    //// TS2322: /'(0|number)' is not assignable/
+    <MyComponent foo="foo" bar="bar" />;        //// TS2322: /'("bar"|string)' is not assignable/
+    <MyComponent foo="foo" bar={0} baz={1} />;  //// TS2322: /'(1|number)' is not assignable/
     <MyComponent foo="foo" bar={0} unknown="unknown" />;    //// TS2339: Property 'unknown' does not exist
 }
 
@@ -77,10 +77,11 @@ function withoutRequiredPropNames() {
     <MyComponent key="xxx" id="xxx" />;
 
     /* NG */
-    <MyComponent foo={0} />;            //// TS2322: '0' is not assignable
-    <MyComponent bar="bar" />;          //// TS2322: '"bar"' is not assignable
-    <MyComponent baz={1} />;            //// TS2322: '1' is not assignable
-    <MyComponent unknown="unknown" />;  //// TS2339: P
+    <MyComponent foo={0} />;            //// TS2322: /'(0|number)' is not assignable/
+    <MyComponent bar="bar" />;          //// TS2322: /'("bar"|string)' is not assignable/
+    <MyComponent baz={1} />;            //// TS2322: /'(1|number)' is not assignable/
+    <MyComponent unknown="unknown" />;  //// TS2339: Property 'unknown' does not exist
+
 }
 
 function withWrongRequiredPropNames() {

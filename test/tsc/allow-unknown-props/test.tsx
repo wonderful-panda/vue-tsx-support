@@ -47,6 +47,6 @@ function convert() {
     // NG
     <MyComponent />;    //// TS2322: Property 'a' is missing
     // NG
-    <MyComponent a={ 0 } />;    //// TS2322: '0' is not assignable
+    <MyComponent a={ 0 } />;    //// TS2322: /'(0|number)' is not assignable/
 }
 

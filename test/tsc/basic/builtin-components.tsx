@@ -4,7 +4,7 @@
 
 <transition onEnter={ (_, done) => done() } />;
 
-<transition name={ 1 } />; //// TS2322: '1' is not assignable
+<transition name={ 1 } />; //// TS2322: /'(1|number)' is not assignable/
 
 <transition-group />;
 
@@ -12,7 +12,7 @@
 
 <transition-group onEnter={ (_, done) => done() } />;
 
-<transition-group name={ 1 } />; //// TS2322: '1' is not assignable
+<transition-group name={ 1 } />; //// TS2322: /'(1|number)' is not assignable/
 
 <keep-alive />;
 

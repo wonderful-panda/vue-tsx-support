@@ -17,7 +17,7 @@ function intrinsicElements() {
     // OK: unknown attrs are allowed
     <a domPropInnerHTML="foo" />;
     // NG
-    <div id={ 0 } />;   //// TS2322: Type '0' is not assignable to
+    <div id={ 0 } />;   //// TS2322: /Type '(0|number)' is not assignable to/
     // OK: unknown attrs are allowed
     <div href="example.com" />;
     // OK: unknown attrs are allowed
