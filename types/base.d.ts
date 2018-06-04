@@ -12,7 +12,8 @@ declare global {
     }
 }
 
-export type KnownAttrs = Pick<VNodeData, "class" | "staticClass" | "style" | "key" | "ref" | "slot" | "scopedSlots" > & {
+export type KnownAttrs = Pick<VNodeData, "class" | "staticClass" | "key" | "ref" | "slot" | "scopedSlots" > & {
+    style?: VNodeData["style"] | string;
     id?: string,
     refInFor?: boolean
 };

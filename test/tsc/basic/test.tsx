@@ -25,6 +25,11 @@ function intrinsicElements() {
     // OK: unknown element
     <foo bar="bar" />;
 
+    // OK: specify style in 3 patterns
+    <div style="display: flex;" />;
+    <div style={ { display: "flex" } } />;
+    <div style={ [{ display: "flex" }] } />;
+
     // NG
     <div id={ 0 } />;   //// TS2322: /Type '(0|number)' is not assignable to/
     // NG
@@ -62,6 +67,11 @@ function standardComponent() {
 
     // NG: native event handler
     <MyComponent nativeOnClick={ noop } />; //// TS2339: Property 'nativeOnClick' does not exist
+
+    // OK: specify style in 3 patterns
+    <MyComponent style="display: flex;" />;
+    <MyComponent style={ { display: "flex" } } />;
+    <MyComponent style={ [{ display: "flex" }] } />;
 }
 
 interface Props {
