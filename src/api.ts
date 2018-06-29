@@ -120,6 +120,30 @@ export interface ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, Addit
         ScopedSlotArgs,
         Data & Methods & Computed & Props
     >;
+
+    mixin<Data, Methods, Computed, Props>(
+        mixinObject: ThisTypedComponentOptions<Vue, Data, Methods, Computed, Props>
+    ): ComponentFactory<
+        BaseProps & Props,
+        EventsWithOn,
+        ScopedSlotArgs,
+        AdditionalThisAttrs & Data & Methods & Computed & Props,
+        Super
+    >;
+
+    mixin<P, E, S, C extends TsxComponentInstance<Vue, P, E, S>>(
+        mixinObject: Constructor<C>
+    ): ComponentFactory<
+        BaseProps & P,
+        EventsWithOn & E,
+        ScopedSlotArgs & S,
+        AdditionalThisAttrs & { $scopedSlots: ScopedSlots<ScopedSlotArgs & S> },
+        C & Super & Vue
+    >;
+
+    mixin<C extends Vue>(
+        mixinObject: Constructor<C>
+    ): ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, AdditionalThisAttrs, C & Super & Vue>;
 }
 
 export interface ExtendableComponentFactory<
@@ -144,10 +168,14 @@ export interface ExtendableComponentFactory<
     ): ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, AdditionalThisAttrs, C>;
 }
 
-function createComponentFactory(base: typeof Vue): ComponentFactory<any, any, any, any, Vue> {
+function createComponentFactory(base: typeof Vue, mixins: any[]): ComponentFactory<any, any, any, any, Vue> {
     return {
         create(options: any): any {
-            return base.extend(options);
+            const mergedMixins = options.mixins ? [...options.mixins, ...mixins] : mixins;
+            return base.extend({ ...options, mixins: mergedMixins });
+        },
+        mixin(mixinObject: any): any {
+            return createComponentFactory(base, [...mixins, mixinObject]);
         }
     };
 }
@@ -157,8 +185,11 @@ function createExtendableComponentFactory(): ExtendableComponentFactory<any, any
         create(options: any): any {
             return Vue.extend(options);
         },
-        extendFrom(newBase: typeof Vue): any {
-            return createComponentFactory(newBase);
+        extendFrom(base: typeof Vue): any {
+            return createComponentFactory(base, []);
+        },
+        mixin(mixinObject: any): any {
+            return createComponentFactory(Vue, [mixinObject]);
         }
     };
 }

@@ -72,4 +72,57 @@ describe("componentFactory", () => {
             assert(w.html() === "<span>foobarbaz</span>")
         })
     });
+
+    describe("mixin", () => {
+        it("accessing mixin's member", () => {
+            const Mixin = {
+                props: {
+                    foo: String
+                },
+                computed: {
+                    bar() {
+                        return "bar";
+                    }
+                }
+            };
+
+            const Component = tsx.componentFactory.mixin(Mixin).create({
+                props: {
+                    baz: String
+                },
+                render(): VNode {
+                    return <span>{this.foo + this.bar + this.baz}</span>;
+                }
+            });
+
+            const w = mount(Component, { propsData: { foo: "foo", baz: "baz" } });
+            assert(w.html() === "<span>foobarbaz</span>")
+        });
+        it("multiple mixins", () => {
+            const Mixin1 = {
+                data() {
+                    return { foo: "foo" }
+                }
+            };
+            const Mixin2 = {
+                data() {
+                    return { bar: "bar" }
+                }
+            };
+
+            const Component = tsx.componentFactory.mixin(Mixin1).mixin(Mixin2).create({
+                props: {
+                    baz: String
+                },
+                render(): VNode {
+                    return <span>{this.foo + this.bar + this.baz}</span>;
+                }
+            });
+
+            const w = mount(Component, { propsData: { baz: "baz" } });
+            assert(w.html() === "<span>foobarbaz</span>")
+        });
+
+    });
+
 });
