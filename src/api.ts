@@ -120,7 +120,15 @@ export interface ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, Addit
         ScopedSlotArgs,
         Data & Methods & Computed & Props
     >;
+}
 
+export interface ExtendableComponentFactory<
+    BaseProps,
+    EventsWithOn,
+    ScopedSlotArgs,
+    AdditionalThisAttrs,
+    Super extends Vue
+> extends ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, AdditionalThisAttrs, Super> {
     extendFrom<P, E, S, C extends TsxComponentInstance<Vue, P, E, S>>(
         componentType: Constructor<C>
     ): ComponentFactory<
@@ -140,6 +148,14 @@ function createComponentFactory(base: typeof Vue): ComponentFactory<any, any, an
     return {
         create(options: any): any {
             return base.extend(options);
+        }
+    };
+}
+
+function createExtendableComponentFactory(): ExtendableComponentFactory<any, any, any, any, Vue> {
+    return {
+        create(options: any): any {
+            return Vue.extend(options);
         },
         extendFrom(newBase: typeof Vue): any {
             return createComponentFactory(newBase);
@@ -147,7 +163,7 @@ function createComponentFactory(base: typeof Vue): ComponentFactory<any, any, an
     };
 }
 
-export const componentFactory: ComponentFactory<{}, {}, {}, {}, Vue> = createComponentFactory(Vue);
+export const componentFactory: ExtendableComponentFactory<{}, {}, {}, {}, Vue> = createExtendableComponentFactory();
 
 export function componentFactoryOf<EventsWithOn = {}, ScopedSlotArgs = {}>(): ComponentFactory<
     {},
