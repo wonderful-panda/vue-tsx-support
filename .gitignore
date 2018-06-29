@@ -59,3 +59,4 @@ typings/
 
 # project specific
 lib
+.vscode
