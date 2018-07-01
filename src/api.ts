@@ -132,7 +132,7 @@ export interface ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, Addit
     >;
 
     mixin<P, E, S, C extends TsxComponentInstance<Vue, P, E, S>>(
-        mixinObject: Constructor<C>
+        mixinObject: VueConstructor<C>
     ): ComponentFactory<
         BaseProps & P,
         EventsWithOn & E,
@@ -142,7 +142,7 @@ export interface ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, Addit
     >;
 
     mixin<C extends Vue>(
-        mixinObject: Constructor<C>
+        mixinObject: VueConstructor<C>
     ): ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, AdditionalThisAttrs, C & Super & Vue>;
 }
 

@@ -1,6 +1,6 @@
 import assert from "power-assert";
 import { mount } from "vue-test-utils";
-import { VNode } from "vue";
+import Vue, { VNode } from "vue";
 import * as tsx from "../../..";
 
 describe("componentFactory", () => {
@@ -104,11 +104,11 @@ describe("componentFactory", () => {
                     return { foo: "foo" }
                 }
             };
-            const Mixin2 = {
+            const Mixin2 = Vue.extend({
                 data() {
                     return { bar: "bar" }
                 }
-            };
+            });
 
             const Component = tsx.componentFactory.mixin(Mixin1).mixin(Mixin2).create({
                 props: {
