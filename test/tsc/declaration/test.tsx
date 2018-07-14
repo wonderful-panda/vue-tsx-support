@@ -1,6 +1,5 @@
 import * as vuetsx from "vue-tsx-support";
-import Vue, { VNode, VNodeChildrenArrayContents, VNodeData } from "vue";
-import { VueConstructor } from "vue/types/vue";
+import Vue, { VNode, VNodeChildrenArrayContents, VNodeData, VueConstructor } from "vue";
 
 // export component with --declaration
 

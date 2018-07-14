@@ -1,5 +1,4 @@
-import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
-import { VueConstructor } from "vue/types/vue";
+import Vue, { ComponentOptions, FunctionalComponentOptions, VueConstructor } from "vue";
 import {
     RecordPropsDefinition,
     ThisTypedComponentOptionsWithRecordProps as ThisTypedComponentOptions
