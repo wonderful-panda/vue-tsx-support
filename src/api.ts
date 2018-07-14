@@ -4,7 +4,7 @@ import {
     ThisTypedComponentOptionsWithRecordProps as ThisTypedComponentOptions
 } from "vue/types/options";
 
-import { TsxComponentAttrs, ScopedSlots } from "../types/base";
+import { TsxComponentAttrs, ScopedSlots, StringKeyOf } from "../types/base";
 export { TsxComponentAttrs, ScopedSlots } from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 export { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
@@ -94,17 +94,19 @@ export function withUnknownProps<P, E, S, C extends TsxComponentInstance<Vue, P,
 //   `{ foo: String, bar: String, baz: { type: String, required: true as true} }`
 // then, `RequiredPropNames<typeof props>` is "baz",
 export type RequiredPropNames<PropsDef extends RecordPropsDefinition<any>> = ({
-    [K in keyof PropsDef]: PropsDef[K] extends { required: true } ? K : never
-})[keyof PropsDef];
+    [K in StringKeyOf<PropsDef>]: PropsDef[K] extends { required: true } ? K : never
+})[StringKeyOf<PropsDef>];
 
-export type PropsForOutside<Props, RequiredPropNames extends keyof Props> = { [K in RequiredPropNames]: Props[K] } &
-    { [K in Exclude<keyof Props, RequiredPropNames>]?: Props[K] };
+export type PropsForOutside<Props, RequiredPropNames extends StringKeyOf<Props>> = {
+    [K in RequiredPropNames]: Props[K]
+} &
+    { [K in Exclude<StringKeyOf<Props>, RequiredPropNames>]?: Props[K] };
 
 export interface ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, AdditionalThisAttrs, Super extends Vue> {
     create<
         Props,
         PropsDef extends RecordPropsDefinition<Props>,
-        RequiredProps extends keyof Props = RequiredPropNames<PropsDef> & keyof Props
+        RequiredProps extends StringKeyOf<Props> = RequiredPropNames<PropsDef> & StringKeyOf<Props>
     >(
         options: FunctionalComponentOptions<Props, PropsDef & RecordPropsDefinition<Props>>,
         requiredProps?: RequiredProps[]
@@ -116,7 +118,7 @@ export interface ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, Addit
         Computed,
         Props,
         PropsDef extends RecordPropsDefinition<Props>,
-        RequiredProps extends keyof Props = RequiredPropNames<PropsDef> & keyof Props
+        RequiredProps extends StringKeyOf<Props> = RequiredPropNames<PropsDef> & StringKeyOf<Props>
     >(
         options: ThisTypedComponentOptions<AdditionalThisAttrs & Super & Vue, Data, Methods, Computed, Props> & {
             props?: PropsDef;
