@@ -91,31 +91,41 @@ export function withUnknownProps<P, E, S, C extends TsxComponentInstance<Vue, P,
  * Depending on some private types of vue, which may be changed by upgrade :(
  */
 
-export type PropsForOutside<PropsForInside, RequiredPropNames extends keyof PropsForInside> = {
-    [K in RequiredPropNames]: PropsForInside[K]
-} &
-    Partial<PropsForInside>;
+// If props is
+//   `{ foo: String, bar: String, baz: { type: String, required: true as true} }`
+// then, `RequiredPropNames<typeof props>` is "baz",
+export type RequiredPropNames<PropsDef extends RecordPropsDefinition<any>> = ({
+    [K in keyof PropsDef]: PropsDef[K] extends { required: true } ? K : never
+})[keyof PropsDef];
+
+export type PropsForOutside<Props, RequiredPropNames extends keyof Props> = { [K in RequiredPropNames]: Props[K] } &
+    { [K in Exclude<keyof Props, RequiredPropNames>]?: Props[K] };
 
 export interface ComponentFactory<BaseProps, EventsWithOn, ScopedSlotArgs, AdditionalThisAttrs, Super extends Vue> {
-    create<Props>(
-        definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>
-    ): TsxComponent<Super, Partial<Props> & BaseProps, EventsWithOn, ScopedSlotArgs, Props>;
+    create<
+        Props,
+        PropsDef extends RecordPropsDefinition<Props>,
+        RequiredProps extends keyof Props = RequiredPropNames<PropsDef> & keyof Props
+    >(
+        options: FunctionalComponentOptions<Props, PropsDef & RecordPropsDefinition<Props>>,
+        requiredProps?: RequiredProps[]
+    ): TsxComponent<Super, PropsForOutside<Props, RequiredProps> & BaseProps, EventsWithOn, ScopedSlotArgs, Props>;
 
-    create<Props, RequiredPropNames extends keyof Props = never>(
-        definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>,
-        requiredPropsNames?: RequiredPropNames[]
-    ): TsxComponent<Super, PropsForOutside<Props, RequiredPropNames> & BaseProps, EventsWithOn, ScopedSlotArgs, Props>;
-
-    create<Data, Methods, Computed, Props>(
-        options: ThisTypedComponentOptions<AdditionalThisAttrs & Super & Vue, Data, Methods, Computed, Props>
-    ): TsxComponent<Super, Partial<Props> & BaseProps, EventsWithOn, ScopedSlotArgs, Data & Methods & Computed & Props>;
-
-    create<Data, Methods, Computed, Props, RequiredPropNames extends keyof Props = never>(
-        options: ThisTypedComponentOptions<AdditionalThisAttrs & Super & Vue, Data, Methods, Computed, Props>,
-        requiredPropsNames?: RequiredPropNames[]
+    create<
+        Data,
+        Methods,
+        Computed,
+        Props,
+        PropsDef extends RecordPropsDefinition<Props>,
+        RequiredProps extends keyof Props = RequiredPropNames<PropsDef> & keyof Props
+    >(
+        options: ThisTypedComponentOptions<AdditionalThisAttrs & Super & Vue, Data, Methods, Computed, Props> & {
+            props?: PropsDef;
+        },
+        requiredPropsNames?: RequiredProps[]
     ): TsxComponent<
         Super,
-        PropsForOutside<Props, RequiredPropNames> & BaseProps,
+        PropsForOutside<Props, RequiredProps> & BaseProps,
         EventsWithOn,
         ScopedSlotArgs,
         Data & Methods & Computed & Props

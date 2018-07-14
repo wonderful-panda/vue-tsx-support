@@ -84,6 +84,36 @@ function withoutRequiredPropNames() {
 
 }
 
+function inferRequiredPropNames() {
+    const MyComponent = tsx.componentFactory.create({
+        props: {
+            foo: { type: String, required: true as true },
+            bar: { type: Number, required: false },
+            baz: String
+        },
+        render(): VNode {
+            return <span>{this.foo}</span>;
+        }
+    });
+
+    /* OK */
+    <MyComponent foo="foo" bar={0} baz="baz" />;
+    // foo is required, bar and baz are optional
+    <MyComponent foo="foo" />;
+    <MyComponent />;          //// TS2322: Property 'foo' is missing
+    // other known attributes
+    <MyComponent foo="foo" key="xxx" id="xxx" />;
+
+    /* NG */
+    <MyComponent foo={0} />;            //// TS2322: /'(0|number)' is not assignable/
+    <MyComponent foo="a" bar="bar" />;          //// TS2322: /'("bar"|string)' is not assignable/
+    <MyComponent foo="a" baz={1} />;            //// TS2322: /'(1|number)' is not assignable/
+    <MyComponent foo="a" unknown="unknown" />;  //// TS2339: Property 'unknown' does not exist
+
+}
+
+
+
 function withWrongRequiredPropNames() {
     const MyComponent = tsx.componentFactory.create({
         props: {
