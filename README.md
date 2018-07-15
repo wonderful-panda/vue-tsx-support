@@ -13,14 +13,12 @@ TSX (JSX for TypeScript) support library for Vue
 - [Using custom component](#using-custom-component)
   * [available APIs to add type information](#available-apis-to-add-type-information)
     + [componentFactory](#componentfactory)
-      - [Usage](#usage)
     + [component](#component)
+    + [extendFrom](#extendfrom)
+    + [mixin](#mixin)
     + [componentFactoryOf](#componentfactoryof)
-      - [Usage](#usage-1)
     + [Component](#component)
-      - [Usage](#usage-2)
     + [ofType](#oftype)
-      - [Usage](#usage-3)
   * [Other attributes](#other-attributes)
     + [Native event listeners and dom properties](#native-event-listeners-and-dom-properties)
     + [HTML attributes attached to the root element](#html-attributes-attached-to-the-root-element)
@@ -35,6 +33,10 @@ TSX (JSX for TypeScript) support library for Vue
 <!-- tocstop -->
 
 ## Caution: BREAKING CHANGE
+- V2.0.0
+  - Support Vue >= 2.5.13 only
+  - Support TypeScript >= 2.8 only
+
 - v1.0.0
   - Support Vue >= 2.5 only.
   - `createComponent` is deprecated. use [componentFactory](#componentfactory) or [component](#component) instead.
@@ -135,8 +137,6 @@ You must add types to the component by apis memtions below, or enable `allow-unk
 
 Create tsx-supported component from component options. (Partially compatible with `Vue.extend`)
 
-##### Usage
-
 ```jsx
 import * as tsx from "vue-tsx-support";
 const MyComponent = tsx.componentFactory.create({
@@ -171,7 +171,39 @@ NOTE: all props are regarded as optional even if `required: true` specified.
 <MyComponent important={true} />;
 ```
 
-If you want to make some props required, you must specify required prop names as second parameter.
+But `text` is required actually, you may think compilation should be failed when text does not specified.
+There are sevaral ways to achieve it.
+
+1. Instead of `required: true`, specify `required: true as true`.
+ This turns type of `required` boolean to 'true',
+ and vue-tsx-support can know it is required in compile time.
+
+```typescript
+import * as tsx from "vue-tsx-support";
+const MyComponent = tsx.componentFactory.create({
+    props: {
+        text: { type: String, required: true as true },
+        important: Boolean,
+    },
+    /* snip */
+});
+```
+
+FYI, [vue-strict-prop](https://github.com/wonderful-panda/vue-strict-prop) make this easy.
+
+```typescript
+import * as tsx from "vue-tsx-support";
+import p from "vue-strict-prop";
+const MyComponent = tsx.componentFactory.create({
+    props: {
+        text: p(String).required,
+        important: Boolean,
+    },
+    /* snip */
+});
+```
+
+2. Specify required prop names as second argument
 
 ```typescript
 import * as tsx from "vue-tsx-support";
@@ -184,15 +216,12 @@ const MyComponent = tsx.componentFactory.create({
 }, ["text"]);
 ```
 
-In the above example, props type will be `{ text: string, important?: boolean }`.
+In above examples, props type will be `{ text: string, important?: boolean }`.
 
 ```jsx
 // NG: `text` is required
 <MyComponent />;
-// OK: `important` is optional
-<MyComponent text="foo" />;
-// OK
-<MyComponent text="foo" important={true} />;
+<MyComponent important={true} />;
 ```
 
 NOTE: shorthand props definition(like `props: ["foo", "bar"]`) is currently not supported.
@@ -203,7 +232,7 @@ import * as tsx from "vue-tsx-support";
 const MyComponent = tsx.componentFactory.create({
     props: ["text", "important"],
     /* snip */
-}, ["text"]);
+});
 ```
 
 #### component
@@ -220,10 +249,66 @@ const MyComponent = tsx.component({
 });
 ```
 
+#### extendFrom
+When you want to extend your component from other than `Vue`, you can use `extendFrom`
+
+```jsx
+import * as tsx from "vue-tsx-support";
+
+// This is equivalent to `const MyComponent = Base.extend({ /* snip */ });`
+const MyComponent = tsx.extendFrom(Base).create({
+    /* snip */
+});
+```
+
+#### mixin
+You can use `mixin` to add mixin type-safely.
+
+```jsx
+import * as tsx from "vue-tsx-support";
+
+const StorageMixin = {
+    methods: {
+        getItem(string name): string {
+            return localStorage.getItem(name);
+        },
+        setItem(string name, string value): void {
+            localStorage.setItem(name, value);
+        }
+    }
+}
+
+const MyComponent = tsx.mixin(StorageMixin).create(
+    // You can use this.getItem and this.setItem here
+    {
+        props: {
+            name: String
+        },
+        data() {
+            return { value: "" }
+        },
+        mounted() {
+            this.value = this.getItem(this.name);
+        },
+        render(): VNode {
+            return (
+                <button onClick={() => this.setItem(this.name, this.value)}>
+                    SAVE
+                </button>
+            );
+        }
+    }
+);
+
+// You can add 2 or more mixins by method chain
+const MyComponent.mixin(FirstMixin).mixin(SecondMixin).create({
+    /* snip */
+})
+```
+
 #### componentFactoryOf
 Return componentFactory with additional types (events and scoped slots)
 
-##### Usage
 If your component has custom events, you may want to specify event listener.
 But below example does not work.
 
@@ -304,8 +389,6 @@ const MyComponent = tsx.componentFactoryOf<{}, ScopedSlots>().create({
 #### Component
 Base class of class base component
 
-##### Usage
-
 If you write your component with `vue-class-component`,
 you can it tsx-supported by extending from this class.
 
@@ -368,8 +451,6 @@ class MyComponent extends tsx.Component<MyComponentProps, Events, ScopedSlots> {
 #### ofType
 
 Make existing component tsx-supported.
-
-##### Usage
 
 If you can't modify existing component definition, wrap it by `ofType` and `convert`
 
