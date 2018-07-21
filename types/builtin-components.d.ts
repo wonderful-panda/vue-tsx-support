@@ -1,6 +1,6 @@
 export interface TransitionPropsBase {
     name?: string;
-    appear?: string;
+    appear?: boolean;
     css?: boolean;
     type?: string;
     enterClass?: string;
