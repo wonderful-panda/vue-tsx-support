@@ -16,8 +16,9 @@ export type StringKeyOf<T> = Extract<keyof T, string>;
 
 export type KnownAttrs = Pick<VNodeData, "class" | "staticClass" | "key" | "ref" | "slot" | "scopedSlots" > & {
     style?: VNodeData["style"] | string;
-    id?: string,
-    refInFor?: boolean
+    id?: string;
+    refInFor?: boolean;
+    domPropsInnerHTML?: string;
 };
 export type ScopedSlots<T> = {
     [K in StringKeyOf<T>]: (props: T[K]) => VNodeChildrenArrayContents | string;
