@@ -1,6 +1,7 @@
 var path = require("path");
 
 module.exports = {
+    mode: "production",
     context: path.join(__dirname, "src"),
     entry: "./index.ts",
     output: {
@@ -15,7 +16,7 @@ module.exports = {
         modules: [ path.join(__dirname, "src"), "node_modules" ]
     },
     module: {
-        loaders: [
+        rules: [
           { test: /\.ts$/, loader: "ts-loader", exclude: /node_modules/ }
         ]
     },
