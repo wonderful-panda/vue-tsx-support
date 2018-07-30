@@ -33,6 +33,25 @@ TSX (JSX for TypeScript) support library for Vue
 <!-- tocstop -->
 
 ## Caution: BREAKING CHANGE
+- V2.1.0
+  - When event type is function, vue-tsx-support treat it as event handler itself (to support events with multiple parameters).
+    ```typescript
+    type Events = {
+        onOk: string,   // equivalent to `(arg: string) => void`
+        onError: (target: any, detail: string) => void
+    };
+    ```
+
+    if you want to use function as a parameter, you must fix code like below.
+
+    ```typescript
+    type Wrong = {
+        onOk: () => void
+    };
+    type Right = {
+        onOk: (callback: (() => void)) => void
+    }
+    ```
 - V2.0.0
   - Support Vue >= 2.5.13 only
   - Support TypeScript >= 2.8 only
@@ -332,7 +351,9 @@ import * as tsx from "vue-tsx-support";
 
 interface Events {
     // all memebers must be prefixed by 'on'
-    onOk: void;
+    onOk: () => void;
+    // If event handler has only one parameter, you can specify parameter type as a shorthand.
+    // For example, this is equivalent to `onError: (arg: { code: number, detail: string }) => void`
     onError: { code: number, detail: string };
 }
 
