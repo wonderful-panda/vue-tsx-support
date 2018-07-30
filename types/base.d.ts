@@ -26,7 +26,7 @@ export type ScopedSlots<T> = {
 };
 
 export type EventHandlers<E> = {
-    [K in StringKeyOf<E>]?: (payload: E[K]) => void;
+    [K in StringKeyOf<E>]?: E[K] extends Function ? E[K] : (payload: E[K]) => void;
 }
 
 export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> = (

@@ -128,7 +128,7 @@ function withWrongRequiredPropNames() {
 }
 
 function componentFactoryOf() {
-    const factory = tsx.componentFactoryOf<{ onChange: number }, { content: string }>();
+    const factory = tsx.componentFactoryOf<{ onChange: number, onOk(target: any, id: string): void }, { content: string }>();
     const MyComponent = factory.create({
         props: {
             foo: String,
@@ -157,6 +157,7 @@ function componentFactoryOf() {
     <MyComponent onChange={_v => {}} />;
     <MyComponent onChange={(_v: number) => {}} />;
     <MyComponent onChange={(_v: string) => {}} />; //// TS2322: 'number' is not assignable
+    <MyComponent onOk={(_, id) => { console.log(id); }} />;
 }
 
 function extendFrom() {
