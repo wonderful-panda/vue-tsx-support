@@ -9,8 +9,8 @@
     "build": "webpack",
     "watch": "webpack -w",
     "clean": "rimraf lib",
-    "prettier": "prettier --list-different \"{src,options,test/mocha}/**/*.ts\"",
-    "prettier:fix": "prettier --write \"{src,options,test/mocha}/**/*.ts\"",
+    "prettier": "prettier --list-different \"{src,options,types,test/mocha}/**/*.ts\"",
+    "prettier:fix": "prettier --write \"{src,options,types,test/mocha}/**/*.ts\"",
     "mocha": "mocha-webpack --webpack-config test/mocha/webpack.config.js --require test/mocha/setup.js test/mocha/src/**/*.{ts,tsx}",
     "tsc-test": "node test/tsc/runner.js",
     "test": "npm-run-all prettier tsc-test mocha"

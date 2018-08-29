@@ -55,8 +55,7 @@ export interface AreaHTMLAttributes extends HTMLAttributes {
     target?: string;
 }
 
-export interface AudioHTMLAttributes extends MediaHTMLAttributes {
-}
+export interface AudioHTMLAttributes extends MediaHTMLAttributes {}
 
 export interface BaseHTMLAttributes extends HTMLAttributes {
     href?: string;
@@ -90,8 +89,7 @@ export interface ColHTMLAttributes extends HTMLAttributes {
     span?: number;
 }
 
-export interface ColgroupHTMLAttributes extends ColHTMLAttributes {
-}
+export interface ColgroupHTMLAttributes extends ColHTMLAttributes {}
 
 export interface DetailsHTMLAttributes extends HTMLAttributes {
     open?: boolean;
@@ -623,7 +621,7 @@ export interface IntrinsicElementAttributes {
     track: TrackHTMLAttributes;
     u: HTMLAttributes;
     ul: HTMLAttributes;
-    "var": HTMLAttributes;
+    var: HTMLAttributes;
     video: VideoHTMLAttributes;
     wbr: HTMLAttributes;
 }

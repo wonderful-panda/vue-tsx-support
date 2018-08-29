@@ -9,4 +9,3 @@ declare module "vue/types/vue" {
         _tsxattrs: TsxComponentAttrs;
     }
 }
-
