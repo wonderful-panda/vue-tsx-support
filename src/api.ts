@@ -47,6 +47,8 @@ export class Component<
 }
 
 /**
+ * @deprecated use componentFactory.create instead
+ *
  * Create component from component options (Compatible with Vue.extend)
  */
 export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(
@@ -56,6 +58,7 @@ export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(
 }
 
 export interface Factory<TProps, TEvents, TScopedSlots> {
+  // now, extendFrom is just alias of convert
   convert<VC extends typeof Vue>(
     componentType: VC
   ): TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
@@ -70,6 +73,8 @@ const factoryImpl = {
 };
 
 /**
+ * @deprecated use componentFactoryOf<...> instead
+ *
  * Specify Props and Event types of component
  *
  * Usage:
