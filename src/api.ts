@@ -63,8 +63,8 @@ export interface Factory<TProps, TEvents, TScopedSlots> {
     componentType: VC
   ): TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
   extendFrom<VC extends typeof Vue>(
-      componentType: VC
-    ): TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
+    componentType: VC
+  ): TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
 }
 
 const factoryImpl = {
@@ -89,21 +89,19 @@ export function ofType<TProps, TEvents = {}, TScopedSlots = {}>(): Factory<
   return factoryImpl;
 }
 
-export function withNativeOn<
-  VC extends typeof Vue
->(componentType: VC): TsxComponent<InstanceType<VC>, {}, EventsNativeOn, {}> {
+export function withNativeOn<VC extends typeof Vue>(
+  componentType: VC
+): TsxComponent<InstanceType<VC>, {}, EventsNativeOn, {}> {
   return componentType as any;
 }
 
-export function withHtmlAttrs<
-  VC extends typeof Vue
->(componentType: VC): TsxComponent<InstanceType<VC>, AllHTMLAttributes, {}, {}> {
+export function withHtmlAttrs<VC extends typeof Vue>(
+  componentType: VC
+): TsxComponent<InstanceType<VC>, AllHTMLAttributes, {}, {}> {
   return componentType as any;
 }
 
-export function withUnknownProps<
-  VC extends typeof Vue
->(
+export function withUnknownProps<VC extends typeof Vue>(
   componentType: VC
 ): TsxComponent<InstanceType<VC>, { [key: string]: any }, {}, {}> {
   return componentType as any;
