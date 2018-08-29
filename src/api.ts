@@ -13,10 +13,6 @@ export { TsxComponentAttrs, ScopedSlots } from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 export { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 
-export type Constructor<T> = {
-  new (...args: any[]): T;
-};
-
 export type TsxComponentInstance<
   V extends Vue,
   Props,
@@ -60,14 +56,12 @@ export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(
 }
 
 export interface Factory<TProps, TEvents, TScopedSlots> {
-  convert<V extends Vue>(
-    componentType: Constructor<V>
-  ): TsxComponent<V, TProps, TEvents, TScopedSlots>;
-  extendFrom: {
-    <P, E, S, C extends TsxComponentInstance<Vue, P, E, S>>(
-      componentType: Constructor<C>
-    ): TsxComponent<C, P & TProps, E & TEvents, S & TScopedSlots>;
-  };
+  convert<VC extends typeof Vue>(
+    componentType: VC
+  ): TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
+  extendFrom<VC extends typeof Vue>(
+      componentType: VC
+    ): TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
 }
 
 const factoryImpl = {
@@ -91,31 +85,22 @@ export function ofType<TProps, TEvents = {}, TScopedSlots = {}>(): Factory<
 }
 
 export function withNativeOn<
-  P,
-  E,
-  S,
-  C extends TsxComponentInstance<Vue, P, E, S>
->(componentType: Constructor<C>): TsxComponent<C, P, E & EventsNativeOn, S> {
+  VC extends typeof Vue
+>(componentType: VC): TsxComponent<InstanceType<VC>, {}, EventsNativeOn, {}> {
   return componentType as any;
 }
 
 export function withHtmlAttrs<
-  P,
-  E,
-  S,
-  C extends TsxComponentInstance<Vue, P, E, S>
->(componentType: Constructor<C>): TsxComponent<C, P & AllHTMLAttributes, E, S> {
+  VC extends typeof Vue
+>(componentType: VC): TsxComponent<InstanceType<VC>, AllHTMLAttributes, {}, {}> {
   return componentType as any;
 }
 
 export function withUnknownProps<
-  P,
-  E,
-  S,
-  C extends TsxComponentInstance<Vue, P, E, S>
+  VC extends typeof Vue
 >(
-  componentType: Constructor<C>
-): TsxComponent<C, P & { [key: string]: any }, E, S> {
+  componentType: VC
+): TsxComponent<InstanceType<VC>, { [key: string]: any }, {}, {}> {
   return componentType as any;
 }
 
@@ -202,24 +187,14 @@ export interface ComponentFactory<
     Super
   >;
 
-  mixin<P, E, S, C extends TsxComponentInstance<Vue, P, E, S>>(
-    mixinObject: VueConstructor<C>
-  ): ComponentFactory<
-    BaseProps & P,
-    EventsWithOn & E,
-    ScopedSlotArgs & S,
-    AdditionalThisAttrs & { $scopedSlots: ScopedSlots<ScopedSlotArgs & S> },
-    C & Super & Vue
-  >;
-
-  mixin<C extends Vue>(
-    mixinObject: VueConstructor<C>
+  mixin<VC extends typeof Vue>(
+    mixinObject: VC
   ): ComponentFactory<
     BaseProps,
     EventsWithOn,
     ScopedSlotArgs,
-    AdditionalThisAttrs,
-    C & Super & Vue
+    AdditionalThisAttrs & { $scopedSlots: ScopedSlots<ScopedSlotArgs> },
+    InstanceType<VC> & Super
   >;
 }
 
@@ -237,24 +212,14 @@ export interface ExtendableComponentFactory<
       AdditionalThisAttrs,
       Super
     > {
-  extendFrom<P, E, S, C extends TsxComponentInstance<Vue, P, E, S>>(
-    componentType: Constructor<C>
-  ): ComponentFactory<
-    BaseProps & P,
-    EventsWithOn & E,
-    ScopedSlotArgs & S,
-    AdditionalThisAttrs & { $scopedSlots: ScopedSlots<ScopedSlotArgs & S> },
-    C
-  >;
-
-  extendFrom<C extends Vue>(
-    componentType: Constructor<C>
+  extendFrom<VC extends typeof Vue>(
+    componentType: VC
   ): ComponentFactory<
     BaseProps,
     EventsWithOn,
     ScopedSlotArgs,
-    AdditionalThisAttrs,
-    C
+    AdditionalThisAttrs & { $scopedSlots: ScopedSlots<ScopedSlotArgs> },
+    InstanceType<VC>
   >;
 }
 
