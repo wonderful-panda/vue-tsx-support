@@ -55,7 +55,7 @@ export interface Element extends VNode {}
 export interface ElementClass extends Vue {}
 
 export interface ElementAttributesProperty {
-  _tsxattrs: any;
+  __tsxattrs: any;
 }
 
 export type IntrinsicElements = {

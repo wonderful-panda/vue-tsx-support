@@ -6,6 +6,6 @@ import Vue from "vue";
 
 declare module "vue/types/vue" {
   export interface Vue {
-    _tsxattrs: TsxComponentAttrs;
+    __tsxattrs: this extends { _tsxattrs: infer A } ? A : TsxComponentAttrs;
   }
 }
