@@ -6,8 +6,8 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "update-readme": "markdown-toc -i README.md",
-    "build": "webpack",
-    "watch": "webpack -w",
+    "build": "tsc",
+    "watch": "tsc -w",
     "clean": "rimraf lib",
     "prettier": "prettier --list-different \"{src,options,types,test}/**/*.{ts,tsx}\"",
     "prettier:fix": "prettier --write \"{src,options,types,test}/**/*.{ts,tsx}\"",
@@ -48,17 +48,13 @@
     "prettier": "1.13.7",
     "rimraf": "^2.6.2",
     "ts-jest": "^23.1.4",
-    "ts-loader": "^4.4.2",
     "tsc-test": "^0.1.5",
     "typescript": "^2.8.1",
     "vue": "^2.5.13",
     "vue-class-component": "^6.2.0",
     "vue-router": "^2.5.13",
     "vue-template-compiler": "^2.5.13",
-    "vue-test-utils": "^1.0.0-beta.11",
-    "webpack": "^4.16.3",
-    "webpack-cli": "^3.1.0",
-    "webpack-node-externals": "^1.7.2"
+    "vue-test-utils": "^1.0.0-beta.11"
   },
   "peerDependencies": {
     "vue": "^2.5.13"
