@@ -67,6 +67,6 @@
     "webpack-node-externals": "^1.7.2"
   },
   "peerDependencies": {
-    "vue": "^2.5.2"
+    "vue": "^2.5.13"
   }
 }
