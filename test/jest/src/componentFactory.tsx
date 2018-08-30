@@ -1,4 +1,3 @@
-import assert from "power-assert";
 import { mount } from "vue-test-utils";
 import Vue, { VNode } from "vue";
 import * as tsx from "../../..";
@@ -20,7 +19,7 @@ describe("componentFactory", () => {
       );
 
       const w = mount(MyComponent, { propsData: { foo: "fooValue" } });
-      assert(w.html() === "<span>fooValue barDefault</span>");
+      expect(w.html()).toBe("<span>fooValue barDefault</span>");
     });
 
     it("scoped slot", () => {
@@ -49,7 +48,7 @@ describe("componentFactory", () => {
       });
 
       const w = mount(ParentComponent);
-      assert(w.html() === "<div><span>fooValue</span></div>");
+      expect(w.html()).toBe("<div><span>fooValue</span></div>");
     });
   });
 
@@ -78,7 +77,7 @@ describe("componentFactory", () => {
       const w = mount(ExtendedComponent, {
         propsData: { foo: "foo", baz: "baz" }
       });
-      assert(w.html() === "<span>foobarbaz</span>");
+      expect(w.html()).toBe("<span>foobarbaz</span>");
     });
   });
 
@@ -105,7 +104,7 @@ describe("componentFactory", () => {
       });
 
       const w = mount(Component, { propsData: { foo: "foo", baz: "baz" } });
-      assert(w.html() === "<span>foobarbaz</span>");
+      expect(w.html()).toBe("<span>foobarbaz</span>");
     });
     it("multiple mixins", () => {
       const Mixin1 = {
@@ -132,7 +131,7 @@ describe("componentFactory", () => {
         });
 
       const w = mount(Component, { propsData: { baz: "baz" } });
-      assert(w.html() === "<span>foobarbaz</span>");
+      expect(w.html()).toBe("<span>foobarbaz</span>");
     });
   });
 });
