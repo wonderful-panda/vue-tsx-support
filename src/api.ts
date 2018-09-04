@@ -8,10 +8,11 @@ import {
   ThisTypedComponentOptionsWithRecordProps as ThisTypedComponentOptions
 } from "vue/types/options";
 
-import { TsxComponentAttrs, ScopedSlots, StringKeyOf } from "../types/base";
+import { ScopedSlots, StringKeyOf } from "../types/base";
 export { TsxComponentAttrs, ScopedSlots } from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 export { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
+import * as keys from "./keys";
 
 export type TsxComponentInstance<
   V extends Vue,
@@ -19,7 +20,9 @@ export type TsxComponentInstance<
   EventsWithOn,
   ScopedSlotArgs
 > = {
-  _tsxattrs: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs>;
+  [keys._Props]: Props;
+  [keys.Events]: EventsWithOn;
+  [keys.ScopedSlots]: ScopedSlots<ScopedSlotArgs>;
 } & (V & Vue);
 
 export type TsxComponent<
@@ -38,12 +41,10 @@ export class Component<
   EventsWithOn = {},
   ScopedSlotArgs = {}
 > extends Vue {
-  _tsxattrs: TsxComponentAttrs<
-    Props,
-    EventsWithOn,
-    ScopedSlotArgs
-  > = undefined as any;
-  $scopedSlots: ScopedSlots<ScopedSlotArgs> = undefined as any;
+  [keys._Props]!: Props;
+  [keys.Events]!: EventsWithOn;
+  [keys.ScopedSlots]!: ScopedSlots<ScopedSlotArgs>;
+  $scopedSlots!: ScopedSlots<ScopedSlotArgs>;
 }
 
 /**

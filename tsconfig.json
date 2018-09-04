@@ -3,6 +3,10 @@
     "target": "es5",
     "module": "umd",
     "moduleResolution": "node",
+    "lib": [
+      "dom",
+      "es2015"
+    ],
     "declaration": true,
     "declarationDir": "./lib",
     "outDir": "./lib",

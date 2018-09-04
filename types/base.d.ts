@@ -1,5 +1,6 @@
 import * as dom from "./dom";
 import Vue, { VNode, VNodeData, VNodeChildrenArrayContents } from "vue";
+import { ScopedSlot } from "vue/types/vnode";
 
 declare global {
   namespace VueTsx {
@@ -38,14 +39,14 @@ export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> =
       KnownAttrs &
       ({} extends TScopedSlots
         ? { scopedSlots?: VNodeData["scopedSlots"] }
-        : { scopedSlots: ScopedSlots<TScopedSlots> }) &
+        : { scopedSlots: TScopedSlots }) &
       EventHandlers<TEvents> &
       VueTsx.ComponentAdditionalAttrs)
   | (TProps &
       KnownAttrs &
       ({} extends TScopedSlots
         ? { scopedSlots?: VNodeData["scopedSlots"] }
-        : { scopedSlots: ScopedSlots<TScopedSlots> }) &
+        : { scopedSlots: TScopedSlots }) &
       EventHandlers<TEvents> &
       VueTsx.ComponentAdditionalAttrs);
 
