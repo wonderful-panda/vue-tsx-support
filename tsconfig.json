@@ -12,6 +12,7 @@
     "outDir": "./lib",
     "strict": true,
     "noUnusedParameters": true,
+    "noUnusedLocals": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
