@@ -157,18 +157,19 @@ function componentFactoryOf() {
 
   /* checking type of scopedSlots */
   <MyComponent scopedSlots={{ content: p => p }} />;
-  <MyComponent scopedSlots={{ content: p => p, unknown: (p: any) => p }} />;
+  <MyComponent scopedSlots={{ content: p => p, unknown: (p: any) => p }} />;  //// TS2322: 'unknown' does not exist
   <MyComponent scopedSlots={{ content: (p: number) => p.toString() }} />; //// TS2322: 'string' is not assignable
   <MyComponent scopedSlots={{}} />; //// TS2322: Property 'content' is missing
 
   /* checking type of custom event handler */
-  <MyComponent onChange={_v => {}} />;
-  <MyComponent onChange={(_v: number) => {}} />;
-  <MyComponent onChange={(_v: string) => {}} />; //// TS2322: 'number' is not assignable
+  <MyComponent onChange={_v => {}} scopedSlots={{ content: p => p }} />;
+  <MyComponent onChange={(_v: number) => {}} scopedSlots={{ content: p => p }} />;
+  <MyComponent onChange={(_v: string) => {}} scopedSlots={{ content: p => p }} />; //// TS2322: 'number' is not assignable
   <MyComponent
     onOk={(_, id) => {
       console.log(id);
     }}
+    scopedSlots={{ content: p => p }}
   />;
 }
 

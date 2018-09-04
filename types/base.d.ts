@@ -16,18 +16,18 @@ export type StringKeyOf<T> = Extract<keyof T, string>;
 
 export type KnownAttrs = Pick<
   VNodeData,
-  "class" | "staticClass" | "key" | "ref" | "slot" | "scopedSlots"
+  "class" | "staticClass" | "key" | "ref" | "slot"
 > & {
   style?: VNodeData["style"] | string;
   id?: string;
   refInFor?: boolean;
   domPropsInnerHTML?: string;
 };
-export type ScopedSlots<T> = {
-  [K in StringKeyOf<T>]: (props: T[K]) => VNodeChildrenArrayContents | string
-} & {
-  [name: string]: (props: any) => VNodeChildrenArrayContents | string;
-};
+export type TypedScopedSlot<T> = (
+  props: T
+) => VNodeChildrenArrayContents | string;
+
+export type ScopedSlots<T> = { [K in StringKeyOf<T>]: TypedScopedSlot<T[K]> };
 
 export type EventHandlers<E> = {
   [K in StringKeyOf<E>]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
@@ -35,14 +35,18 @@ export type EventHandlers<E> = {
 
 export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> =
   | ({ props: TProps } & Partial<TProps> &
-      KnownAttrs & {
-        scopedSlots?: ScopedSlots<TScopedSlots>;
-      } & EventHandlers<TEvents> &
+      KnownAttrs &
+      ({} extends TScopedSlots
+        ? { scopedSlots?: VNodeData["scopedSlots"] }
+        : { scopedSlots: ScopedSlots<TScopedSlots> }) &
+      EventHandlers<TEvents> &
       VueTsx.ComponentAdditionalAttrs)
   | (TProps &
-      KnownAttrs & {
-        scopedSlots?: ScopedSlots<TScopedSlots>;
-      } & EventHandlers<TEvents> &
+      KnownAttrs &
+      ({} extends TScopedSlots
+        ? { scopedSlots?: VNodeData["scopedSlots"] }
+        : { scopedSlots: ScopedSlots<TScopedSlots> }) &
+      EventHandlers<TEvents> &
       VueTsx.ComponentAdditionalAttrs);
 
 export type ElementAttrs<T> = T &

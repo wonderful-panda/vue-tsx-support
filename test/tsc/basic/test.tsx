@@ -184,8 +184,8 @@ function vueClassComponent() {
 
   // OK
   <MyComponent2 a="foo" scopedSlots={{ default: p => p.ssprops }} />;
-  // OK (unfortunately)
-  <MyComponent2 a="foo" />;
+  // NG
+  <MyComponent2 a="foo" />; //// TS2322: 'scopedSlots' is missing
   // NG
   <MyComponent2 a="foo" scopedSlots={{ default: p => p.xxx }} />; //// TS2339: 'xxx' does not exist
 }
