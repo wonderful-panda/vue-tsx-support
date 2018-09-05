@@ -1,6 +1,7 @@
 import * as dom from "./dom";
 import Vue, { VNode, VNodeData, VNodeChildrenArrayContents } from "vue";
 import { ScopedSlot } from "vue/types/vnode";
+import { RecordPropsDefinition } from "vue/types/options";
 
 declare global {
   namespace VueTsx {
@@ -68,3 +69,16 @@ export type IntrinsicElements = {
     dom.IntrinsicElementAttributes[K]
   >
 };
+
+export type RequiredPropNames<PD extends RecordPropsDefinition<any>> = ({
+  [K in StringKeyOf<PD>]: PD[K] extends { required: true } ? K : never
+})[StringKeyOf<PD>] &
+  StringKeyOf<PD>;
+
+export type OuterProps<
+  PD extends RecordPropsDefinition<any>,
+  RequiredProps extends StringKeyOf<PD> = RequiredPropNames<PD>
+> = PD extends RecordPropsDefinition<infer P>
+  ? { [K in Extract<StringKeyOf<P>, RequiredProps>]: P[K] } &
+      { [K in Exclude<StringKeyOf<P>, RequiredProps>]?: P[K] }
+  : {};

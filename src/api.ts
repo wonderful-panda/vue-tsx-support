@@ -8,7 +8,12 @@ import {
   ThisTypedComponentOptionsWithRecordProps as ThisTypedComponentOptions
 } from "vue/types/options";
 
-import { ScopedSlots, StringKeyOf } from "../types/base";
+import {
+  ScopedSlots,
+  StringKeyOf,
+  RequiredPropNames,
+  OuterProps
+} from "../types/base";
 export { TsxComponentAttrs, ScopedSlots } from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 export { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
@@ -116,18 +121,6 @@ export function withUnknownProps<VC extends typeof Vue>(
 // If props is
 //   `{ foo: String, bar: String, baz: { type: String, required: true as true} }`
 // then, `RequiredPropNames<typeof props>` is "baz",
-export type RequiredPropNames<PropsDef extends RecordPropsDefinition<any>> = ({
-  [K in StringKeyOf<PropsDef>]: PropsDef[K] extends { required: true }
-    ? K
-    : never
-})[StringKeyOf<PropsDef>];
-
-export type PropsForOutside<
-  Props,
-  RequiredPropNames extends StringKeyOf<Props>
-> = { [K in RequiredPropNames]: Props[K] } &
-  { [K in Exclude<StringKeyOf<Props>, RequiredPropNames>]?: Props[K] };
-
 export interface ComponentFactory<
   BaseProps,
   EventsWithOn,
@@ -135,20 +128,33 @@ export interface ComponentFactory<
   AdditionalThisAttrs,
   Super extends Vue
 > {
+  create<Props, PropsDef extends RecordPropsDefinition<Props>>(
+    options: FunctionalComponentOptions<
+      Props,
+      PropsDef & RecordPropsDefinition<Props>
+    >
+  ): TsxComponent<
+    Super,
+    OuterProps<PropsDef> & BaseProps,
+    EventsWithOn,
+    ScopedSlotArgs,
+    Props
+  >;
+
+  /** @deprecated use create(options) instead. now, required props can be detected automatically */
   create<
     Props,
     PropsDef extends RecordPropsDefinition<Props>,
-    RequiredProps extends StringKeyOf<Props> = RequiredPropNames<PropsDef> &
-      StringKeyOf<Props>
+    RequiredProps extends StringKeyOf<PropsDef> = RequiredPropNames<PropsDef>
   >(
     options: FunctionalComponentOptions<
       Props,
       PropsDef & RecordPropsDefinition<Props>
     >,
-    requiredProps?: RequiredProps[]
+    requiredProps: RequiredProps[]
   ): TsxComponent<
     Super,
-    PropsForOutside<Props, RequiredProps> & BaseProps,
+    OuterProps<PropsDef, RequiredProps> & BaseProps,
     EventsWithOn,
     ScopedSlotArgs,
     Props
@@ -159,9 +165,33 @@ export interface ComponentFactory<
     Methods,
     Computed,
     Props,
+    PropsDef extends RecordPropsDefinition<Props>
+  >(
+    options: ThisTypedComponentOptions<
+      AdditionalThisAttrs & Super & Vue,
+      Data,
+      Methods,
+      Computed,
+      Props
+    > & {
+      props?: PropsDef;
+    }
+  ): TsxComponent<
+    Super,
+    OuterProps<PropsDef> & BaseProps,
+    EventsWithOn,
+    ScopedSlotArgs,
+    Data & Methods & Computed & Props
+  >;
+
+  /** @deprecated use create(options) instead. now, required props can be detected automatically */
+  create<
+    Data,
+    Methods,
+    Computed,
+    Props,
     PropsDef extends RecordPropsDefinition<Props>,
-    RequiredProps extends StringKeyOf<Props> = RequiredPropNames<PropsDef> &
-      StringKeyOf<Props>
+    RequiredProps extends StringKeyOf<PropsDef> = RequiredPropNames<PropsDef>
   >(
     options: ThisTypedComponentOptions<
       AdditionalThisAttrs & Super & Vue,
@@ -172,10 +202,10 @@ export interface ComponentFactory<
     > & {
       props?: PropsDef;
     },
-    requiredPropsNames?: RequiredProps[]
+    requiredPropsNames: RequiredProps[]
   ): TsxComponent<
     Super,
-    PropsForOutside<Props, RequiredProps> & BaseProps,
+    OuterProps<PropsDef, RequiredProps> & BaseProps,
     EventsWithOn,
     ScopedSlotArgs,
     Data & Methods & Computed & Props
