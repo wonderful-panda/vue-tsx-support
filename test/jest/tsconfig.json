@@ -11,7 +11,8 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "experimentalDecorators": true
   },
   "include": [
     "src/**/*.ts",

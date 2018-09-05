@@ -31,9 +31,9 @@ export type TypedScopedSlot<T> = (
 
 export type ScopedSlots<T> = { [K in StringKeyOf<T>]: TypedScopedSlot<T[K]> };
 
-export type EventHandlers<E> = {
-  [K in StringKeyOf<E>]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
-};
+export type EventHandler<T> = T extends Function ? T : (payload: T) => void;
+export type EventHandlers<E> = { [K in StringKeyOf<E>]?: EventHandler<E[K]> };
+export type AllEventHandlers<E> = { [K in StringKeyOf<E>]: EventHandler<E[K]> };
 
 export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> =
   | ({ props: TProps } & Partial<TProps> &
