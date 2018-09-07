@@ -1,4 +1,4 @@
-import { WithProps, ComponentBase, Keys } from "vue-tsx-support/lib/class";
+import { WithProps, ExVue, Keys } from "vue-tsx-support/lib/class";
 
 function propsDef() {
 
@@ -15,7 +15,7 @@ function propsDef() {
 
 function events() {
 
-  class Test extends ComponentBase {
+  class Test extends ExVue {
     get [Keys.Events]() {
       return {
         onClick(_arg: { button: number }) {}
@@ -31,7 +31,7 @@ function events() {
 }
 
 function scopedSlots() {
-  class Test extends ComponentBase {
+  class Test extends ExVue {
     get [Keys.ScopedSlots]() {
       return {
         default(_: { msg: string }) {}

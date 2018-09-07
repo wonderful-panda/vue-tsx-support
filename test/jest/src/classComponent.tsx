@@ -1,24 +1,16 @@
 import { mount, createLocalVue } from "vue-test-utils";
+import Component from "vue-class-component";
 import Vue, { VNode } from "vue";
-import {
-  plugin,
-  Component,
-  ComponentBase,
-  WithProps,
-  Keys
-} from "../../../lib/class";
+import { WithProps, Keys } from "../../../lib/class";
 
 describe("classComponent", () => {
   describe("simple component", () => {
-    const localVue = createLocalVue();
-    localVue.use(plugin);
-
     @Component
-    class Test extends WithProps({ foo: String }, localVue) {
+    class Test extends WithProps({ foo: String }) {
       get [Keys.Events]() {
         return {
-          onOneArgEvent(_: { code: number; msg: string }) {},
-          onMultiArgsEvent(_code: number, _msg: string) {},
+          onOneArgEvent(payload: { code: number; msg: string }) {},
+          onMultiArgsEvent(code: number, msg: string) {},
           onNoArgEvent() {}
         };
       }
