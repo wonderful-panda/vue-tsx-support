@@ -3,7 +3,6 @@
  */
 import { TsxComponentAttrs, OuterProps } from "./base";
 import Vue from "vue";
-import * as keys from "../lib/keys";
 import { RecordPropsDefinition } from "vue/types/options";
 
 declare module "vue/types/vue" {
@@ -11,12 +10,12 @@ declare module "vue/types/vue" {
     __tsxattrs: this extends { _tsxattrs: infer A }
       ? A
       : (TsxComponentAttrs<
-          (this extends { [keys._Props]: infer P } ? P : {}) &
-            (this extends { [keys._PropsDef]: infer PD }
+          (this extends { __props__: infer P } ? P : {}) &
+            (this extends { __propsDef__: infer PD }
               ? (PD extends RecordPropsDefinition<any> ? OuterProps<PD> : {})
               : {}),
-          this extends { [keys.Events]: infer E } ? E : {},
-          this extends { [keys.ScopedSlots]: infer S } ? S : {}
+          this extends { __events: infer E } ? E : {},
+          this extends { __scopedSlots: infer S } ? S : {}
         >);
   }
 }
