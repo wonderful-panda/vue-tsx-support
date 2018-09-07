@@ -1,6 +1,6 @@
 {
   "name": "vue-tsx-support",
-  "version": "2.1.1",
+  "version": "3.0.0-beta.1",
   "description": "TSX (JSX for TypeScript) support library for Vue",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -80,8 +80,12 @@
       "ts-jest": {
         "tsConfigFile": "test/jest/tsconfig.json",
         "babelConfig": {
-          "presets": ["env"],
-          "plugins": ["transform-vue-jsx"]
+          "presets": [
+            "env"
+          ],
+          "plugins": [
+            "transform-vue-jsx"
+          ]
         }
       }
     }
