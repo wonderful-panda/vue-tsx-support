@@ -35,8 +35,8 @@ function $$emit(this: Vue) {
 }
 
 export interface ComponentExtension {
-  $$emit: this extends { [keys.Events]: infer E } ? AllEventHandlers<E> : never;
-  $scopedSlots: this extends { [keys.ScopedSlots]: infer S }
+  $$emit: this extends { __events: infer E } ? AllEventHandlers<E> : never;
+  $scopedSlots: this extends { __scopedSlots: infer S }
     ? {
         [K in StringKeyOf<S>]: TypedScopedSlot<
           S[K] extends (props: infer P) => any ? P : S[K]
@@ -53,7 +53,7 @@ export function WithProps<
   props: PD & RecordPropsDefinition<P>,
   Super?: VC
 ): VueConstructor<
-  InstanceType<VC> & ComponentExtension & P & { [keys._PropsDef]: PD }
+  InstanceType<VC> & ComponentExtension & P & { __propsDef__: PD }
 > {
   return (Super || Vue).extend({ props, computed: { $$emit } }) as any;
 }
