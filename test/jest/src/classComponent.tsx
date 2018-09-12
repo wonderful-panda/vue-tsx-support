@@ -1,7 +1,6 @@
 import { mount, createLocalVue } from "vue-test-utils";
-import Component from "vue-class-component";
 import Vue, { VNode } from "vue";
-import { WithProps, Keys } from "../../../lib/class";
+import { WithProps, Keys, Component, ExVue } from "../../../lib/class";
 
 describe("classComponent", () => {
   describe("simple component", () => {
@@ -90,6 +89,35 @@ describe("classComponent", () => {
         expect(emitted["oneArgEvent"]).toEqual([[{ code: 1, msg: "message" }]]);
         expect(emitted["extendedEvent"]).toEqual([["message"]]);
       });
+    });
+  });
+
+  describe("use __propsDef", () => {
+    @Component
+    class Test extends ExVue {
+      get [Keys.PropsDef]() {
+        return {
+          foo: { type: String, default: "FooDefault" },
+          bar: { type: Number, required: true as true }
+        };
+      }
+      render() {
+        return (
+          <div>
+            {this.$props.foo}/{this.$props.bar}
+          </div>
+        );
+      }
+    }
+
+    it("props", () => {
+      const w = mount(Test, { propsData: { foo: "Foo", bar: 1 } });
+      expect(w.html()).toBe("<div>Foo/1</div>");
+    });
+
+    it("use default value", () => {
+      const w = mount(Test, { propsData: { bar: 1 } });
+      expect(w.html()).toBe("<div>FooDefault/1</div>");
     });
   });
 });

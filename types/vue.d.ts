@@ -11,7 +11,7 @@ declare module "vue/types/vue" {
       ? A
       : (TsxComponentAttrs<
           (this extends { __props__: infer P } ? P : {}) &
-            (this extends { __propsDef__: infer PD }
+            (this extends { __propsDef: infer PD }
               ? (PD extends RecordPropsDefinition<any> ? OuterProps<PD> : {})
               : {}),
           this extends { __events: infer E } ? E : {},
