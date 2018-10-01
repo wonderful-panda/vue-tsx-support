@@ -1,5 +1,5 @@
 import assert from "power-assert";
-import { mount } from "vue-test-utils";
+import { mount } from "@vue/test-utils";
 import Vue, { VNode } from "vue";
 import * as tsx from "../../..";
 
