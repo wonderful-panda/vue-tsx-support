@@ -1,16 +1,22 @@
 export type EventFilter = (event: Event) => boolean;
 export type EventHandler<E extends Event> = (event: E) => void;
 
+export type KeyName = "esc" | "tab" | "enter" | "space" | "up" | "down" | "del" | "left" | "right";
+
+const keyCodes: { [K in KeyName]: number[] } = {
+    esc: [27],
+    tab: [9],
+    enter: [13],
+    space: [32],
+    up: [38],
+    down: [40],
+    del: [8, 46],
+    left: [37],
+    right: [39]
+};
+
 export type ModifierName =
-    | "esc"
-    | "tab"
-    | "enter"
-    | "space"
-    | "up"
-    | "down"
-    | "del"
-    | "left"
-    | "right"
+    | KeyName
     | "middle"
     | "ctrl"
     | "shift"
@@ -29,6 +35,7 @@ export type Modifiers = { [K in ModifierName]: Modifier };
 export interface Modifier extends Modifiers {
     <E extends Event>(handler: EventHandler<E>): EventHandler<E>;
     (event: Event): void; // Modifier itself can behave as EventHandler
+    keys(keys: (KeyName | number)[]): Modifier;
 }
 
 function handleEvent(event: Event, filters: EventFilter[], handler?: EventHandler<Event>) {
