@@ -1,42 +1,38 @@
 export type EventFilter = (event: Event) => boolean;
 export type EventHandler<E extends Event> = (event: E) => void;
 
-export type KeyName = "esc" | "tab" | "enter" | "space" | "up" | "down" | "del" | "left" | "right";
+export type KeyModifierName = "esc" | "tab" | "enter" | "space" | "up" | "down" | "del";
+export type ModKeyModifierName = "ctrl" | "noctrl" | "shift" | "noshift" | "alt" | "noalt" | "meta" | "nometa";
+export type StandaloneModifierName = "left" | "right" | "middle" | "prevent" | "stop" | "self";
+export type ModifierName = KeyModifierName | ModKeyModifierName | StandaloneModifierName;
 
-const keyCodes: { [K in KeyName]: number[] } = {
+export type ExcludedKeys = { [K in StandaloneModifierName]: K } & {
+    ctrl: "ctrl" | "noctrl";
+    shift: "shift" | "noshift";
+    alt: "alt" | "noalt";
+    meta: "meta" | "nometa";
+    noctrl: "ctrl" | "noctrl";
+    noshift: "shift" | "noshift";
+    noalt: "alt" | "noalt";
+    nometa: "meta" | "nometa";
+} & { [K in KeyModifierName]: KeyModifierName };
+
+const keyCodes: { [K in KeyModifierName]: number[] } = {
     esc: [27],
     tab: [9],
     enter: [13],
     space: [32],
     up: [38],
     down: [40],
-    del: [8, 46],
-    left: [37],
-    right: [39]
+    del: [8, 46]
 };
 
-export type ModifierName =
-    | KeyName
-    | "middle"
-    | "ctrl"
-    | "shift"
-    | "alt"
-    | "meta"
-    | "noctrl"
-    | "noshift"
-    | "noalt"
-    | "nometa"
-    | "prevent"
-    | "stop"
-    | "self";
+export type Modifiers<Keys extends ModifierName> = { [K in Keys]: Modifier<Exclude<Keys, ExcludedKeys[K]>> };
 
-export type Modifiers = { [K in ModifierName]: Modifier };
-
-export interface Modifier extends Modifiers {
+export type Modifier<Keys extends ModifierName> = Modifiers<Keys> & {
     <E extends Event>(handler: EventHandler<E>): EventHandler<E>;
     (event: Event): void; // Modifier itself can behave as EventHandler
-    keys(keys: (KeyName | number)[]): Modifier;
-}
+};
 
 function handleEvent(event: Event, filters: EventFilter[], handler?: EventHandler<Event>) {
     for (let filter of filters) {
@@ -49,12 +45,38 @@ function handleEvent(event: Event, filters: EventFilter[], handler?: EventHandle
     }
 }
 
-function defineChildModifier(target: Function, currentFilters: EventFilter[], name: ModifierName, filter: EventFilter) {
+function createKeyFilter(keys: (KeyModifierName | number)[]): EventFilter {
+    const codes = [] as number[];
+    for (const key of keys) {
+        if (typeof key === "number") {
+            codes.push(key);
+        } else {
+            codes.push(...keyCodes[key]);
+        }
+    }
+    switch (codes.length) {
+        case 0:
+            return _ => false;
+        case 1:
+            const code = codes[0];
+            return (e: any) => e.keyCode === code;
+        default:
+            return (e: any) => codes.indexOf(e.keyCode) >= 0;
+    }
+}
+
+function defineChildModifier(
+    target: Function,
+    currentFilters: EventFilter[],
+    name: ModifierName,
+    filter: EventFilter,
+    includeKeyModifiers: boolean
+) {
     Object.defineProperty(target, name, {
         get: function() {
             // call this getter at most once.
             // reuse created instance after next time.
-            const ret = createModifier([...currentFilters, filter]);
+            const ret = createModifier([...currentFilters, filter], includeKeyModifiers);
             Object.defineProperty(target, name, {
                 value: ret,
                 enumerable: true
@@ -66,7 +88,7 @@ function defineChildModifier(target: Function, currentFilters: EventFilter[], na
     });
 }
 
-function createModifier(filters: EventFilter[]): Modifier {
+function createModifier(filters: EventFilter[], includeKeyModifiers: boolean): Modifier<ModifierName> {
     function m(arg: any): any {
         if (arg instanceof Function) {
             // EventHandler => EventHandler
@@ -77,35 +99,39 @@ function createModifier(filters: EventFilter[]): Modifier {
             return;
         }
     }
-    defineChildModifier(m, filters, "esc", (e: any) => e.keyCode === 27);
-    defineChildModifier(m, filters, "tab", (e: any) => e.keyCode === 9);
-    defineChildModifier(m, filters, "enter", (e: any) => e.keyCode === 13);
-    defineChildModifier(m, filters, "space", (e: any) => e.keyCode === 32);
-    defineChildModifier(m, filters, "up", (e: any) => e.keyCode === 38);
-    defineChildModifier(m, filters, "down", (e: any) => e.keyCode === 40);
-    defineChildModifier(m, filters, "del", (e: any) => e.keyCode === 8 || e.keyCode === 46);
+    if (includeKeyModifiers) {
+        for (const name in keyCodes) {
+            const keyName = name as KeyModifierName;
+            defineChildModifier(m, filters, keyName, createKeyFilter([keyName]), false);
+        }
+    }
+    defineChildModifier(m, filters, "left", (e: any) => e.keyCode === 37 || e.button === 0, includeKeyModifiers);
+    defineChildModifier(m, filters, "right", (e: any) => e.keyCode === 39 || e.button === 2, includeKeyModifiers);
+    defineChildModifier(m, filters, "middle", (e: any) => e.button === 1, includeKeyModifiers);
 
-    defineChildModifier(m, filters, "left", (e: any) => e.keyCode === 37 || e.button === 0);
-    defineChildModifier(m, filters, "right", (e: any) => e.keyCode === 39 || e.button === 2);
-    defineChildModifier(m, filters, "middle", (e: any) => e.button === 1);
+    defineChildModifier(m, filters, "ctrl", (e: any) => e.ctrlKey, includeKeyModifiers);
+    defineChildModifier(m, filters, "shift", (e: any) => e.shiftKey, includeKeyModifiers);
+    defineChildModifier(m, filters, "alt", (e: any) => e.altKey, includeKeyModifiers);
+    defineChildModifier(m, filters, "meta", (e: any) => e.metaKey, includeKeyModifiers);
 
-    defineChildModifier(m, filters, "ctrl", (e: any) => e.ctrlKey);
-    defineChildModifier(m, filters, "shift", (e: any) => e.shiftKey);
-    defineChildModifier(m, filters, "alt", (e: any) => e.altKey);
-    defineChildModifier(m, filters, "meta", (e: any) => e.metaKey);
+    defineChildModifier(m, filters, "noctrl", (e: any) => e.ctrlKey !== undefined && !e.ctrlKey, includeKeyModifiers);
+    defineChildModifier(
+        m,
+        filters,
+        "noshift",
+        (e: any) => e.shiftKey !== undefined && !e.shiftKey,
+        includeKeyModifiers
+    );
+    defineChildModifier(m, filters, "noalt", (e: any) => e.altKey !== undefined && !e.altKey, includeKeyModifiers);
+    defineChildModifier(m, filters, "nometa", (e: any) => e.metaKey !== undefined && !e.metaKey, includeKeyModifiers);
 
-    defineChildModifier(m, filters, "noctrl", (e: any) => e.ctrlKey !== undefined && !e.ctrlKey);
-    defineChildModifier(m, filters, "noshift", (e: any) => e.shiftKey !== undefined && !e.shiftKey);
-    defineChildModifier(m, filters, "noalt", (e: any) => e.altKey !== undefined && !e.altKey);
-    defineChildModifier(m, filters, "nometa", (e: any) => e.metaKey !== undefined && !e.metaKey);
-
-    defineChildModifier(m, filters, "stop", e => e.stopPropagation() || true);
-    defineChildModifier(m, filters, "prevent", e => e.preventDefault() || true);
-    defineChildModifier(m, filters, "self", e => e.target === e.currentTarget);
-    return m as Modifier;
+    defineChildModifier(m, filters, "stop", e => e.stopPropagation() || true, includeKeyModifiers);
+    defineChildModifier(m, filters, "prevent", e => e.preventDefault() || true, includeKeyModifiers);
+    defineChildModifier(m, filters, "self", e => e.target === e.currentTarget, includeKeyModifiers);
+    return m as Modifier<ModifierName>;
 }
 
-const root = createModifier([]);
+const root = createModifier([], true);
 export const {
     esc,
     tab,
