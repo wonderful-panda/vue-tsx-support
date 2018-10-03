@@ -16,6 +16,8 @@ function modifiers() {
     <div onClick={m.enter.enter} />;    //// TS2339: 'enter' does not exist
     // key modifier can be specified only once
     <div onKeydown={m.enter.esc} />;    //// TS2339: 'esc' does not exist
+    <div onKeydown={m.enter.keys("esc")} />;    //// TS2339: 'keys' does not exist
+    <div onKeydown={m.keys("up", "down", "left", "right").enter} />;    //// TS2339: 'enter' does not exist
     // xxx and noxxx can't be specified togetter
     <div onClick={m.ctrl.noctrl} />;    //// TS2339: 'noctrl' does not exist
     <div onClick={m.noctrl.ctrl} />;    //// TS2339: 'ctrl' does not exist

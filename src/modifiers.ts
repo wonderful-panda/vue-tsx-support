@@ -4,7 +4,7 @@ export type EventHandler<E extends Event> = (event: E) => void;
 export type KeyModifierName = "esc" | "tab" | "enter" | "space" | "up" | "down" | "del";
 export type ModKeyModifierName = "ctrl" | "noctrl" | "shift" | "noshift" | "alt" | "noalt" | "meta" | "nometa";
 export type StandaloneModifierName = "left" | "right" | "middle" | "prevent" | "stop" | "self";
-export type ModifierName = KeyModifierName | ModKeyModifierName | StandaloneModifierName;
+export type ModifierName = KeyModifierName | ModKeyModifierName | StandaloneModifierName | "keys";
 
 export type ExcludedKeys = { [K in StandaloneModifierName]: K } & {
     ctrl: "ctrl" | "noctrl";
@@ -15,19 +15,25 @@ export type ExcludedKeys = { [K in StandaloneModifierName]: K } & {
     noshift: "shift" | "noshift";
     noalt: "alt" | "noalt";
     nometa: "meta" | "nometa";
-} & { [K in KeyModifierName]: KeyModifierName };
+} & { [K in KeyModifierName]: KeyModifierName | "keys" } & { keys: KeyModifierName | "keys" };
 
-const keyCodes: { [K in KeyModifierName]: number[] } = {
-    esc: [27],
-    tab: [9],
-    enter: [13],
-    space: [32],
-    up: [38],
-    down: [40],
-    del: [8, 46]
+const keyCodes: { [K in KeyModifierName | "left" | "right"]: number | [number, number] } = {
+    esc: 27,
+    tab: 9,
+    enter: 13,
+    space: 32,
+    up: 38,
+    down: 40,
+    del: [8, 46],
+    left: 37,
+    right: 39
 };
 
-export type Modifiers<Keys extends ModifierName> = { [K in Keys]: Modifier<Exclude<Keys, ExcludedKeys[K]>> };
+export type Modifiers<Keys extends ModifierName> = {
+    [K in Keys]: K extends "keys"
+        ? (...keys: (KeyModifierName | "left" | "right" | number)[]) => Modifier<Exclude<Keys, ExcludedKeys[K]>>
+        : Modifier<Exclude<Keys, ExcludedKeys[K]>>
+};
 
 export type Modifier<Keys extends ModifierName> = Modifiers<Keys> & {
     <E extends Event>(handler: EventHandler<E>): EventHandler<E>;
@@ -45,13 +51,18 @@ function handleEvent(event: Event, filters: EventFilter[], handler?: EventHandle
     }
 }
 
-function createKeyFilter(keys: (KeyModifierName | number)[]): EventFilter {
+function createKeyFilter(keys: (KeyModifierName | "left" | "right" | number)[]): EventFilter {
     const codes = [] as number[];
     for (const key of keys) {
         if (typeof key === "number") {
             codes.push(key);
         } else {
-            codes.push(...keyCodes[key]);
+            const code = keyCodes[key];
+            if (typeof code === "number") {
+                codes.push(code);
+            } else {
+                codes.push(...code);
+            }
         }
     }
     switch (codes.length) {
@@ -68,7 +79,7 @@ function createKeyFilter(keys: (KeyModifierName | number)[]): EventFilter {
 function defineChildModifier(
     target: Function,
     currentFilters: EventFilter[],
-    name: ModifierName,
+    name: string,
     filter: EventFilter,
     includeKeyModifiers: boolean
 ) {
@@ -101,9 +112,36 @@ function createModifier(filters: EventFilter[], includeKeyModifiers: boolean): M
     }
     if (includeKeyModifiers) {
         for (const name in keyCodes) {
-            const keyName = name as KeyModifierName;
-            defineChildModifier(m, filters, keyName, createKeyFilter([keyName]), false);
+            const keyName = name as KeyModifierName | "left" | "right";
+            if (keyName === "left" || keyName === "right") {
+                continue;
+            }
+            const code = keyCodes[keyName];
+            if (typeof code === "number") {
+                defineChildModifier(m, filters, keyName, (e: any) => e.keyCode === code, false);
+            } else {
+                const [c1, c2] = code;
+                defineChildModifier(m, filters, keyName, (e: any) => e.keyCode === c1 || e.keyCode === c2, false);
+            }
         }
+        Object.defineProperty(m, "keys", {
+            get() {
+                const keysFunction = (...args: (KeyModifierName | "left" | "right" | number)[]) => {
+                    const propName = "keys:" + args.toString();
+                    const modifier = this[propName];
+                    if (modifier !== undefined) {
+                        return modifier;
+                    }
+                    const filter = createKeyFilter(args);
+                    defineChildModifier(this, filters, propName, filter, false);
+                    return this[propName];
+                };
+                Object.defineProperty(this, "keys", { value: keysFunction, enumerable: true });
+                return keysFunction;
+            },
+            enumerable: true,
+            configurable: true
+        });
     }
     defineChildModifier(m, filters, "left", (e: any) => e.keyCode === 37 || e.button === 0, includeKeyModifiers);
     defineChildModifier(m, filters, "right", (e: any) => e.keyCode === 39 || e.button === 2, includeKeyModifiers);
@@ -153,5 +191,6 @@ export const {
     nometa,
     stop,
     prevent,
-    self
+    self,
+    keys
 } = root;
