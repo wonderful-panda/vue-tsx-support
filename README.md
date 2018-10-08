@@ -33,7 +33,7 @@ TSX (JSX for TypeScript) support library for Vue
 <!-- tocstop -->
 
 ## BREAKING CHANGES
-- V2.2.0
+- V2.2.0 (Not released yet)
   - Disallow meaningless combination of modifiers(undocumented api).
 
     ```typescript
