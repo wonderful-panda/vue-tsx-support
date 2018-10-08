@@ -12,8 +12,8 @@ const keyNames: { [key: number]: string } = {
     32: "space",
     38: "up",
     40: "down",
-    8: "del",
-    46: "46",
+    8: "delete",
+    46: "backspace",
     37: "left",
     39: "right"
 };
@@ -71,7 +71,27 @@ describe("modifiers", () => {
         assert.deepEqual(keysR, ["right"]);
         assert.deepEqual(buttonsR, ["right"]);
     });
-    it("prevent", () => {
+    it("prevent before", () => {
+        const result = [] as string[];
+        const Comp = Vue.extend({
+            render(): VNode {
+                return <div onKeydown={m.prevent.space} />;
+            }
+        });
+        const w = mount(Comp);
+        w.trigger("keydown.space", {
+            preventDefault() {
+                result.push("preventDefault:space");
+            }
+        });
+        w.trigger("keydown.enter", {
+            preventDefault() {
+                result.push("preventDefault:enter");
+            }
+        });
+        assert.deepEqual(result, ["preventDefault:space", "preventDefault:enter"]);
+    });
+    it("prevent after", () => {
         const result = [] as string[];
         const Comp = Vue.extend({
             render(): VNode {
@@ -81,22 +101,43 @@ describe("modifiers", () => {
         const w = mount(Comp);
         w.trigger("keydown.space", {
             preventDefault() {
-                result.push("should be called");
+                result.push("preventDefault:space");
             }
         });
         w.trigger("keydown.enter", {
             preventDefault() {
-                result.push("should not be called");
+                result.push("preventDefault:enter");
             }
         });
-        assert.deepEqual(result, ["should be called"]);
+        assert.deepEqual(result, ["preventDefault:space"]);
     });
-    it("stop", () => {
+    it("stop before", () => {
+        const propagated = [] as string[];
         const result = [] as string[];
         const Comp = Vue.extend({
             render(): VNode {
                 return (
-                    <div onKeydown={e => result.push(keyNames[e.keyCode])}>
+                    <div onKeydown={e => propagated.push(keyNames[e.keyCode])}>
+                        <div class="inner" onKeydown={m.stop.enter(e => result.push(keyNames[e.keyCode]))} />
+                    </div>
+                );
+            }
+        });
+        const w = mount(Comp);
+        const inner = w.find(".inner");
+        inner.trigger("keydown.up");
+        inner.trigger("keydown.enter");
+        inner.trigger("keydown.space");
+        assert.deepEqual(result, ["enter"]);
+        // all keydown events are not propagated
+        assert.deepEqual(propagated, []);
+    });
+    it("stop after", () => {
+        const propagated = [] as string[];
+        const Comp = Vue.extend({
+            render(): VNode {
+                return (
+                    <div onKeydown={e => propagated.push(keyNames[e.keyCode])}>
                         <div class="inner" onKeydown={m.enter.stop} />
                     </div>
                 );
@@ -108,6 +149,31 @@ describe("modifiers", () => {
         inner.trigger("keydown.enter");
         inner.trigger("keydown.space");
         // keydown.enter is not propagated
-        assert.deepEqual(result, ["up", "space"]);
+        assert.deepEqual(propagated, ["up", "space"]);
+    });
+    it("exact", () => {
+        const accepted = [] as string[];
+        const Comp = Vue.extend({
+            render(): VNode {
+                return <div onKeydown={m.exact("ctrl", "alt")(e => accepted.push(keyNames[e.keyCode]))} />;
+            }
+        });
+        const w = mount(Comp);
+        w.trigger("keydown.up", {
+            ctrlKey: true
+        });
+        w.trigger("keydown.down", {
+            altKey: true
+        });
+        w.trigger("keydown.left", {
+            ctrlKey: true,
+            altKey: true
+        });
+        w.trigger("keydown.right", {
+            ctrlKey: true,
+            shiftKey: true,
+            altKey: true
+        });
+        assert.deepEqual(accepted, ["left"]);
     });
 });
