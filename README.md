@@ -7,7 +7,7 @@ TSX (JSX for TypeScript) support library for Vue
 
 <!-- toc -->
 
-- [Caution: BREAKING CHANGE](#caution-breaking-change)
+- [BREAKING CHANGES](#breaking-changes)
 - [Install and enable](#install-and-enable)
 - [Using intrinsic elements](#using-intrinsic-elements)
 - [Using custom component](#using-custom-component)
@@ -32,7 +32,36 @@ TSX (JSX for TypeScript) support library for Vue
 
 <!-- tocstop -->
 
-## Caution: BREAKING CHANGE
+## BREAKING CHANGES
+- V2.2.0
+  - Disallow meaningless combination of modifiers(undocumented api).
+
+    ```typescript
+    import { modifiers as m } from "vue-tsx-support";
+
+    /*
+     * Below combinations are all disallowed
+     */
+
+    // repeating same modifier
+    <div onClick={m.enter.enter(/* snip */)} />;
+    <div onClick={m.prevent.prevent(/* snip */)} />;
+    <div onClick={m.enter.ctrl.enter(/* snip */)} />;
+
+    // multiple key names.
+    // # what you want may be `m.keys("enter", "asc")`
+    <div onKeydown={m.enter.esc(/* snip */)} />;
+
+    // multiple buttons
+    <div onMousedown={m.left.middle(/* snip */)} />
+
+    // using key name and button togetter
+    <div onKeydown={m.enter.middle(/* snip */)} />
+
+    // xxx and noxxx
+    <div onClick={m.ctrl.noctrl(/* snip */)} />
+    ```
+
 - V2.1.0
   - When event type is function, vue-tsx-support treat it as event handler itself (to support events with multiple parameters).
     ```typescript
@@ -180,7 +209,7 @@ const MyComponent = tsx.componentFactory.create({
 `componentFactory.create` can infer types of props from component options same as `Vue.extend`.
 In the above example, props type will be `{ text?: string, important?: boolean }`.
 
-NOTE: all props are regarded as optional even if `required: true` specified.
+:warning: all props are regarded as optional even if `required: true` specified.
 
 ```jsx
 // both `text` and `important` are regarded as optional
@@ -190,7 +219,7 @@ NOTE: all props are regarded as optional even if `required: true` specified.
 <MyComponent important={true} />;
 ```
 
-But `text` is required actually, you may think compilation should be failed when text does not specified.
+But `text` is required actually, you may think compilation should be failed when text is not specified.
 There are sevaral ways to achieve it.
 
 1. Instead of `required: true`, specify `required: true as true`.
@@ -243,7 +272,7 @@ In above examples, props type will be `{ text: string, important?: boolean }`.
 <MyComponent important={true} />;
 ```
 
-NOTE: shorthand props definition(like `props: ["foo", "bar"]`) is currently not supported.
+:warning: shorthand props definition(like `props: ["foo", "bar"]`) is currently not supported.
 
 ```typescript
 // Does not work
@@ -297,7 +326,7 @@ const StorageMixin = {
     }
 }
 
-const MyComponent = tsx.mixin(StorageMixin).create(
+const MyComponent = tsx.componentFactory.mixin(StorageMixin).create(
     // You can use this.getItem and this.setItem here
     {
         props: {
@@ -320,7 +349,7 @@ const MyComponent = tsx.mixin(StorageMixin).create(
 );
 
 // You can add 2 or more mixins by method chain
-const MyComponent.mixin(FirstMixin).mixin(SecondMixin).create({
+const tsx.componentFactory.mixin(FirstMixin).mixin(SecondMixin).create({
     /* snip */
 })
 ```
@@ -555,7 +584,7 @@ To enable each options, import them somewhere
 import "vue-tsx-support/options/allow-unknown-props";
 ```
 
-NOTE: Scope of option is whole project, not a file.
+:warning: Scope of option is whole project, not a file.
 
 ### allow-element-unknown-attrs
 
