@@ -249,3 +249,16 @@ function extendFrom() {
     <Ext4 bar="b" />;
     <Ext4 bar="b" baz="c" />;    //// TS2339: 'baz' does not exist
 }
+
+function withXXX() {
+  const Base = tsx.componentFactoryOf<{ onOk: { value: string } }, { default: { value: string }}>().create({
+    props: { foo: { type: String, required: true as true }}
+  });
+  const Ext = tsx.withNativeOn(Base);
+  <Ext foo="a" />;
+  <Ext foo="a" onOk={v => console.log(v.value)} />;
+  <Ext foo="a" scopedSlots={{ default: v => v.value }} />;
+  <Ext foo="a" nativeOnClick={() => {}} />;
+  <Ext />;  //// TS2322: 'foo' is missing
+
+}
