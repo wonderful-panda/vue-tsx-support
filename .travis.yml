@@ -1,12 +1,12 @@
 sudo: false
 language: node_js
 node_js:
-- stable
+  - stable
 script:
-- npm run build
-- npm test
-- npm update vue vue-class-component vue-template-compiler
-- npm test
+  - yarn run build
+  - yarn test
+  - yarn upgrade vue vue-class-component vue-template-compiler
+  - yarn test
 deploy:
   provider: npm
   email: iwata0303@gmail.com
