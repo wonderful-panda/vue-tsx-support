@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "es6",
     "module": "es2015",
     "moduleResolution": "node",
@@ -10,11 +11,15 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "paths": {
+      "vue-tsx-support": ["../.."],
+      "vue-tsx-support/*": ["../../*"],
+    }
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
+    "**/*.ts",
+    "**/*.tsx",
     "../../enable-check.d.ts"
   ]
 }
