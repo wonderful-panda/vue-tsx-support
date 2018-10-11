@@ -7,8 +7,8 @@
   "scripts": {
     "update-readme": "markdown-toc -i README.md",
     "clean": "rimraf lib",
-    "build": "webpack",
-    "watch": "webpack -w",
+    "build": "tsc",
+    "watch": "tsc -w",
     "prettier": "prettier --list-different \"{src,types,options,test/jest}/**/*.ts\"",
     "prettier:fix": "prettier --write \"{src,types,options,test/jest}/**/*.ts\"",
     "jest": "jest",
@@ -57,10 +57,7 @@
     "vue": "^2.5.13",
     "vue-class-component": "^6.2.0",
     "vue-router": "^2.5.13",
-    "vue-template-compiler": "^2.5.13",
-    "webpack": "^4.16.3",
-    "webpack-cli": "^3.1.0",
-    "webpack-node-externals": "^1.7.2"
+    "vue-template-compiler": "^2.5.13"
   },
   "peerDependencies": {
     "vue": "^2.5.13"
