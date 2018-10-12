@@ -78,7 +78,7 @@
     },
     "globals": {
       "ts-jest": {
-        "tsConfigFile": "test/jest/tsconfig.json",
+        "tsConfig": "test/jest/tsconfig.json",
         "babelConfig": {
           "presets": [
             "env"
