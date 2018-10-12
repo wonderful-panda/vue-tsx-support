@@ -28,6 +28,9 @@ TSX (JSX for TypeScript) support library for Vue
   * [enable-html-attrs](#enable-html-attrs)
   * [enable-nativeon](#enable-nativeon)
   * [enable-vue-router](#enable-vue-router)
+- [Utility](#utility)
+  * [modifiers](#modifiers)
+    + [Available modifiers](#available-modifiers)
 - [LICENSE](#license)
 
 <!-- tocstop -->
@@ -631,6 +634,87 @@ const MyComponent = vuetsx.createComponent<{ foo: string }>({ /* ... */ });
 
 Add definitions of `router-link` and `router-view`
 
+## Utility
+
+### modifiers
+
+Event handler wrappers which work like some event modifiers available in template
+
+```typescript
+import { modifiers as m } from "vue-tsx-support";
+
+// Basic usage:
+//  Equivalent to `<div @keydown.enter="onEnter" />`
+<div onKeydown={m.enter(this.onEnter)} />;
+
+// Use multiple modifiers:
+//  Equivalent to `<div @keydown.enter.prevent="onEnter" />`
+<div onKeydown={m.enter.prevent(this.onEnter)} />;
+
+// Use without event handler:
+//  Equivalent to `<div @keydown.esc.prevent />`
+<div onKeydown={m.esc.prevent} />;
+
+// Use multiple keys:
+//  Equivalent to `<div @keydown.enter.esc="onEnterOrEsc" />`
+<div onKeydown={m.keys("enter", "esc")(this.onEnterOrEsc)} />;
+
+// Use exact modkey combination:
+//  Equivalent to `<div @keydown.65.ctrl.alt.exact="onCtrlAltA" />`
+<div onKeydown={m.keys(65).exact("ctrl", "alt")(this.onCtrlAltA)} />;
+```
+
+#### Available modifiers
+
+* `esc`, `tab`, `enter`, `space`, `up`, `down`, `del`
+
+  Execute event handler only when specified key is pressed.  
+  :exclamation: `del` allows not only DELETE, but also BACKSPACE.  
+  :exclamation: `left` and `right` have another behavior when specified to mouse event  
+  :exclamation: combination of key modifiers (e.g. `m.enter.esc`) does not work. See [keys](#keys)  
+
+* `left`, `right`, `middle`
+
+  Execute event handler only when specified mouse button is pressed. 
+  :exclamation: `left` and `right` have another behavior when specified to keyboard event  
+
+* `ctrl`, `shift`, `alt`, `meta`
+
+  Execute event handler only when specified system modifier key is pressed.  
+
+* `noctrl`, `noshift`, `noalt`, `nometa`
+
+  Execute event handler only when specified system modifier key is not pressed.  
+
+* `self`
+
+  Execute event handler only when event.target is the element itself (not from children).  
+
+* `prevent`, `stop`
+
+  Call `preventDefault` or `stopPropagation` of event object before executing event handler.  
+
+<a name="keys"></a>
+* `keys(...args)`
+
+  Execute event handler only when one of specified key is pressed.  
+  Known key name("esc", "tab", "enter", ...) or number can be specified.  
+
+  ```typescript
+  // when enter or esc pressed
+  <div onKeydown={m.keys("enter", "esc")(handler)} />;
+  // when 'a' pressed
+  <div onKeydown={m.keys(65)(handler)} />;
+  ```
+
+* `exact(...args)`
+
+  Execute event handler only when specified system modifier keys are all pressed, and others are not pressed.  
+
+  ```typescript
+  // when CTRL, SHIFT are both pressed, and ALT, META are both not pressed
+  <div onClick={m.exact("ctrl", "shift")(handler)} />;
+  ```
 
 ## LICENSE
 MIT
