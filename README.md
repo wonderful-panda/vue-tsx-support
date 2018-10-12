@@ -666,17 +666,17 @@ import { modifiers as m } from "vue-tsx-support";
 
 #### Available modifiers
 
-* `esc`, `tab`, `enter`, `space`, `up`, `down`, `del`
+* `esc`, `tab`, `enter`, `space`, `up`, `down`, `del`, `left`, `right`
 
   Execute event handler only when specified key is pressed.  
-  :exclamation: `del` allows not only DELETE, but also BACKSPACE.  
-  :exclamation: `left` and `right` have another behavior when specified to mouse event  
-  :exclamation: combination of key modifiers (e.g. `m.enter.esc`) does not work. See [keys](#keys)  
+  :warning: `del` allows not only DELETE, but also BACKSPACE.  
+  :warning: `left` and `right` have another behavior when specified to mouse event  
+  :warning: combination of key modifiers (e.g. `m.enter.esc`) does not work. See [keys](#keys)  
 
 * `left`, `right`, `middle`
 
-  Execute event handler only when specified mouse button is pressed. 
-  :exclamation: `left` and `right` have another behavior when specified to keyboard event  
+  Execute event handler only when specified mouse button is pressed.  
+  :warning: `left` and `right` have another behavior when specified to keyboard event  
 
 * `ctrl`, `shift`, `alt`, `meta`
 
