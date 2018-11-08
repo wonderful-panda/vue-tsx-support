@@ -91,11 +91,17 @@ interface ScopedSlots {
  * ofType and convert
  */
 function convert() {
-    const MyComponent1 = vuetsx.ofType<Props, Events>().convert(Vue.extend({}));
+    const MyComponent1 = vuetsx.ofType<Props, Events>().convert(Vue.extend({
+      methods: { greet() {} }
+    }));
     const MyComponent2 = vuetsx.ofType<Props, Events, ScopedSlots>().convert(Vue.extend({}));
+    const MyComponent3 = vuetsx.ofType<Props, Events>().convert({} as any);
 
     // NG: `a` is required
     <MyComponent1 />;    //// TS2322: 'a' is missing
+
+    let vm!: InstanceType<typeof MyComponent1>;
+    vm.greet(); // OK
 
     // OK
     <MyComponent1 a="foo" b={ 0 } />;
@@ -114,6 +120,22 @@ function convert() {
     <MyComponent2 a="foo" scopedSlots={{}} />;   //// TS2322: 'default' is missing
     // NG
     <MyComponent2 a="foo" scopedSlots={{ default: props => props.xxx }} />;   //// TS2339: 'xxx' does not exist
+
+    // NG: `a` is required
+    <MyComponent3 />;    //// TS2322
+
+    // OK
+    <MyComponent3 a="foo" b={ 0 } />;
+    // OK
+    <MyComponent3 a="foo" b={ 0 } onChange={ value => console.log(value.toUpperCase()) } />;
+    // NG: `c` is not defined
+    <MyComponent3 a="foo" c="bar" />;  //// TS2339
+    // NG: `a` must be string
+    <MyComponent3 a={ 0 } />;          //// TS2322
+    // NG: `b` must be number
+    <MyComponent3 a="foo" b="bar" />;  //// TS2322
+
+
 }
 
 /*

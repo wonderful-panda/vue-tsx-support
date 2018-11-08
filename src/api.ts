@@ -56,10 +56,9 @@ export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(
 }
 
 export interface Factory<TProps, TEvents, TScopedSlots> {
-  convert<VC extends typeof Vue>(
-    componentType: VC
-  ): TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
-  // now, `extendFrom` and `convert` are equivalent
+  convert<V extends Vue>(
+    componentType: new (...args: any[]) => V
+  ): TsxComponent<V, TProps, TEvents, TScopedSlots>;
   extendFrom<VC extends typeof Vue>(
     componentType: VC
   ): TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
