@@ -36,12 +36,12 @@ export type EventHandlers<E> = {
 export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> =
   | ({ props: TProps } & Partial<TProps> &
       KnownAttrs & {
-        scopedSlots?: ScopedSlots<TScopedSlots>;
+        scopedSlots?: ScopedSlots<TScopedSlots> | { [key:string] : any };
       } & EventHandlers<TEvents> &
       VueTsx.ComponentAdditionalAttrs)
   | (TProps &
       KnownAttrs & {
-        scopedSlots?: ScopedSlots<TScopedSlots>;
+        scopedSlots?: ScopedSlots<TScopedSlots> | { [key:string] : any };
       } & EventHandlers<TEvents> &
       VueTsx.ComponentAdditionalAttrs);
 
