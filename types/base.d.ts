@@ -12,8 +12,6 @@ declare global {
   }
 }
 
-export type StringKeyOf<T> = Extract<keyof T, string>;
-
 export type KnownAttrs = Pick<
   VNodeData,
   "class" | "staticClass" | "key" | "ref" | "slot" | "scopedSlots"
@@ -24,13 +22,13 @@ export type KnownAttrs = Pick<
   domPropsInnerHTML?: string;
 };
 export type ScopedSlots<T> = {
-  [K in StringKeyOf<T>]: (props: T[K]) => VNodeChildrenArrayContents | string
+  [K in keyof T]: (props: T[K]) => VNodeChildrenArrayContents | string
 } & {
   [name: string]: (props: any) => VNodeChildrenArrayContents | string;
 };
 
 export type EventHandlers<E> = {
-  [K in StringKeyOf<E>]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
+  [K in keyof E]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
 };
 
 export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> =
@@ -59,7 +57,7 @@ export interface ElementAttributesProperty {
 }
 
 export type IntrinsicElements = {
-  [K in StringKeyOf<dom.IntrinsicElementAttributes>]: ElementAttrs<
+  [K in keyof dom.IntrinsicElementAttributes]: ElementAttrs<
     dom.IntrinsicElementAttributes[K]
   >
 };
