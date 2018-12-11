@@ -14,7 +14,9 @@ declare global {
 
 export type StringKeyOf<T> = Extract<keyof T, string>;
 
-type ScopedSlot<P = any> = ((props: P) => VNodeChildrenArrayContents | VNode | string);
+type ScopedSlot<P = any> = ((
+  props: P
+) => VNodeChildrenArrayContents | VNode | string);
 
 export type KnownAttrs = Pick<
   VNodeData,

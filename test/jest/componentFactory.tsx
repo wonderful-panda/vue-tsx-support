@@ -30,7 +30,9 @@ describe("componentFactory", () => {
             foo: String
           },
           render(): VNode {
-            return <div>{this.$scopedSlots.default(this.foo)}</div>;
+            const defaultSlot = this.$scopedSlots.default
+            const child = defaultSlot ? defaultSlot(this.foo) : 'Default Content'
+            return <div>{child}</div>;
           }
         });
 
