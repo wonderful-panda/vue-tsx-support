@@ -136,10 +136,12 @@ function componentFactoryOf() {
         },
         computed: {
             okNode(): VNode {
-                return <div>{this.$scopedSlots.content("foo")}</div>;
+                const content = this.$scopedSlots.content
+                return <div>{content && content("foo")}</div>;
             },
             ngNode(): VNode {
-                return <div>{this.$scopedSlots.content(0)}</div>;       //// TS2345: '0' is not assignable
+                const content = this.$scopedSlots.content
+                return <div>{content && content(0)}</div>;       //// TS2345: '0' is not assignable
             }
         },
         render(): VNode {

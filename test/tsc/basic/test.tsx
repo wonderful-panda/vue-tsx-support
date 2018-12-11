@@ -170,14 +170,16 @@ function vueClassComponent() {
     @component
     class MyComponent2 extends vuetsx.Component<Props, Events, ScopedSlots> {
         render() {
-            return <div>{ this.$scopedSlots.default({ ssprops: "foo" }) }</div>;
+            const defaultSlot = this.$scopedSlots.default
+            return <div>{ defaultSlot && defaultSlot({ ssprops: "foo" }) }</div>;
         }
     }
 
     @component
     class MyComponent3 extends vuetsx.Component<Props, Events, ScopedSlots> {
         render() {
-            return <div>{ this.$scopedSlots.default({ ssprops: 1 }) }</div>;    //// TS2345: 'number' is not assignable
+            const defaultSlot = this.$scopedSlots.default
+            return <div>{ defaultSlot && defaultSlot({ ssprops: 1 }) }</div>;    //// TS2345: 'number' is not assignable
         }
     }
 

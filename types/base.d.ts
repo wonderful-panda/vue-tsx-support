@@ -14,6 +14,8 @@ declare global {
 
 export type StringKeyOf<T> = Extract<keyof T, string>;
 
+type ScopedSlot<P = any> = ((props: P) => VNodeChildrenArrayContents | VNode | string);
+
 export type KnownAttrs = Pick<
   VNodeData,
   "class" | "staticClass" | "key" | "ref" | "slot" | "scopedSlots"
@@ -24,9 +26,9 @@ export type KnownAttrs = Pick<
   domPropsInnerHTML?: string;
 };
 export type ScopedSlots<T> = {
-  [K in StringKeyOf<T>]: (props: T[K]) => VNodeChildrenArrayContents | string
+  [K in StringKeyOf<T>]: ScopedSlot<T[K]> | undefined
 } & {
-  [name: string]: (props: any) => VNodeChildrenArrayContents | string;
+  [name: string]: ScopedSlot | undefined;
 };
 
 export type EventHandlers<E> = {
