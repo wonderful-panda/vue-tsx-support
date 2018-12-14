@@ -54,13 +54,13 @@
     "ts-loader": "^4.4.2",
     "tsc-test": "^0.1.5",
     "typescript": "^2.8.1",
-    "vue": "^2.5.20",
+    "vue": "^2.5.21",
     "vue-class-component": "^6.2.0",
     "vue-router": "^2.5.13",
-    "vue-template-compiler": "^2.5.20"
+    "vue-template-compiler": "^2.5.21"
   },
   "peerDependencies": {
-    "vue": "^2.5.20"
+    "vue": "^2.5.21"
   },
   "jest": {
     "moduleFileExtensions": [

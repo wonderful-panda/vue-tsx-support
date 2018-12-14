@@ -1,5 +1,6 @@
 import * as dom from "./dom";
 import Vue, { VNode, VNodeData, VNodeChildrenArrayContents } from "vue";
+import { ScopedSlotChildren } from "vue/types/vnode";
 
 declare global {
   namespace VueTsx {
@@ -14,9 +15,7 @@ declare global {
 
 export type StringKeyOf<T> = Extract<keyof T, string>;
 
-type ScopedSlot<P = any> = ((
-  props: P
-) => VNodeChildrenArrayContents | VNode | string);
+type ScopedSlot<P = any> = (props: P) => ScopedSlotChildren;
 
 export type KnownAttrs = Pick<
   VNodeData,
