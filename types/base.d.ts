@@ -1,5 +1,6 @@
 import * as dom from "./dom";
 import Vue, { VNode, VNodeData, VNodeChildrenArrayContents } from "vue";
+import { ScopedSlot } from "vue/types/vnode";
 
 declare global {
   namespace VueTsx {
@@ -12,6 +13,8 @@ declare global {
   }
 }
 
+export type ScopedSlotReturnType = ReturnType<ScopedSlot>;
+
 export type KnownAttrs = Pick<
   VNodeData,
   "class" | "staticClass" | "key" | "ref" | "slot" | "scopedSlots"
@@ -22,10 +25,9 @@ export type KnownAttrs = Pick<
   domPropsInnerHTML?: string;
 };
 export type ScopedSlots<T> = {
-  [K in keyof T]: (props: T[K]) => VNodeChildrenArrayContents | string
-} & {
-  [name: string]: (props: any) => VNodeChildrenArrayContents | string;
-};
+  [K in keyof T]: (props: T[K]) => ScopedSlotReturnType
+} &
+  Vue["$scopedSlots"];
 
 export type EventHandlers<E> = {
   [K in keyof E]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
