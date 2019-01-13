@@ -10,7 +10,7 @@ declare global {
 
         interface IntrinsicElements extends base.IntrinsicElements {
             // allow unknown elements
-            [name: string]: any;
+            name: any;
 
             // builtin components
             transition: base.TsxComponentAttrs<builtin.TransitionProps>;
