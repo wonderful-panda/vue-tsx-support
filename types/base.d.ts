@@ -47,7 +47,7 @@ export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> =
 
 export type ElementAttrs<T> = T &
   KnownAttrs &
-  EventHandlers<dom.EventsOn> &
+  EventHandlers<dom.EventsOn<T>> &
   VueTsx.ElementAdditionalAttrs;
 
 export interface Element extends VNode {}
