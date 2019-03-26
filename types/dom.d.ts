@@ -730,7 +730,7 @@ export interface Events {
 
 type SyntheticEvent<T = Element, E = Event> = {
   target: EventTarget & T;
-} & Pick<E, Exclude<keyof E, 'target'>>
+} & Pick<E, Exclude<keyof E, "target">>;
 
 export interface EventsOn<E = Element> {
   // clipboard events
