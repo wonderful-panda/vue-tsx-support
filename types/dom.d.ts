@@ -728,7 +728,11 @@ export interface Events {
   transitionstart: TransitionEvent;
 }
 
-export interface EventsOn {
+type SyntheticEvent<T = Element, E = Event> = {
+  target: EventTarget & T;
+} & Pick<E, Exclude<keyof E, "target">>;
+
+export interface EventsOn<E = Element> {
   // clipboard events
   onCopy: ClipboardEvent;
   onCut: ClipboardEvent;
@@ -750,15 +754,15 @@ export interface EventsOn {
   onDrop: DragEvent;
 
   // focus events
-  onFocus: FocusEvent;
-  onBlur: FocusEvent;
+  onFocus: SyntheticEvent<E, FocusEvent>;
+  onBlur: SyntheticEvent<E, FocusEvent>;
 
   // form events
-  onChange: Event;
-  onInput: Event;
-  onReset: Event;
-  onSubmit: Event;
-  onInvalid: Event;
+  onChange: SyntheticEvent<E>;
+  onInput: SyntheticEvent<E>;
+  onReset: SyntheticEvent<E>;
+  onSubmit: SyntheticEvent<E>;
+  onInvalid: SyntheticEvent<E>;
 
   // image events
   onLoad: Event;
