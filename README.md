@@ -434,7 +434,7 @@ const MyComponent = tsx.componentFactoryOf<{}, ScopedSlots>().create({
 
 // NG: 'default' is missing in scopedSlots
 <MyComponent scopedSlots={{
-        defualt: p => [<span>p.text</span>]
+        default: p => [<span>p.text</span>]
     }}
 />;
 ```
