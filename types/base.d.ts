@@ -26,8 +26,14 @@ export type KnownAttrs = Pick<
 };
 export type ScopedSlots<T> = {
   [K in keyof T]: (props: T[K]) => ScopedSlotReturnType
-} &
-  Vue["$scopedSlots"];
+};
+
+export type InnerScopedSlotReturnType = Vue["$scopedSlots"] extends {
+  [name: string]: (...args: any[]) => infer T;
+}
+  ? T
+  : never;
+export type InnerScopedSlot<T> = (props: T) => InnerScopedSlotReturnType;
 
 export type EventHandlers<E> = {
   [K in keyof E]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
