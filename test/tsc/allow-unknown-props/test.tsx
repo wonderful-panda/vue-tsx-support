@@ -10,9 +10,9 @@ function intrinsicElements() {
     // unknown attributes of intrinsic element are rejected
 
     // NG
-    <a domPropInnerHTML="foo" />;   //// TS2339: Property 'domPropInnerHTML' does not exist
+    <a domPropInnerHTML="foo" />;   //// TS2322 | TS2339: Property 'domPropInnerHTML' does not exist
     // NG
-    <div href="example.com" />;     //// TS2339: Property 'href' does not exist
+    <div href="example.com" />;     //// TS2322 | TS2339: Property 'href' does not exist
 }
 
 /*
@@ -45,8 +45,8 @@ function convert() {
     // OK
     <MyComponent a="value" nativeOnClick={ noop } />;
     // NG
-    <MyComponent />;    //// TS2322: Property 'a' is missing
+    <MyComponent />;    //// TS2322 | TS2326: Property 'a' is missing
     // NG
-    <MyComponent a={ 0 } />;    //// TS2322: /'(0|number)' is not assignable/
+    <MyComponent a={ 0 } />;    //// TS2322 | TS2326: /'(0|number)' is not assignable/
 }
 

@@ -1,9 +1,0 @@
-{
-  "extends": "../base",
-  "compilerOptions": {
-    "noImplicitAny": false
-  },
-  "include": [
-    "*.tsx"
-  ]
-}

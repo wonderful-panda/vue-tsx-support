@@ -5,7 +5,7 @@ node_js:
 script:
   - yarn run build
   - yarn test
-  - yarn upgrade vue vue-class-component vue-template-compiler
+  - yarn upgrade vue vue-class-component vue-template-compiler typescript
   - yarn test
 deploy:
   provider: npm

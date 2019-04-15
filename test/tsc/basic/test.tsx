@@ -31,11 +31,11 @@ function intrinsicElements() {
     <div style={ [{ display: "flex" }] } />;
 
     // NG
-    <div id={ 0 } />;   //// TS2322: /Type '(0|number)' is not assignable to/
+    <div id={ 0 } />;   //// TS2322 | TS2326: /Type '(0|number)' is not assignable to/
     // NG
-    <div href="example.com" />; //// TS2339: Property 'href' does not exist
+    <div href="example.com" />; //// TS2322 | TS2339: Property 'href' does not exist
     // NG
-    <a domPropInnerHTML="foo" />;   //// TS2339: Property 'domPropInnerHTML' does not exist
+    <a domPropInnerHTML="foo" />;   //// TS2322 | TS2339: Property 'domPropInnerHTML' does not exist
 }
 
 
@@ -60,13 +60,13 @@ function standardComponent() {
     <MyComponent { ...{ attrs: { min: 0, max: 100 } } } />;
 
     // NG: prop
-    <MyComponent a="value" />;      //// TS2339: Property 'a' does not exist
+    <MyComponent a="value" />;      //// TS2322 | TS2339: Property 'a' does not exist
 
     // NG: HTML element
-    <MyComponent accesskey="akey" />;   //// TS2339: Property 'accesskey' does not exist
+    <MyComponent accesskey="akey" />;   //// TS2322 | TS2339: Property 'accesskey' does not exist
 
     // NG: native event handler
-    <MyComponent nativeOnClick={ noop } />; //// TS2339: Property 'nativeOnClick' does not exist
+    <MyComponent nativeOnClick={ noop } />; //// TS2322 | TS2339: Property 'nativeOnClick' does not exist
 
     // OK: specify style in 3 patterns
     <MyComponent style="display: flex;" />;
@@ -98,7 +98,7 @@ function convert() {
     const MyComponent3 = vuetsx.ofType<Props, Events>().convert({} as any);
 
     // NG: `a` is required
-    <MyComponent1 />;    //// TS2322: 'a' is missing
+    <MyComponent1 />;    //// TS2322 | TS2326: 'a' is missing
 
     let vm!: InstanceType<typeof MyComponent1>;
     vm.greet(); // OK
@@ -108,18 +108,18 @@ function convert() {
     // OK
     <MyComponent1 a="foo" b={ 0 } onChange={ value => console.log(value.toUpperCase()) } />;
     // NG: `c` is not defined
-    <MyComponent1 a="foo" c="bar" />;  //// TS2339: 'c' does not exist
+    <MyComponent1 a="foo" c="bar" />;  //// TS2322 | TS2339: 'c' does not exist
     // NG: `a` must be string
-    <MyComponent1 a={ 0 } />;          //// TS2322: /'(0|number)' is not assignable/
+    <MyComponent1 a={ 0 } />;          //// TS2322 | TS2326: /'(0|number)' is not assignable/
     // NG: `b` must be number
-    <MyComponent1 a="foo" b="bar" />;  //// TS2322: /'("bar"|string)' is not assignable/
+    <MyComponent1 a="foo" b="bar" />;  //// TS2322 | TS2326: /'("bar"|string)' is not assignable/
 
     // OK
     <MyComponent2 a="foo" scopedSlots={{ default: props => props.ssprops }} />;
     // NG
-    <MyComponent2 a="foo" scopedSlots={{}} />;   //// TS2322: 'default' is missing
+    <MyComponent2 a="foo" scopedSlots={{}} />;   //// TS2322 | TS2326: 'default' is missing
     // NG
-    <MyComponent2 a="foo" scopedSlots={{ default: props => props.xxx }} />;   //// TS2339: 'xxx' does not exist
+    <MyComponent2 a="foo" scopedSlots={{ default: props => props.xxx }} />;   //// TS2322 | TS2339: 'xxx' does not exist
 
     // NG: `a` is required
     <MyComponent3 />;    //// TS2322
@@ -129,11 +129,11 @@ function convert() {
     // OK
     <MyComponent3 a="foo" b={ 0 } onChange={ value => console.log(value.toUpperCase()) } />;
     // NG: `c` is not defined
-    <MyComponent3 a="foo" c="bar" />;  //// TS2339
+    <MyComponent3 a="foo" c="bar" />;  //// TS2322 | TS2339
     // NG: `a` must be string
-    <MyComponent3 a={ 0 } />;          //// TS2322
+    <MyComponent3 a={ 0 } />;          //// TS2322 | TS2326
     // NG: `b` must be number
-    <MyComponent3 a="foo" b="bar" />;  //// TS2322
+    <MyComponent3 a="foo" b="bar" />;  //// TS2322 | TS2326
 
 
 }
@@ -151,11 +151,11 @@ function createComponent() {
     // OK
     <MyComponent a="foo" b={ 0 } />;
     // NG: `c` is not defined
-    <MyComponent a="foo" c="bar" />;  //// TS2339: 'c' does not exist
+    <MyComponent a="foo" c="bar" />;  //// TS2322 | TS2339: 'c' does not exist
     // NG: `a` must be string
-    <MyComponent a={ 0 } />;          //// TS2322: /'(0|number)' is not assignable/
+    <MyComponent a={ 0 } />;          //// TS2322 | TS2326: /'(0|number)' is not assignable/
     // NG: `b` must be number
-    <MyComponent a="foo" b="bar" />;  //// TS2322: /'("bar"|string)' is not assignable/
+    <MyComponent a="foo" b="bar" />;  //// TS2322 | TS2326: /'("bar"|string)' is not assignable/
 
 }
 
@@ -177,7 +177,7 @@ function vueClassComponent() {
     @component
     class MyComponent3 extends vuetsx.Component<Props, Events, ScopedSlots> {
         render() {
-            return <div>{ this.$scopedSlots.default({ ssprops: 1 }) }</div>;    //// TS2345: 'number' is not assignable
+            return <div>{ this.$scopedSlots.default({ ssprops: 1 }) }</div>;    //// TS2322 | TS2345: 'number' is not assignable
         }
     }
 
@@ -193,17 +193,17 @@ function vueClassComponent() {
     <MyComponent a="foo" scopedSlots={{ default: (p: any) => [<span>{p.xxx}</span>] }} />;
 
     // NG: `c` is not defined
-    <MyComponent a="foo" c="bar" />;  //// TS2339: 'c' does not exist
+    <MyComponent a="foo" c="bar" />;  //// TS2322 | TS2339: 'c' does not exist
     // NG: `a` must be string
-    <MyComponent a={ 0 } />;          //// TS2322: /'(0|number)' is not assignable/
+    <MyComponent a={ 0 } />;          //// TS2322 | TS2326: /'(0|number)' is not assignable/
     // NG: `b` must be number
-    <MyComponent a="foo" b="bar" />;  //// TS2322: /'("bar"|string)' is not assignable/
+    <MyComponent a="foo" b="bar" />;  //// TS2322 | TS2326: /'("bar"|string)' is not assignable/
 
     // OK
     <MyComponent2 a="foo" scopedSlots={{ default: p => p.ssprops }} />;
     // OK (unfortunately)
     <MyComponent2 a="foo" />;
     // NG
-    <MyComponent2 a="foo" scopedSlots={{ default: p => p.xxx }} />;   //// TS2339: 'xxx' does not exist
+    <MyComponent2 a="foo" scopedSlots={{ default: p => p.xxx }} />;   //// TS2322 | TS2339: 'xxx' does not exist
 }
 
