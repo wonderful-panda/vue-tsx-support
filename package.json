@@ -53,14 +53,14 @@
     "ts-jest": "^23.10.4",
     "ts-loader": "^4.4.2",
     "tsc-test": "^0.2.0",
-    "typescript": ">=2.8.1",
+    "typescript": ">=3.2.5",
     "vue": "^2.5.13",
     "vue-class-component": "^6.2.0",
-    "vue-router": "^2.5.13",
+    "vue-router": "^2.5.3",
     "vue-template-compiler": "^2.5.13"
   },
   "peerDependencies": {
-    "typescript": ">=2.8.1",
+    "typescript": ">=3.2.5",
     "vue": "^2.5.13"
   },
   "jest": {

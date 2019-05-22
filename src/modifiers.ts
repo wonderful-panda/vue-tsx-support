@@ -337,14 +337,20 @@ function createModifier(
     m,
     filters,
     "stop",
-    e => e.stopPropagation() || true,
+    e => {
+      e.stopPropagation();
+      return true;
+    },
     children
   );
   defineChildModifier(
     m,
     filters,
     "prevent",
-    e => e.preventDefault() || true,
+    e => {
+      e.preventDefault();
+      return true;
+    },
     children
   );
   defineChildModifier(
