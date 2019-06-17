@@ -21,7 +21,7 @@ export type KnownAttrs = Pick<
   domPropsInnerHTML?: string;
 };
 export type ScopedSlots<T> = {
-  [K in keyof T]: (props: T[K]) => ScopedSlotReturnType
+  [K in keyof T]: (props: Exclude<T[K], undefined>) => ScopedSlotReturnType
 };
 
 export type InnerScopedSlotReturnType = Vue["$scopedSlots"] extends {

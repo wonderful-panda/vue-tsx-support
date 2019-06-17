@@ -159,6 +159,30 @@ function componentFactoryOf() {
     <MyComponent onOk={(_, id) => { console.log(id); }} />;
 }
 
+function optionalScopedSlot() {
+    const factory = tsx.componentFactoryOf<{}, { required: string, optional?: number }>();
+    const MyComponent = factory.create({
+        props: {
+            foo: String,
+            bar: Number
+        },
+        render(): VNode {
+            return (
+              <div>
+                {this.$scopedSlots.optional!(1)} // OK
+                {this.$scopedSlots.optional(1)} //// TS2722: possibly 'undefined'
+              </div>
+            );
+        },
+    });
+
+    /* checking type of scopedSlots */
+    <MyComponent scopedSlots={{ required: p => p.toUpperCase() }} />;
+    <MyComponent scopedSlots={{ required: p => p.toUpperCase(), optional: p => p.toString() }} />;
+    <MyComponent scopedSlots={{ optional: p => p.toString() }} />; //// TS2322: 'required' is missing
+}
+
+
 function extendFrom() {
     /*
      * extend from tsx component
