@@ -1,10 +1,7 @@
 // Make enabled to specify HTML attributes to the Vue component
-
+import "..";
 import { AllHTMLAttributes } from "../types/dom";
 
-// prettier-ignore
-declare global {
-    namespace VueTsx {
-        interface ComponentAdditionalAttrs extends AllHTMLAttributes {}
-    }
+declare module "vue-tsx-support/types/base" {
+  interface ComponentAdditionalAttrs extends AllHTMLAttributes {}
 }
