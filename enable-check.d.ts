@@ -1,13 +1,12 @@
 import * as base from "./types/base";
 import * as builtin from "./types/builtin-components";
-import "./types/vue";
 
 declare global {
   namespace JSX {
     interface Element extends base.Element {}
     interface ElementClass extends base.ElementClass {}
     type LibraryManagedAttributes<C, P> = C extends new () => infer V
-      ? V extends { _tsxattrs: infer A } ? A : {}
+      ? V extends { _tsxattrs: infer A } ? A : base.TsxComponentAttrs
       : P;
 
     interface IntrinsicElements extends base.IntrinsicElements {
