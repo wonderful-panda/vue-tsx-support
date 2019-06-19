@@ -19,7 +19,7 @@ interface RouterViewProps {
 }
 
 declare global {
-  namespace JSX {
+  namespace VueTsxSupport.JSX {
     interface IntrinsicElements {
       "router-link"?: TsxComponentAttrs<RouterLinkProps>;
       "router-view"?: TsxComponentAttrs<RouterViewProps>;

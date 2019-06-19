@@ -3,6 +3,7 @@
     "baseUrl": ".",
     "target": "es5",
     "jsx": "preserve",
+    "jsxFactory": "VueTsxSupport",
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": true,

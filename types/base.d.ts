@@ -2,9 +2,6 @@ import * as dom from "./dom";
 import Vue, { VNode, VNodeData, VNodeChildrenArrayContents } from "vue";
 import { ScopedSlot } from "vue/types/vnode";
 
-export interface ComponentAdditionalAttrs {
-  // extension point.
-}
 export interface ElementAdditionalAttrs {
   // extension point.
 }
@@ -39,13 +36,11 @@ export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> =
   | ({ props: TProps } & Partial<TProps> &
       KnownAttrs & {
         scopedSlots?: ScopedSlots<TScopedSlots>;
-      } & EventHandlers<TEvents> &
-      ComponentAdditionalAttrs)
+      } & EventHandlers<TEvents>)
   | (TProps &
       KnownAttrs & {
         scopedSlots?: ScopedSlots<TScopedSlots>;
-      } & EventHandlers<TEvents> &
-      ComponentAdditionalAttrs);
+      } & EventHandlers<TEvents>);
 
 export type ElementAttrs<T> = T &
   KnownAttrs &

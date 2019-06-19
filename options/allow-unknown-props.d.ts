@@ -1,8 +1,6 @@
 // Make enabled to specify unknown attributes(props) to the Vue components
-import "..";
-
-declare module "vue-tsx-support/types/base" {
-  interface ComponentAdditionalAttrs {
+declare namespace VueTsxSupport.JSX {
+  interface IntrinsicAttributes {
     [name: string]: any;
   }
 }
