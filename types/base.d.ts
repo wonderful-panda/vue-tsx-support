@@ -56,3 +56,22 @@ export type IntrinsicElements = {
     dom.IntrinsicElementAttributes[K]
   >
 };
+
+export type PropMarker = { __vuetsx_type: "prop" };
+export type PropOf<T> = T & PropMarker;
+// prettier-ignore
+export type RawPropType<T> =
+  unknown extends T
+  ? never
+  : T extends PropOf<infer X>
+    ? PropMarker extends T ? unknown : X
+    : never;
+
+export type ClassComponentPropNames<C> = {
+  [K in keyof C]: RawPropType<C[K]> extends never ? never : K
+}[keyof C];
+
+export type ClassComponentProps<C> = Pick<
+  { [K in keyof C]: RawPropType<C[K]> },
+  ClassComponentPropNames<C>
+>;
