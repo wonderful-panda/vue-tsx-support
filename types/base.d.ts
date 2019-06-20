@@ -22,7 +22,7 @@ export type ScopedSlots<T> = {
 };
 
 export type InnerScopedSlotReturnType = Vue["$scopedSlots"] extends {
-  [name: string]: (...args: any[]) => infer T;
+  [name: string]: ((...args: any[]) => infer T) | undefined;
 }
   ? T
   : never;
