@@ -57,21 +57,18 @@ export type IntrinsicElements = {
   >
 };
 
-export type PropMarker = { __vuetsx_type: "prop" };
-export type PropOf<T> = T & PropMarker;
-// prettier-ignore
-export type RawPropType<T> =
-  unknown extends T
-  ? never
-  : T extends PropOf<infer X>
-    ? PropMarker extends T ? unknown : X
-    : never;
+export type DefineTsxProps<
+  V extends Vue,
+  PropNames extends Exclude<keyof V, keyof Vue>,
+  ForceOptionals extends PropNames = never
+> = {
+  props: Record<PropNames, unknown>;
+  forceOptionals: Record<ForceOptionals, unknown>;
+};
 
-export type ClassComponentPropNames<C> = {
-  [K in keyof C]: RawPropType<C[K]> extends never ? never : K
-}[keyof C];
-
-export type ClassComponentProps<C> = Pick<
-  { [K in keyof C]: RawPropType<C[K]> },
-  ClassComponentPropNames<C>
->;
+export type ClassComponentProps<Class, Inst> = Class extends {
+  TsxProps: { props: infer P; forceOptionals: infer FO };
+}
+  ? Pick<Inst, keyof Inst & Exclude<keyof P, keyof FO>> &
+      { [K in keyof Inst & keyof FO]?: Inst[K] }
+  : {};

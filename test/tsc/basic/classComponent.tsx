@@ -1,28 +1,32 @@
-import Vue, { VNode } from "vue";
+import Vue from "vue";
 import Component from "vue-class-component";
-import * as tsx from "vue-tsx-support";
+import { DefineTsxProps } from "vue-tsx-support";
 
 @Component
 class Test extends Vue {
-  foo!: tsx.PropOf<string>;
-  bar?: tsx.PropOf<number>;
+  foo!: string;
+  bar?: number;
   baz!: string;
-  bra: any;
+  bra!: number;
+
+  static TsxProps: DefineTsxProps<Test, "foo" | "bar" | "baz", "baz">;
+}
+
+class Test2 extends Test {
+  piyo!: string[];
+  static TsxProps: DefineTsxProps<Test2, "piyo"> & typeof Test.TsxProps;
 }
 
 // OK
 <Test foo="value" />;
 // OK
 <Test foo="value" bar={1} />;
+// OK
+<Test foo="value" bar={1} baz="value" />;
 // NG
-<Test foo="value" bar={1} baz="value" />; //// TS2322 | TS2339: 'baz' does not exist
+<Test foo="value" bar={1} bra={1} />; //// TS2322 | TS2339: 'baz' does not exist
 // NG
 <Test />;   //// TS2322 | TS2326: 'foo' is missing
-
-@Component
-class Test2 extends Test {
-  piyo!: tsx.PropOf<string[]>;
-}
 
 // OK
 <Test2 foo="value" piyo={["foo"]} />;

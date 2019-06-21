@@ -9,7 +9,7 @@ import {
 } from "vue/types/options";
 
 import { InnerScopedSlot, TsxComponentAttrs, ScopedSlots } from "../types/base";
-export { TsxComponentAttrs, ScopedSlots, PropOf } from "../types/base";
+export { TsxComponentAttrs, ScopedSlots, DefineTsxProps } from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 export { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 
