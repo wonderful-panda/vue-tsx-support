@@ -9,6 +9,7 @@ script:
   - yarn test
 deploy:
   provider: npm
+  tag: dev
   email: iwata0303@gmail.com
   on:
     tags: true
