@@ -16,7 +16,8 @@
     "paths": {
       "vue-tsx-support": ["../.."],
       "vue-tsx-support/*": ["../../*"],
-    }
+    },
+    "experimentalDecorators": true
   },
   "include": [
     "**/*.ts",

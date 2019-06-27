@@ -7,18 +7,21 @@ export interface ElementAdditionalAttrs {
 }
 
 export type ScopedSlotReturnType = ReturnType<ScopedSlot>;
+export type TypedScopedSlot<P> = (props: P) => ScopedSlotReturnType;
 
-export type KnownAttrs = Pick<
-  VNodeData,
-  "class" | "staticClass" | "key" | "ref" | "slot" | "scopedSlots"
-> & {
+export type KnownAttrs = {
+  class?: VNodeData["class"];
+  staticClass?: VNodeData["staticClass"];
+  key?: VNodeData["key"];
+  ref?: VNodeData["ref"];
+  slot?: VNodeData["slot"];
   style?: VNodeData["style"] | string;
   id?: string;
   refInFor?: boolean;
   domPropsInnerHTML?: string;
 };
 export type ScopedSlots<T> = {
-  [K in keyof T]: (props: Exclude<T[K], undefined>) => ScopedSlotReturnType
+  [K in keyof T]: TypedScopedSlot<Exclude<T[K], undefined>>
 };
 
 export type InnerScopedSlotReturnType = Vue["$scopedSlots"] extends {
@@ -27,6 +30,9 @@ export type InnerScopedSlotReturnType = Vue["$scopedSlots"] extends {
   ? T
   : never;
 export type InnerScopedSlot<T> = (props: T) => InnerScopedSlotReturnType;
+export type InnerScopedSlots<T> = {
+  [K in keyof T]: InnerScopedSlot<Exclude<T[K], undefined>>
+};
 
 export type EventHandlers<E> = {
   [K in keyof E]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
@@ -57,10 +63,10 @@ export type IntrinsicElements = {
   >
 };
 
-export type DefineTsxProps<
+export type DefineProps<
   V extends Vue,
   PropNames extends Exclude<keyof V, keyof Vue>,
-  ForceOptionals extends PropNames = never
+  ForceOptionals extends Exclude<keyof V, keyof Vue | PropNames> = never
 > = {
   props: Record<PropNames, unknown>;
   forceOptionals: Record<ForceOptionals, unknown>;
@@ -69,6 +75,18 @@ export type DefineTsxProps<
 export type ClassComponentProps<Class, Inst> = Class extends {
   TsxProps: { props: infer P; forceOptionals: infer FO };
 }
-  ? Pick<Inst, keyof Inst & Exclude<keyof P, keyof FO>> &
-      { [K in keyof Inst & keyof FO]?: Inst[K] }
+  ? Pick<Inst, keyof Inst & keyof P> &
+      Partial<Pick<Inst, keyof Inst & keyof FO>>
+  : {};
+
+export type Arg1<T> = T extends ((arg1: infer A1) => any | undefined)
+  ? A1
+  : never;
+
+export type ClassComponentScopedSlots<Inst> = Inst extends {
+  $scopedSlots: infer SS;
+}
+  ? {
+      scopedSlots?: { [K in keyof SS]: TypedScopedSlot<Arg1<SS[K]>> };
+    }
   : {};

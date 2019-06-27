@@ -8,10 +8,12 @@ import {
   ThisTypedComponentOptionsWithRecordProps as ThisTypedComponentOptions
 } from "vue/types/options";
 
-import { InnerScopedSlot, TsxComponentAttrs, ScopedSlots } from "../types/base";
-export { TsxComponentAttrs, ScopedSlots, DefineTsxProps } from "../types/base";
+import {
+  TsxComponentAttrs,
+  ScopedSlots,
+  InnerScopedSlots
+} from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
-export { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 
 export type TsxComponentInstance<
   V extends Vue,
@@ -39,9 +41,7 @@ export class Component<
   ScopedSlotArgs = {}
 > extends Vue {
   _tsxattrs!: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs>;
-  $scopedSlots!: {
-    [K in keyof ScopedSlotArgs]: InnerScopedSlot<ScopedSlotArgs[K]>
-  };
+  $scopedSlots!: InnerScopedSlots<ScopedSlotArgs>;
 }
 
 /**
