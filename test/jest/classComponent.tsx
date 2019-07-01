@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { DefineProps, InnerScopedSlots } from "vue-tsx-support";
+import { DefineAttrs, InnerScopedSlots, tsxkey } from "vue-tsx-support";
 import { EmitWithoutPrefix as Emit } from "vue-tsx-support/lib/decorator";
 
 describe("classComponent", () => {
@@ -12,18 +12,19 @@ describe("classComponent", () => {
 
     @Prop({ type: String, required: true })
     foo!: string;
+    @Prop({ type: String })
+    bar?: string;
 
     emitCustomEvent(arg: string) {
       this.onCustomEvent(arg);
     }
 
-    render(): VNode {
+    private render(): VNode {
       const defaultSlot = this.$scopedSlots.default;
       const content = defaultSlot ? defaultSlot(this.foo) : this.foo;
       return <div>{content}</div>;
     }
-
-    static TsxProps: DefineProps<Test, "foo", "onCustomEvent">;
+    [tsxkey]!: DefineAttrs<Test, "foo" | "bar", "onCustomEvent">;
     $scopedSlots!: InnerScopedSlots<{ default?: string }>;
   }
   describe("create", () => {

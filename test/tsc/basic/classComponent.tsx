@@ -1,15 +1,12 @@
-import Vue from "vue";
-import { Component, Prop, Emit } from "vue-property-decorator";
-import { DefineProps, InnerScopedSlots } from "vue-tsx-support";
-
-function TsxEvent(target: Vue, name: string, descriptor: any): void {
-  const eventName = name.replace(/^on(.)/, (_, head: string) => head.toLowerCase());
-  Emit(eventName)(target, name, descriptor);
-}
+import Vue, { VNode } from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { DefineAttrs, InnerScopedSlots, tsxkey } from "vue-tsx-support";
+import { EmitWithoutPrefix as Emit } from "vue-tsx-support/lib/decorator";
+import { DefineExtendedComponentAttrs } from "vue-tsx-support/types/base";
 
 @Component
 class Test extends Vue {
-  static TsxProps: DefineProps<Test, "foo" | "bar", "baz" | "onCustomEvent">;
+  [tsxkey]!: DefineAttrs<Test, "foo" | "bar", "baz" | "onCustomEvent">;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;
@@ -17,8 +14,7 @@ class Test extends Vue {
 
   bra!: number;
 
-  /** @TsxEvent onCustomEvent() {} は @Emit("customEvent") onCustomEvent() のショートハンド */
-  @TsxEvent onCustomEvent() {}
+  @Emit onCustomEvent() {}
 
   $scopedSlots!: InnerScopedSlots<{
     default: { ssprops: string },
@@ -28,7 +24,7 @@ class Test extends Vue {
 
 class Test2 extends Test {
   piyo!: string[];
-  static TsxProps: DefineProps<Test2, "piyo"> & typeof Test.TsxProps;
+  [tsxkey]!: DefineExtendedComponentAttrs<Test2, Test, "piyo">;
   $scopedSlots!:
     Test["$scopedSlots"] & InnerScopedSlots<{ additional: { foo: string, bar: number }}>;
 }
@@ -70,3 +66,30 @@ class Test2 extends Test {
     additional: props => `${props.foo} ${props.bar}`
   }}
 />;
+
+@Component
+class GenericTest<T> extends Vue {
+  [tsxkey]!: DefineAttrs<GenericTest<T>, "foo" | "bar">;
+
+  @Prop() foo!: T;
+  @Prop(Function) bar!: (value: T) => string;
+
+  $scopedSlots!: InnerScopedSlots<{
+    default: { item: T },
+    optional?: string
+  }>;
+}
+
+@Component
+class GenericParent<T> extends Vue {
+  value!: T;
+  bar(value: T): string {
+    return "";
+  }
+  render(): VNode {
+    const GenericTestT = GenericTest as new () => GenericTest<T>;
+    return <GenericTestT foo={this.value} bar={this.bar} scopedSlots={{
+      default: props => <div>{this.bar(props.item)}</div>
+    }} />;
+  }
+}

@@ -1,5 +1,10 @@
 import * as dom from "./dom";
-import Vue, { VNode, VNodeData, VNodeChildrenArrayContents } from "vue";
+import Vue, {
+  VNode,
+  VNodeData,
+  VNodeChildrenArrayContents,
+  ComponentOptions
+} from "vue";
 import { ScopedSlot } from "vue/types/vnode";
 
 export interface ElementAdditionalAttrs {
@@ -63,20 +68,54 @@ export type IntrinsicElements = {
   >
 };
 
-export type DefineProps<
-  V extends Vue,
-  PropNames extends Exclude<keyof V, keyof Vue>,
-  ForceOptionals extends Exclude<keyof V, keyof Vue | PropNames> = never
-> = {
-  props: Record<PropNames, unknown>;
-  forceOptionals: Record<ForceOptionals, unknown>;
-};
+export type TsxKey = "$tsx";
+type ExcludedKey<V extends Vue = Vue> =
+  | keyof V
+  | keyof ComponentOptions<Vue>
+  | TsxKey;
 
-export type ClassComponentProps<Class, Inst> = Class extends {
-  TsxProps: { props: infer P; forceOptionals: infer FO };
+export type DefineAttrs<
+  V extends Vue,
+  Names extends Exclude<keyof V, ExcludedKey<Vue>>,
+  ForceOptionals extends Exclude<keyof V, ExcludedKey<Vue>> = never
+> =
+  | {
+      attrs: Pick<V, Exclude<Names, ForceOptionals>> &
+        Partial<Pick<V, ForceOptionals>>;
+    }
+  | undefined;
+
+export type DefineExtendedComponentAttrs<
+  V extends Parent,
+  Parent extends Vue,
+  Names extends Exclude<keyof V, ExcludedKey<Parent>>,
+  ForceOptionals extends Exclude<keyof V, ExcludedKey<Parent>> = never
+> =
+  | ({
+      attrs: Pick<V, Exclude<Names, ForceOptionals>> &
+        Partial<Pick<V, ForceOptionals>>;
+    } & (Parent extends { $tsx: infer PA } ? PA : {}))
+  | undefined;
+
+export type ExposeAllPublicMembers<
+  V extends Parent,
+  Parent extends Vue,
+  Excludes extends Exclude<keyof V, ExcludedKey<Parent>> = never,
+  ForceOptionals extends Exclude<
+    keyof V,
+    ExcludedKey<Parent> | Excludes
+  > = never
+> =
+  | ({
+      attrs: Pick<V, Exclude<keyof V, ForceOptionals | ExcludedKey<Parent>>> &
+        Partial<Pick<V, ForceOptionals>>;
+    } & (Parent extends { $tsx: infer PA } ? PA : {}))
+  | undefined;
+
+export type ClassComponentAttrs<Inst> = Inst extends {
+  $tsx: infer Metadata | undefined;
 }
-  ? Pick<Inst, keyof Inst & keyof P> &
-      Partial<Pick<Inst, keyof Inst & keyof FO>>
+  ? Metadata extends { attrs: infer A } ? A : {}
   : {};
 
 export type Arg1<T> = T extends ((arg1: infer A1) => any | undefined)
