@@ -107,7 +107,10 @@ export type ExposeAllPublicMembers<
   > = never
 > =
   | ({
-      attrs: Pick<V, Exclude<keyof V, ForceOptionals | ExcludedKey<Parent>>> &
+      attrs: Pick<
+        V,
+        Exclude<keyof V, ForceOptionals | Excludes | ExcludedKey<Parent>>
+      > &
         Partial<Pick<V, ForceOptionals>>;
     } & (Parent extends { $tsx: infer PA } ? PA : {}))
   | undefined;

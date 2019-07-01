@@ -2,7 +2,7 @@ import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { DefineAttrs, InnerScopedSlots, tsxkey } from "vue-tsx-support";
 import { EmitWithoutPrefix as Emit } from "vue-tsx-support/lib/decorator";
-import { DefineExtendedComponentAttrs } from "vue-tsx-support/types/base";
+import { DefineExtendedComponentAttrs, ExposeAllPublicMembers } from "vue-tsx-support/types/base";
 
 @Component
 class Test extends Vue {
@@ -93,3 +93,24 @@ class GenericParent<T> extends Vue {
     }} />;
   }
 }
+
+@Component
+class Test3 extends Vue {
+  [tsxkey]!: ExposeAllPublicMembers<Test3, Vue, "bra" | "test">;
+
+  @Prop(String) foo!: string;
+  @Prop(Number) bar?: number;
+
+  bra!: number;
+
+  test() {}
+}
+
+// OK
+<Test3 foo="fooValue" />;
+// OK
+<Test3 foo="fooValue" bar={1} />;
+// NG
+<Test3 bar={1} />;    //// TS2322: 'foo' is missing
+// OK
+<Test3 foo="fooValue" bra={1} />;   //// TS2322: 'bra' does not exist
