@@ -68,11 +68,28 @@ export type IntrinsicElements = {
   >
 };
 
-export type TsxKey = "$tsx";
+/** Types to emit or listen event */
+
+/**
+ * Generate event listeners object which can be specified to `on`
+ *
+ *  MultiArgEventListeners<{ foo: string, bar: [string, number] }>
+ *  => { foo?: (p1: string) => void, bar?: (p1; string, p2: number) => void }
+ */
+type MultiArgEventListeners<T> = {
+  [K in keyof T]?: (...payload: T[K] extends any[] ? T[K] : [T[K]]) => void
+};
+
+/** Generate type safe wrapper of Vue.$emit */
+type TypeSafeEmitter<T> = <K extends keyof T>(
+  name: K,
+  ...payload: T[K] extends any[] ? T[K] : [T[K]]
+) => void;
+
 type ExcludedKey<V extends Vue = Vue> =
   | keyof V
   | keyof ComponentOptions<Vue>
-  | TsxKey;
+  | "$tsx";
 
 export type DefineAttrs<
   V extends Vue,
@@ -115,10 +132,12 @@ export type ExposeAllPublicMembers<
     } & (Parent extends { $tsx: infer PA } ? PA : {}))
   | undefined;
 
+export type DefineEvents<T> = { events: T } | undefined;
+
 export type ClassComponentAttrs<Inst> = Inst extends {
-  $tsx: infer Metadata | undefined;
+  $tsx: { attrs: infer A } | undefined;
 }
-  ? Metadata extends { attrs: infer A } ? A : {}
+  ? A
   : {};
 
 export type Arg1<T> = T extends ((arg1: infer A1) => any | undefined)
@@ -132,3 +151,9 @@ export type ClassComponentScopedSlots<Inst> = Inst extends {
       scopedSlots?: { [K in keyof SS]: TypedScopedSlot<Arg1<SS[K]>> };
     }
   : {};
+
+export type ClassComponentEventListeners<Inst> = Inst extends {
+  $tsx: { events: infer E } | undefined;
+}
+  ? { on?: MultiArgEventListeners<E> }
+  : { on?: {} };

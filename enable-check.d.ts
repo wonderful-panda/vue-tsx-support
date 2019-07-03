@@ -8,7 +8,8 @@ declare global {
     type LibraryManagedAttributes<C, P> = C extends new () => infer V
       ? (V extends { _tsxattrs: infer A } ? A : base.TsxComponentAttrs) &
           base.ClassComponentAttrs<V> &
-          base.ClassComponentScopedSlots<V>
+          base.ClassComponentScopedSlots<V> &
+          base.ClassComponentEventListeners<V>
       : P;
 
     interface IntrinsicElements extends base.IntrinsicElements {

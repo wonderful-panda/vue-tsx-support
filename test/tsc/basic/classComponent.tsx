@@ -1,12 +1,12 @@
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { DefineAttrs, InnerScopedSlots, tsxkey } from "vue-tsx-support";
+import { DefineAttrs, InnerScopedSlots } from "vue-tsx-support";
 import { EmitWithoutPrefix as Emit } from "vue-tsx-support/lib/decorator";
-import { DefineExtendedComponentAttrs, ExposeAllPublicMembers } from "vue-tsx-support/types/base";
+import { DefineExtendedComponentAttrs, ExposeAllPublicMembers, DefineEvents } from "vue-tsx-support";
 
 @Component
 class Test extends Vue {
-  [tsxkey]!: DefineAttrs<Test, "foo" | "bar", "baz" | "onCustomEvent">;
+  $tsx!: DefineAttrs<Test, "foo" | "bar", "baz" | "onCustomEvent"> & DefineEvents<{ foo: string, bar: [string, number]}>;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;
@@ -24,7 +24,7 @@ class Test extends Vue {
 
 class Test2 extends Test {
   piyo!: string[];
-  [tsxkey]!: DefineExtendedComponentAttrs<Test2, Test, "piyo">;
+  $tsx!: DefineExtendedComponentAttrs<Test2, Test, "piyo"> & DefineEvents<{ baz: [] }>;
   $scopedSlots!:
     Test["$scopedSlots"] & InnerScopedSlots<{ additional: { foo: string, bar: number }}>;
 }
@@ -35,10 +35,22 @@ class Test2 extends Test {
 <Test foo="value" bar={1} />;
 // OK
 <Test foo="value" bar={1} baz="value" />;
+// OK
+<Test foo="value" on={{}} />;
+// OK
+<Test foo="value" on={{
+  foo: p => console.log(p.toLocaleLowerCase()),
+  bar: (p1, p2) => console.log(p1.toLocaleLowerCase(), p2.toFixed())
+}} />;
 // NG
 <Test foo="value" bar={1} bra={1} />; //// TS2322 | TS2339: 'bra' does not exist
 // NG
 <Test />;   //// TS2322 | TS2326: 'foo' is missing
+
+// NG
+<Test foo="value" on={{
+  fooo: (p: any) => console.log(p)   //// TS2322: 'fooo' does not exist
+}} />;
 
 <Test foo="value" scopedSlots={{
   default: props => props.ssprops
@@ -57,6 +69,12 @@ class Test2 extends Test {
 <Test2 foo="value" piyo={["foo"]} />;
 // OK
 <Test2 foo="value" bar={1} piyo={["foo"]} />;
+// OK
+<Test2 foo="value" piyo={[]} on={{
+  foo: p => console.log(p.toLocaleLowerCase()),
+  baz: () => console.log("baz")
+}} />;
+
 // NG
 <Test2 piyo={["foo"]} />; //// TS2322 | TS2326: 'foo' is missing
 // OK
@@ -69,7 +87,7 @@ class Test2 extends Test {
 
 @Component
 class GenericTest<T> extends Vue {
-  [tsxkey]!: DefineAttrs<GenericTest<T>, "foo" | "bar">;
+  $tsx!: DefineAttrs<GenericTest<T>, "foo" | "bar">;
 
   @Prop() foo!: T;
   @Prop(Function) bar!: (value: T) => string;
@@ -96,7 +114,7 @@ class GenericParent<T> extends Vue {
 
 @Component
 class Test3 extends Vue {
-  [tsxkey]!: ExposeAllPublicMembers<Test3, Vue, "bra" | "test">;
+  $tsx!: ExposeAllPublicMembers<Test3, Vue, "bra" | "test">;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;
