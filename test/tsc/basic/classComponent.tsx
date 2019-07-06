@@ -1,12 +1,18 @@
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { DefineAttrs, InnerScopedSlots } from "vue-tsx-support";
 import { EmitWithoutPrefix as Emit } from "vue-tsx-support/lib/decorator";
-import { DefineExtendedComponentAttrs, ExposeAllPublicMembers, DefineEvents } from "vue-tsx-support";
+import {
+  DefineProps,
+  InnerScopedSlots,
+  DefineExtendedComponentProps,
+  ExposeAllPublicMembers,
+  DefineEvents
+} from "vue-tsx-support";
 
 @Component
 class Test extends Vue {
-  $tsx!: DefineAttrs<Test, "foo" | "bar", "baz" | "onCustomEvent"> & DefineEvents<{ foo: string, bar: [string, number]}>;
+  _tsx!: DefineProps<Test, "foo" | "bar", "baz">
+       & DefineEvents<{ foo: string, bar: (p1: string, p2: number) => void }>;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;
@@ -24,7 +30,7 @@ class Test extends Vue {
 
 class Test2 extends Test {
   piyo!: string[];
-  $tsx!: DefineExtendedComponentAttrs<Test2, Test, "piyo"> & DefineEvents<{ baz: [] }>;
+  _tsx!: DefineExtendedComponentProps<Test2, Test, "piyo"> & DefineEvents<{ baz: [] }>;
   $scopedSlots!:
     Test["$scopedSlots"] & InnerScopedSlots<{ additional: { foo: string, bar: number }}>;
 }
@@ -61,7 +67,7 @@ class Test2 extends Test {
   optional: props => props.toUpperCase()
 }} />;
 
-<Test foo="value" scopedSlots={{          //// TS2322 | TS2326: 'default' is missing
+<Test foo="value" scopedSlots={{          //// TS2322 | TS2326 | TS2741: 'default' is missing
   optional: props => props.toUpperCase()
 }} />;
 
@@ -87,7 +93,7 @@ class Test2 extends Test {
 
 @Component
 class GenericTest<T> extends Vue {
-  $tsx!: DefineAttrs<GenericTest<T>, "foo" | "bar">;
+  _tsx!: DefineProps<GenericTest<T>, "foo" | "bar">;
 
   @Prop() foo!: T;
   @Prop(Function) bar!: (value: T) => string;
@@ -114,7 +120,7 @@ class GenericParent<T> extends Vue {
 
 @Component
 class Test3 extends Vue {
-  $tsx!: ExposeAllPublicMembers<Test3, Vue, "bra" | "test">;
+  _tsx!: ExposeAllPublicMembers<Test3, Vue, "bra" | "test">;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;

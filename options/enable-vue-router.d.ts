@@ -1,6 +1,6 @@
 // Add definitions of `router-link` and `router-view`
 
-import { TsxComponentAttrs } from "../types/base";
+import { CombinedTsxComponentAttrs } from "../types/base";
 import { Location } from "vue-router";
 
 interface RouterLinkProps {
@@ -21,8 +21,8 @@ interface RouterViewProps {
 declare global {
   namespace VueTsxSupport.JSX {
     interface IntrinsicElements {
-      "router-link"?: TsxComponentAttrs<RouterLinkProps>;
-      "router-view"?: TsxComponentAttrs<RouterViewProps>;
+      "router-link"?: CombinedTsxComponentAttrs<RouterLinkProps>;
+      "router-view"?: CombinedTsxComponentAttrs<RouterViewProps>;
     }
   }
 }

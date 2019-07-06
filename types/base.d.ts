@@ -25,9 +25,10 @@ export type KnownAttrs = {
   refInFor?: boolean;
   domPropsInnerHTML?: string;
 };
-export type ScopedSlots<T> = {
-  [K in keyof T]: TypedScopedSlot<Exclude<T[K], undefined>>
-};
+
+export type Arg1<T> = T extends ((arg1: infer A1) => any | undefined)
+  ? A1
+  : never;
 
 export type InnerScopedSlotReturnType = Vue["$scopedSlots"] extends {
   [name: string]: ((...args: any[]) => infer T) | undefined;
@@ -39,19 +40,44 @@ export type InnerScopedSlots<T> = {
   [K in keyof T]: InnerScopedSlot<Exclude<T[K], undefined>>
 };
 
+export type ScopedSlotHandlers<InnerSSType> = {
+  [K in keyof InnerSSType]: TypedScopedSlot<Arg1<InnerSSType[K]>>
+};
+
 export type EventHandlers<E> = {
   [K in keyof E]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
 };
 
-export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> =
-  | ({ props: TProps } & Partial<TProps> &
-      KnownAttrs & {
-        scopedSlots?: ScopedSlots<TScopedSlots>;
-      } & EventHandlers<TEvents>)
-  | (TProps &
-      KnownAttrs & {
-        scopedSlots?: ScopedSlots<TScopedSlots>;
-      } & EventHandlers<TEvents>);
+export type TsxComponentTypeInfo<Props, Events, On, NativeOn> = {
+  props: Props;
+  prefixedEvents: Events;
+  on: On;
+  nativeOn: NativeOn;
+};
+
+type CombinedTsxComponentAttrsOtherThanProps<
+  Events,
+  On,
+  NativeOn,
+  InnerSS
+> = KnownAttrs &
+  EventHandlers<Events> & {
+    on?: EventHandlers<On>;
+    nativeOn?: EventHandlers<NativeOn>;
+    scopedSlots?: ScopedSlotHandlers<InnerSS>;
+  };
+
+type CombinedTsxComponentAttrs<
+  Props = {},
+  Events = {},
+  On = {},
+  NativeOn = {},
+  InnerSS = {}
+> =
+  | { props: Props } & Partial<Props> &
+      CombinedTsxComponentAttrsOtherThanProps<Events, On, NativeOn, InnerSS>
+  | Props &
+      CombinedTsxComponentAttrsOtherThanProps<Events, On, NativeOn, InnerSS>;
 
 export type ElementAttrs<T> = T &
   KnownAttrs &
@@ -68,51 +94,29 @@ export type IntrinsicElements = {
   >
 };
 
-/** Types to emit or listen event */
-
-/**
- * Generate event listeners object which can be specified to `on`
- *
- *  MultiArgEventListeners<{ foo: string, bar: [string, number] }>
- *  => { foo?: (p1: string) => void, bar?: (p1; string, p2: number) => void }
- */
-type MultiArgEventListeners<T> = {
-  [K in keyof T]?: (...payload: T[K] extends any[] ? T[K] : [T[K]]) => void
-};
-
-/** Generate type safe wrapper of Vue.$emit */
-type TypeSafeEmitter<T> = <K extends keyof T>(
-  name: K,
-  ...payload: T[K] extends any[] ? T[K] : [T[K]]
-) => void;
-
 type ExcludedKey<V extends Vue = Vue> =
   | keyof V
   | keyof ComponentOptions<Vue>
-  | "$tsx";
+  | "_tsx";
 
-export type DefineAttrs<
+export type DefineProps<
   V extends Vue,
   Names extends Exclude<keyof V, ExcludedKey<Vue>>,
   ForceOptionals extends Exclude<keyof V, ExcludedKey<Vue>> = never
-> =
-  | {
-      attrs: Pick<V, Exclude<Names, ForceOptionals>> &
-        Partial<Pick<V, ForceOptionals>>;
-    }
-  | undefined;
+> = {
+  props: Pick<V, Exclude<Names, ForceOptionals>> &
+    Partial<Pick<V, ForceOptionals>>;
+};
 
-export type DefineExtendedComponentAttrs<
+export type DefineExtendedComponentProps<
   V extends Parent,
   Parent extends Vue,
   Names extends Exclude<keyof V, ExcludedKey<Parent>>,
   ForceOptionals extends Exclude<keyof V, ExcludedKey<Parent>> = never
-> =
-  | ({
-      attrs: Pick<V, Exclude<Names, ForceOptionals>> &
-        Partial<Pick<V, ForceOptionals>>;
-    } & (Parent extends { $tsx: infer PA } ? PA : {}))
-  | undefined;
+> = {
+  props: Pick<V, Exclude<Names, ForceOptionals>> &
+    Partial<Pick<V, ForceOptionals>>;
+} & (Parent extends { _tsx: infer PA } ? PA : {});
 
 export type ExposeAllPublicMembers<
   V extends Parent,
@@ -122,38 +126,12 @@ export type ExposeAllPublicMembers<
     keyof V,
     ExcludedKey<Parent> | Excludes
   > = never
-> =
-  | ({
-      attrs: Pick<
-        V,
-        Exclude<keyof V, ForceOptionals | Excludes | ExcludedKey<Parent>>
-      > &
-        Partial<Pick<V, ForceOptionals>>;
-    } & (Parent extends { $tsx: infer PA } ? PA : {}))
-  | undefined;
+> = {
+  props: Pick<
+    V,
+    Exclude<keyof V, ForceOptionals | Excludes | ExcludedKey<Parent>>
+  > &
+    Partial<Pick<V, ForceOptionals>>;
+} & (Parent extends { _tsx: infer PA } ? PA : {});
 
-export type DefineEvents<T> = { events: T } | undefined;
-
-export type ClassComponentAttrs<Inst> = Inst extends {
-  $tsx: { attrs: infer A } | undefined;
-}
-  ? A
-  : {};
-
-export type Arg1<T> = T extends ((arg1: infer A1) => any | undefined)
-  ? A1
-  : never;
-
-export type ClassComponentScopedSlots<Inst> = Inst extends {
-  $scopedSlots: infer SS;
-}
-  ? {
-      scopedSlots?: { [K in keyof SS]: TypedScopedSlot<Arg1<SS[K]>> };
-    }
-  : {};
-
-export type ClassComponentEventListeners<Inst> = Inst extends {
-  $tsx: { events: infer E } | undefined;
-}
-  ? { on?: MultiArgEventListeners<E> }
-  : { on?: {} };
+export type DefineEvents<T> = { on: T };

@@ -1,12 +1,11 @@
 export * from "./api";
 export { modifiers } from "./modifiers";
 export {
-  DefineAttrs,
-  DefineExtendedComponentAttrs,
+  DefineProps,
+  DefineExtendedComponentProps,
   ExposeAllPublicMembers,
   DefineEvents,
-  TsxComponentAttrs,
-  ScopedSlots,
+  ScopedSlotHandlers,
   InnerScopedSlot,
   InnerScopedSlots
 } from "../types/base";

@@ -1,3 +1,4 @@
+import Vue from "vue";
 import * as base from "./types/base";
 import * as builtin from "./types/builtin-components";
 
@@ -6,10 +7,15 @@ declare global {
     interface Element extends base.Element {}
     interface ElementClass extends base.ElementClass {}
     type LibraryManagedAttributes<C, P> = C extends new () => infer V
-      ? (V extends { _tsxattrs: infer A } ? A : base.TsxComponentAttrs) &
-          base.ClassComponentAttrs<V> &
-          base.ClassComponentScopedSlots<V> &
-          base.ClassComponentEventListeners<V>
+      ? (V extends { _tsx: infer T }
+          ? base.CombinedTsxComponentAttrs<
+              T extends { props: infer X } ? X : {},
+              T extends { prefixedEvents: infer X } ? X : {},
+              T extends { on: infer X } ? X : {},
+              T extends { nativeOn: infer X } ? X : {},
+              V extends { $scopedSlots: infer X } ? X : {}
+            >
+          : base.CombinedTsxComponentAttrs)
       : P;
 
     interface IntrinsicElements extends base.IntrinsicElements {
@@ -17,9 +23,11 @@ declare global {
       [name: string]: any;
 
       // builtin components
-      transition: base.TsxComponentAttrs<builtin.TransitionProps>;
-      "transition-group": base.TsxComponentAttrs<builtin.TransitionGroupProps>;
-      "keep-alive": base.TsxComponentAttrs<builtin.KeepAliveProps>;
+      transition: base.CombinedTsxComponentAttrs<builtin.TransitionProps>;
+      "transition-group": base.CombinedTsxComponentAttrs<
+        builtin.TransitionGroupProps
+      >;
+      "keep-alive": base.CombinedTsxComponentAttrs<builtin.KeepAliveProps>;
     }
   }
 }

@@ -150,7 +150,7 @@ function componentFactoryOf() {
     /* checking type of scopedSlots */
     <MyComponent scopedSlots={{ content: p => p }} />;
     <MyComponent scopedSlots={{ content: (p: number) => p.toString() }} />; //// TS2322 | TS2326: 'string' is not assignable
-    <MyComponent scopedSlots={{}} />;           //// TS2322 | TS2326: Property 'content' is missing
+    <MyComponent scopedSlots={{}} />;           //// TS2322 | TS2326 | TS2741: Property 'content' is missing
 
     /* checking type of custom event handler */
     <MyComponent onChange={_v => {}} />;
@@ -179,7 +179,7 @@ function optionalScopedSlot() {
     /* checking type of scopedSlots */
     <MyComponent scopedSlots={{ required: p => p.toUpperCase() }} />;
     <MyComponent scopedSlots={{ required: p => p.toUpperCase(), optional: p => p.toString() }} />;
-    <MyComponent scopedSlots={{ optional: p => p.toString() }} />; //// TS2322: 'required' is missing
+    <MyComponent scopedSlots={{ optional: p => p.toString() }} />; //// TS2322 | TS2741: 'required' is missing
 }
 
 

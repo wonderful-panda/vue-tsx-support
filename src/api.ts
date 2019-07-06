@@ -8,11 +8,7 @@ import {
   ThisTypedComponentOptionsWithRecordProps as ThisTypedComponentOptions
 } from "vue/types/options";
 
-import {
-  TsxComponentAttrs,
-  ScopedSlots,
-  InnerScopedSlots
-} from "../types/base";
+import { InnerScopedSlots, TsxComponentTypeInfo } from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 
 export type TsxComponentInstance<
@@ -21,7 +17,8 @@ export type TsxComponentInstance<
   EventsWithOn,
   ScopedSlotArgs
 > = {
-  _tsxattrs: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs>;
+  _tsx: TsxComponentTypeInfo<Props, EventsWithOn, {}, {}>;
+  $scopedSlots: InnerScopedSlots<ScopedSlotArgs>;
 } & V;
 
 export type TsxComponent<
@@ -40,7 +37,7 @@ export class Component<
   EventsWithOn = {},
   ScopedSlotArgs = {}
 > extends Vue {
-  _tsxattrs!: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs>;
+  _tsx!: TsxComponentTypeInfo<Props, EventsWithOn, {}, {}>;
   $scopedSlots!: InnerScopedSlots<ScopedSlotArgs>;
 }
 
@@ -186,7 +183,7 @@ export interface ComponentFactory<
     BaseProps,
     EventsWithOn,
     ScopedSlotArgs,
-    AdditionalThisAttrs & { $scopedSlots: ScopedSlots<ScopedSlotArgs> },
+    AdditionalThisAttrs & { $scopedSlots: InnerScopedSlots<ScopedSlotArgs> },
     InstanceType<VC> & Super
   >;
 }
@@ -211,7 +208,7 @@ export interface ExtendableComponentFactory<
     BaseProps,
     EventsWithOn,
     ScopedSlotArgs,
-    AdditionalThisAttrs & { $scopedSlots: ScopedSlots<ScopedSlotArgs> },
+    AdditionalThisAttrs & { $scopedSlots: InnerScopedSlots<ScopedSlotArgs> },
     InstanceType<VC>
   >;
 }
@@ -268,7 +265,7 @@ export function componentFactoryOf<
   {},
   EventsWithOn,
   ScopedSlotArgs,
-  { $scopedSlots: ScopedSlots<ScopedSlotArgs> },
+  { $scopedSlots: InnerScopedSlots<ScopedSlotArgs> },
   Vue
 > {
   return componentFactory as any;
