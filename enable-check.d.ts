@@ -13,9 +13,10 @@ declare global {
               T extends { prefixedEvents: infer X } ? X : {},
               T extends { on: infer X } ? X : {},
               T extends { nativeOn: infer X } ? X : {},
-              V extends { $scopedSlots: infer X } ? X : {}
+              V extends { $scopedSlots: infer X } ? X : {},
+              V extends { _tsx_allowPropsObject: true } ? true : false
             >
-          : base.CombinedTsxComponentAttrs)
+          : base.CombinedTsxComponentAttrs<{}, {}, {}, {}, {}, true>)
       : P;
 
     interface IntrinsicElements extends base.IntrinsicElements {
@@ -23,11 +24,30 @@ declare global {
       [name: string]: any;
 
       // builtin components
-      transition: base.CombinedTsxComponentAttrs<builtin.TransitionProps>;
-      "transition-group": base.CombinedTsxComponentAttrs<
-        builtin.TransitionGroupProps
+      transition: base.CombinedTsxComponentAttrs<
+        builtin.TransitionProps,
+        {},
+        {},
+        {},
+        {},
+        true
       >;
-      "keep-alive": base.CombinedTsxComponentAttrs<builtin.KeepAliveProps>;
+      "transition-group": base.CombinedTsxComponentAttrs<
+        builtin.TransitionGroupProps,
+        {},
+        {},
+        {},
+        {},
+        true
+      >;
+      "keep-alive": base.CombinedTsxComponentAttrs<
+        builtin.KeepAliveProps,
+        {},
+        {},
+        {},
+        {},
+        true
+      >;
     }
   }
 }

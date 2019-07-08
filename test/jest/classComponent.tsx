@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { DefineAttrs, InnerScopedSlots } from "vue-tsx-support";
+import { DefineProps, InnerScopedSlots } from "vue-tsx-support";
 import { EmitWithoutPrefix as Emit } from "vue-tsx-support/lib/decorator";
 
 describe("classComponent", () => {
@@ -24,7 +24,7 @@ describe("classComponent", () => {
       const content = defaultSlot ? defaultSlot(this.foo) : this.foo;
       return <div>{content}</div>;
     }
-    $tsx!: DefineAttrs<Test, "foo" | "bar", "onCustomEvent">;
+    _tsx!: DefineProps<Test, "foo" | "bar", "onCustomEvent">;
     $scopedSlots!: InnerScopedSlots<{ default?: string }>;
   }
   describe("create", () => {

@@ -135,6 +135,8 @@ function convert() {
     // NG: `b` must be number
     <MyComponent3 a="foo" b="bar" />;  //// TS2322 | TS2326
 
+    // OK: Specify props object
+    <MyComponent1 { ...{ props: { a: "foo", b: 0 } }} />;
 
 }
 

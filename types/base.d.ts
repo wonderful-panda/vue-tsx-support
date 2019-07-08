@@ -68,14 +68,17 @@ type CombinedTsxComponentAttrsOtherThanProps<
   };
 
 type CombinedTsxComponentAttrs<
-  Props = {},
-  Events = {},
-  On = {},
-  NativeOn = {},
-  InnerSS = {}
+  Props,
+  Events,
+  On,
+  NativeOn,
+  InnerSS,
+  AllowPropsObject extends boolean
 > =
-  | { props: Props } & Partial<Props> &
-      CombinedTsxComponentAttrsOtherThanProps<Events, On, NativeOn, InnerSS>
+  | (AllowPropsObject extends true
+      ? { props: Props } & Partial<Props> &
+          CombinedTsxComponentAttrsOtherThanProps<Events, On, NativeOn, InnerSS>
+      : never)
   | Props &
       CombinedTsxComponentAttrsOtherThanProps<Events, On, NativeOn, InnerSS>;
 

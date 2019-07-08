@@ -2,6 +2,7 @@
   "extends": "../base",
   "include": [
     "*.tsx",
-    "../../../enable-check.d.ts"
+    "../../../enable-check.d.ts",
+    "../../../options/allow-props-object.d.ts"
   ]
 }
