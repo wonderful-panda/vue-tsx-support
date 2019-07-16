@@ -412,6 +412,7 @@ import * as tsx from "vue-tsx-support";
 
 interface ScopedSlots {
     default: { text: string };
+    optional?: string;
 }
 
 const MyComponent = tsx.componentFactoryOf<{}, ScopedSlots>().create({
@@ -420,21 +421,24 @@ const MyComponent = tsx.componentFactoryOf<{}, ScopedSlots>().create({
     },
     render(): VNode {
         // type of `$scopedSlots` is checked statically
-        return <div>
-                 { this.$scopedSlots.default({ text: this.text || "default text" }) }
-               </div>;
+        const { default, optional } = this.$scopedSlots;
+        return <ul>
+                 <li>{ default({ text: this.text || "default text" }) }</li>
+                 <li>{ optional ? optional(this.text) : this.text }<li>
+               </ul>;
     }
 });
 
 // type of `scopedSlots` is checked statically, too
+// 'default' is requred, 'optional' is optional
 <MyComponent scopedSlots={{
-        default: p => [<span>p.text</span>]
+        default: p => <span>p.text</span>
     }}
 />;
 
 // NG: 'default' is missing in scopedSlots
 <MyComponent scopedSlots={{
-        default: p => [<span>p.text</span>]
+        optional: p => <span>p</span>
     }}
 />;
 ```
