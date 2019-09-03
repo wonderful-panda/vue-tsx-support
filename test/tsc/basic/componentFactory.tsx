@@ -21,12 +21,12 @@ function standardComponent() {
     <MyComponent foo="foo" bar={0} key="xxx" id="xxx" />;
 
     /* NG */
-    <MyComponent />;                    //// TS2322 | TS2326
-    <MyComponent foo="foo" />;          //// TS2322 | TS2326: Property 'bar' is missing
-    <MyComponent foo={0} bar={1} />;    //// TS2322 | TS2326: /'(0|number)' is not assignable/
-    <MyComponent foo="foo" bar="bar" />;        //// TS2322 | TS2326: /'("bar"|string)' is not assignable/
-    <MyComponent foo="foo" bar={0} baz={1} />;  //// TS2322 | TS2326: /'(1|number)' is not assignable/
-    <MyComponent foo="foo" bar={0} unknown="unknown" />;    //// TS2322 | TS2339: Property 'unknown' does not exist
+    <MyComponent />;                    //// TS2322 | TS2326 | TS2769
+    <MyComponent foo="foo" />;          //// TS2322 | TS2326 | TS2769: Property 'bar' is missing
+    <MyComponent foo={0} bar={1} />;    //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
+    <MyComponent foo="foo" bar="bar" />;        //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
+    <MyComponent foo="foo" bar={0} baz={1} />;  //// TS2322 | TS2326 | TS2769: /'(1|number)' is not assignable/
+    <MyComponent foo="foo" bar={0} unknown="unknown" />;    //// TS2322 | TS2339 | TS2769: Property 'unknown' does not exist
 }
 
 function functionalComponent() {
@@ -49,12 +49,12 @@ function functionalComponent() {
     <MyComponent foo="foo" bar={0} key="xxx" id="xxx" />;
 
     /* NG */
-    <MyComponent />;                    //// TS2322 | TS2326
-    <MyComponent foo="foo" />;          //// TS2322 | TS2326: Property 'bar' is missing
-    <MyComponent foo={0} bar={1} />;    //// TS2322 | TS2326: /'(0|number)' is not assignable/
-    <MyComponent foo="foo" bar="bar" />;        //// TS2322 | TS2326: /'("bar"|string)' is not assignable/
-    <MyComponent foo="foo" bar={0} baz={1} />;  //// TS2322 | TS2326: /'(1|number)' is not assignable/
-    <MyComponent foo="foo" bar={0} unknown="unknown" />;    //// TS2322 | TS2339: Property 'unknown' does not exist
+    <MyComponent />;                    //// TS2322 | TS2326 | TS2769
+    <MyComponent foo="foo" />;          //// TS2322 | TS2326 | TS2769: Property 'bar' is missing
+    <MyComponent foo={0} bar={1} />;    //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
+    <MyComponent foo="foo" bar="bar" />;        //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
+    <MyComponent foo="foo" bar={0} baz={1} />;  //// TS2322 | TS2326 | TS2769: /'(1|number)' is not assignable/
+    <MyComponent foo="foo" bar={0} unknown="unknown" />;    //// TS2322 | TS2339 | TS2769: Property 'unknown' does not exist
 }
 
 function withoutRequiredPropNames() {
@@ -77,10 +77,10 @@ function withoutRequiredPropNames() {
     <MyComponent key="xxx" id="xxx" />;
 
     /* NG */
-    <MyComponent foo={0} />;            //// TS2322 | TS2326: /'(0|number)' is not assignable/
-    <MyComponent bar="bar" />;          //// TS2322 | TS2326: /'("bar"|string)' is not assignable/
-    <MyComponent baz={1} />;            //// TS2322 | TS2326: /'(1|number)' is not assignable/
-    <MyComponent unknown="unknown" />;  //// TS2322 | TS2339: Property 'unknown' does not exist
+    <MyComponent foo={0} />;            //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
+    <MyComponent bar="bar" />;          //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
+    <MyComponent baz={1} />;            //// TS2322 | TS2326 | TS2769: /'(1|number)' is not assignable/
+    <MyComponent unknown="unknown" />;  //// TS2322 | TS2339 | TS2769: Property 'unknown' does not exist
 
 }
 
@@ -100,31 +100,22 @@ function inferRequiredPropNames() {
     <MyComponent foo="foo" bar={0} baz="baz" />;
     // foo is required, bar and baz are optional
     <MyComponent foo="foo" />;
-    <MyComponent />;          //// TS2322 | TS2326: Property 'foo' is missing
+    <MyComponent />;          //// TS2322 | TS2326 | TS2769: Property 'foo' is missing
     // other known attributes
     <MyComponent foo="foo" key="xxx" id="xxx" />;
 
     /* NG */
-    <MyComponent foo={0} />;            //// TS2322 | TS2326: /'(0|number)' is not assignable/
-    <MyComponent foo="a" bar="bar" />;          //// TS2322 | TS2326: /'("bar"|string)' is not assignable/
-    <MyComponent foo="a" baz={1} />;            //// TS2322 | TS2326: /'(1|number)' is not assignable/
-    <MyComponent foo="a" unknown="unknown" />;  //// TS2322 | TS2339: Property 'unknown' does not exist
+    <MyComponent foo={0} />;            //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
+    <MyComponent foo="a" bar="bar" />;          //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
+    <MyComponent foo="a" baz={1} />;            //// TS2322 | TS2326 | TS2769: /'(1|number)' is not assignable/
+    <MyComponent foo="a" unknown="unknown" />;  //// TS2322 | TS2339 | TS2769: Property 'unknown' does not exist
 
 }
 
 
 
 function withWrongRequiredPropNames() {
-    const MyComponent = tsx.componentFactory.create({
-        props: {
-            foo: String,
-            bar: Number,
-            baz: String
-        },
-        render(): VNode {
-            return <span>{this.foo}</span>;
-        }
-    }, ["foo", "unknown"]);    //// TS2345: '"unknown"' is not assignable
+    const MyComponent = tsx.component({ props: { foo: String } }, ["foo", "unknown"]);    //// TS2345 | TS2769
 }
 
 function componentFactoryOf() {
@@ -149,13 +140,13 @@ function componentFactoryOf() {
 
     /* checking type of scopedSlots */
     <MyComponent scopedSlots={{ content: p => p }} />;
-    <MyComponent scopedSlots={{ content: (p: number) => p.toString() }} />; //// TS2322 | TS2326: 'string' is not assignable
-    <MyComponent scopedSlots={{}} />;           //// TS2322 | TS2326 | TS2741: Property 'content' is missing
+    <MyComponent scopedSlots={{ content: (p: number) => p.toString() }} />; //// TS2322 | TS2326 | TS2769: 'string' is not assignable
+    <MyComponent scopedSlots={{}} />;           //// TS2322 | TS2326 | TS2741 | TS2769: Property 'content' is missing
 
     /* checking type of custom event handler */
     <MyComponent onChange={_v => {}} />;
     <MyComponent onChange={(_v: number) => {}} />;
-    <MyComponent onChange={(_v: string) => {}} />; //// TS2322 | TS2326: 'number' is not assignable
+    <MyComponent onChange={(_v: string) => {}} />; //// TS2322 | TS2326 | TS2769: 'number' is not assignable
     <MyComponent onOk={(_, id) => { console.log(id); }} />;
 }
 
@@ -179,7 +170,7 @@ function optionalScopedSlot() {
     /* checking type of scopedSlots */
     <MyComponent scopedSlots={{ required: p => p.toUpperCase() }} />;
     <MyComponent scopedSlots={{ required: p => p.toUpperCase(), optional: p => p.toString() }} />;
-    <MyComponent scopedSlots={{ optional: p => p.toString() }} />; //// TS2322 | TS2741: 'required' is missing
+    <MyComponent scopedSlots={{ optional: p => p.toString() }} />; //// TS2322 | TS2741 | TS2769: 'required' is missing
 }
 
 
@@ -204,8 +195,8 @@ function extendFrom() {
     });
 
     <Ext1 foo="a" bar="b" />;
-    <Ext1 bar="b" />;        //// TS2322 | TS2326: 'foo' is missing
-    <Ext1 foo="a" bar="b" baz="c" />;    //// TS2322 | TS2339: 'baz' does not exist
+    <Ext1 bar="b" />;        //// TS2322 | TS2326 | TS2769: 'foo' is missing
+    <Ext1 foo="a" bar="b" baz="c" />;    //// TS2322 | TS2339 | TS2769: 'baz' does not exist
 
     /*
      * extend from class base tsx component
@@ -224,8 +215,8 @@ function extendFrom() {
     });
 
     <Ext2 foo="a" bar="b" />;
-    <Ext2 bar="b" />;        //// TS2322 | TS2326: 'foo' is missing
-    <Ext2 foo="a" bar="b" baz="c" />;    //// TS2322 | TS2339: 'baz' does not exist
+    <Ext2 bar="b" />;        //// TS2322 | TS2326 | TS2769: 'foo' is missing
+    <Ext2 foo="a" bar="b" baz="c" />;    //// TS2322 | TS2339 | TS2769: 'baz' does not exist
 
     /*
      * extend from standard component
@@ -247,7 +238,7 @@ function extendFrom() {
 
     <Ext3 />;
     <Ext3 bar="b" />;
-    <Ext3 bar="b" baz="c" />;    //// TS2322 | TS2339: 'baz' does not exist
+    <Ext3 bar="b" baz="c" />;    //// TS2322 | TS2339 | TS2769: 'baz' does not exist
 
 
     /*
@@ -270,7 +261,7 @@ function extendFrom() {
 
     <Ext4 />;
     <Ext4 bar="b" />;
-    <Ext4 bar="b" baz="c" />;    //// TS2322 | TS2339: 'baz' does not exist
+    <Ext4 bar="b" baz="c" />;    //// TS2322 | TS2339 | TS2769: 'baz' does not exist
 }
 
 function withXXX() {
@@ -282,6 +273,6 @@ function withXXX() {
   <Ext foo="a" onOk={v => console.log(v.value)} />;
   <Ext foo="a" scopedSlots={{ default: v => v.value }} />;
   <Ext foo="a" nativeOnClick={() => {}} />;
-  <Ext />;  //// TS2322 | TS2326: 'foo' is missing
+  <Ext />;  //// TS2322 | TS2326 | TS2769: 'foo' is missing
 
 }

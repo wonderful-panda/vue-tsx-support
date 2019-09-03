@@ -205,8 +205,8 @@ export interface KeygenHTMLAttributes extends HTMLAttributes {
 }
 
 export interface LabelHTMLAttributes extends HTMLAttributes {
+  for?: string;
   form?: string;
-  htmlfor?: string;
 }
 
 export interface LiHTMLAttributes extends HTMLAttributes {
@@ -293,8 +293,8 @@ export interface OptionHTMLAttributes extends HTMLAttributes {
 }
 
 export interface OutputHTMLAttributes extends HTMLAttributes {
+  for?: string;
   form?: string;
-  htmlfor?: string;
   name?: string;
 }
 
@@ -434,6 +434,7 @@ export interface AllHTMLAttributes extends HTMLAttributes {
   disabled?: boolean;
   download?: any;
   enctype?: string;
+  for?: string;
   form?: string;
   formaction?: string;
   formenctype?: string;
@@ -446,7 +447,6 @@ export interface AllHTMLAttributes extends HTMLAttributes {
   high?: number;
   href?: string;
   hreflang?: string;
-  htmlfor?: string;
   httpequiv?: string;
   integrity?: string;
   keyparams?: string;

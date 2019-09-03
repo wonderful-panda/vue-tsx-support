@@ -3,9 +3,9 @@ language: node_js
 node_js:
   - stable
 script:
-  - yarn run build
+  - yarn build
   - yarn test
-  - yarn upgrade vue vue-class-component vue-template-compiler typescript
+  - yarn upgrade vue vue-class-component vue-template-compiler typescript --latest
   - yarn test
 deploy:
   provider: npm
