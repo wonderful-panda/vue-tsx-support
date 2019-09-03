@@ -10,9 +10,9 @@ function standardComponent() {
     const MyComponent = Vue.extend({});
 
     // NG
-    <MyComponent a="value" />;      //// TS2322 | TS2339: 'a' does not exist
+    <MyComponent a="value" />;      //// TS2322 | TS2339 | TS2769: 'a' does not exist
     // OK
     <MyComponent accesskey="akey" />;
     // NG
-    <MyComponent nativeOnClick={ noop } />;      //// TS2322 | TS2339: 'nativeOnClick' does not exist
+    <MyComponent nativeOnClick={ noop } />;      //// TS2322 | TS2339 | TS2769: 'nativeOnClick' does not exist
 }

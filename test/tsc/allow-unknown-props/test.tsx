@@ -45,8 +45,8 @@ function convert() {
     // OK
     <MyComponent a="value" nativeOnClick={ noop } />;
     // NG
-    <MyComponent />;    //// TS2322 | TS2326: Property 'a' is missing
+    <MyComponent />;    //// TS2322 | TS2326 | TS2769: Property 'a' is missing
     // NG
-    <MyComponent a={ 0 } />;    //// TS2322 | TS2326: /'(0|number)' is not assignable/
+    <MyComponent a={ 0 } />;    //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
 }
 

@@ -26,22 +26,22 @@ function by_createComponent() {
     const Base = vuetsx.createComponent<Props, Events>({});
 
     // NG
-    <Base />;   //// TS2322 | TS2326: 'foo' is missing
+    <Base />;   //// TS2322 | TS2326 | TS2769: 'foo' is missing
     // OK
     <Base foo="foo" onOk={ noop } />;
     // NG
-    <Base foo="foo" bar="bar" />;   //// TS2322 | TS2339: Property 'bar' does not exist
+    <Base foo="foo" bar="bar" />;   //// TS2322 | TS2339 | TS2769: Property 'bar' does not exist
     // NG
-    <Base foo="foo" onErr={ noop } />;   //// TS2322 | TS2339: Property 'onErr' does not exist
+    <Base foo="foo" onErr={ noop } />;   //// TS2322 | TS2339 | TS2769: Property 'onErr' does not exist
 
     /* add more attributes */
     const Extend = vuetsx.ofType<Props2, Events2>().extendFrom(Base);
     // OK
     <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
     // NG
-    <Extend foo="foo" />;   //// TS2322 | TS2326: 'bar' is missing
+    <Extend foo="foo" />;   //// TS2322 | TS2326 | TS2769: 'bar' is missing
     // NG
-    <Extend bar="bar" />;   //// TS2322 | TS2326: 'foo' is missing
+    <Extend bar="bar" />;   //// TS2322 | TS2326 | TS2769: 'foo' is missing
 
     const WithNativeOn = vuetsx.withNativeOn(Base);
     <WithNativeOn foo="foo" nativeOnClick={ noop } />;
@@ -61,9 +61,9 @@ function by_convert() {
     // OK
     <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
     // NG
-    <Extend foo="foo" />;   //// TS2322 | TS2326: 'bar' is missing
+    <Extend foo="foo" />;   //// TS2322 | TS2326 | TS2769: 'bar' is missing
     // NG
-    <Extend bar="bar" />;   //// TS2322 | TS2326: 'foo' is missing
+    <Extend bar="bar" />;   //// TS2322 | TS2326 | TS2769: 'foo' is missing
 
     const WithNativeOn = vuetsx.withNativeOn(Base);
     <WithNativeOn foo="foo" nativeOnClick={ noop } />;
@@ -87,9 +87,9 @@ function by_class() {
     // OK
     <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
     // NG
-    <Extend foo="foo" />;   //// TS2322 | TS2326: 'bar' is missing
+    <Extend foo="foo" />;   //// TS2322 | TS2326 | TS2769: 'bar' is missing
     // NG
-    <Extend bar="bar" />;   //// TS2322 | TS2326: 'foo' is missing
+    <Extend bar="bar" />;   //// TS2322 | TS2326 | TS2769: 'foo' is missing
 
     // Extend inherits prototype of Base.
     const ext = new Extend();
@@ -128,9 +128,9 @@ function by_componentFactory() {
     // OK
     <Extend foo="foo" bar="bar" onOk={ noop } onErr={ s => console.log(s) } />;
     // NG
-    <Extend foo="foo" />;   //// TS2322 | TS2326: 'bar' is missing
+    <Extend foo="foo" />;   //// TS2322 | TS2326 | TS2769: 'bar' is missing
     // NG
-    <Extend bar="bar" />;   //// TS2322 | TS2326: 'foo' is missing
+    <Extend bar="bar" />;   //// TS2322 | TS2326 | TS2769: 'foo' is missing
 
     // Extend inherits prototype of Base.
     const ext = new Extend();

@@ -11,11 +11,11 @@ function standardComponent() {
     const MyComponent = Vue.extend({});
 
     // NG
-    <MyComponent a="value" />;      //// TS2322 | TS2339: 'a' does not exist
+    <MyComponent a="value" />;      //// TS2322 | TS2339 | TS2769: 'a' does not exist
     // NG
-    <MyComponent accesskey="akey" />;   //// TS2322 | TS2339: 'accesskey' does not exist
+    <MyComponent accesskey="akey" />;   //// TS2322 | TS2339 | TS2769: 'accesskey' does not exist
     // OK
     <MyComponent nativeOnClick={ noop } />;
     // NG
-    <MyComponent nativeOnClick={ func } />; //// TS2322 | TS2326: /Types of .* are incompatible/
+    <MyComponent nativeOnClick={ func } />; //// TS2322 | TS2326 | TS2769: /Types of .* are incompatible/
 }
