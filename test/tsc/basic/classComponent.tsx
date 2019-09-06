@@ -49,13 +49,13 @@ class Test2 extends Test {
   bar: (p1, p2) => console.log(p1.toLocaleLowerCase(), p2.toFixed())
 }} />;
 // NG
-<Test foo="value" bar={1} bra={1} />; //// TS2322 | TS2339: 'bra' does not exist
+<Test foo="value" bar={1} bra={1} />; //// TS2322 | TS2339 | TS2769: 'bra' does not exist
 // NG
-<Test />;   //// TS2322 | TS2326: 'foo' is missing
+<Test />;   //// TS2322 | TS2326 | TS2769: 'foo' is missing
 
 // NG
 <Test foo="value" on={{
-  fooo: (p: any) => console.log(p)   //// TS2322: 'fooo' does not exist
+  fooo: (p: any) => console.log(p)   //// TS2322 | TS2769: 'fooo' does not exist
 }} />;
 
 <Test foo="value" scopedSlots={{
@@ -67,7 +67,7 @@ class Test2 extends Test {
   optional: props => props.toUpperCase()
 }} />;
 
-<Test foo="value" scopedSlots={{          //// TS2322 | TS2326 | TS2741: 'default' is missing
+<Test foo="value" scopedSlots={{          //// TS2322 | TS2326 | TS2741 | TS2769: 'default' is missing
   optional: props => props.toUpperCase()
 }} />;
 
@@ -82,7 +82,7 @@ class Test2 extends Test {
 }} />;
 
 // NG
-<Test2 piyo={["foo"]} />; //// TS2322 | TS2326: 'foo' is missing
+<Test2 piyo={["foo"]} />; //// TS2322 | TS2326 | TS2769: 'foo' is missing
 // OK
 <Test2 foo="value" bar={1} piyo={["foo"]}
   scopedSlots={{
@@ -135,6 +135,6 @@ class Test3 extends Vue {
 // OK
 <Test3 foo="fooValue" bar={1} />;
 // NG
-<Test3 bar={1} />;    //// TS2322: 'foo' is missing
+<Test3 bar={1} />;    //// TS2322 | TS2769: 'foo' is missing
 // OK
-<Test3 foo="fooValue" bra={1} />;   //// TS2322: 'bra' does not exist
+<Test3 foo="fooValue" bra={1} />;   //// TS2322 | TS2769: 'bra' does not exist

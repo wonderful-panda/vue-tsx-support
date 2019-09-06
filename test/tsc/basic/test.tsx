@@ -136,7 +136,7 @@ function convert() {
     <MyComponent3 a="foo" b="bar" />;  //// TS2322 | TS2326 | TS2769
 
     // NG: props object does not allow by default
-    <MyComponent1 { ...{ props: { a: "foo", b: 0 } }} />; //// TS2322: 'a' is missing
+    <MyComponent1 { ...{ props: { a: "foo", b: 0 } }} />; //// TS2322 | TS2769: 'a' is missing
 
 }
 
