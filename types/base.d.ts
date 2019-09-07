@@ -44,9 +44,10 @@ export type ScopedSlotHandlers<InnerSSType> = {
   [K in keyof InnerSSType]: TypedScopedSlot<Arg1<InnerSSType[K]>>
 };
 
-export type EventHandlers<E> = {
-  [K in keyof E]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
-};
+export type EventHandler<E> = E extends (...args: any[]) => any
+  ? E
+  : (payload: E) => void;
+export type EventHandlers<E> = { [K in keyof E]?: EventHandler<E[K]> };
 
 export type TsxComponentTypeInfo<Props, Events, On, NativeOn> = {
   props: Props;

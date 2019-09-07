@@ -8,7 +8,11 @@ import {
   ThisTypedComponentOptionsWithRecordProps as ThisTypedComponentOptions
 } from "vue/types/options";
 
-import { InnerScopedSlots, TsxComponentTypeInfo } from "../types/base";
+import {
+  InnerScopedSlots,
+  TsxComponentTypeInfo,
+  EventHandler
+} from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 
 export type TsxComponentInstance<
@@ -265,7 +269,10 @@ export function componentFactoryOf<
   {},
   EventsWithOn,
   ScopedSlotArgs,
-  { $scopedSlots: InnerScopedSlots<ScopedSlotArgs> },
+  {
+    _tsx: TsxComponentTypeInfo<{}, EventsWithOn, {}, {}>;
+    $scopedSlots: InnerScopedSlots<ScopedSlotArgs>;
+  },
   Vue
 > {
   return componentFactory as any;
@@ -276,3 +283,19 @@ export function componentFactoryOf<
  */
 export const component = componentFactory.create;
 export const extendFrom = componentFactory.extendFrom;
+
+export function emit<Events, Name extends string & keyof Events>(
+  vm: Vue & { _tsx: { on: Events } },
+  name: Name,
+  ...args: Parameters<EventHandler<Events[Name]>>
+) {
+  vm.$emit(name, ...args);
+}
+
+export function emitOn<Events, Name extends string & keyof Events>(
+  vm: Vue & { _tsx: { prefixedEvents: Events } },
+  name: Name,
+  ...args: Parameters<EventHandler<Events[Name]>>
+) {
+  vm.$emit(name.replace(/^on[A-Z]/, v => v[2].toLowerCase()), ...args);
+}

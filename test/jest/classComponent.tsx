@@ -1,31 +1,35 @@
 import { mount } from "@vue/test-utils";
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { DefineProps, InnerScopedSlots } from "vue-tsx-support";
-import { EmitWithoutPrefix as Emit } from "vue-tsx-support/lib/decorator";
+import {
+  DefineProps,
+  InnerScopedSlots,
+  DefineEvents,
+  emit
+} from "vue-tsx-support";
 
 describe("classComponent", () => {
   @Component
   class Test extends Vue {
-    @Emit
-    onCustomEvent(_: string) {}
-
     @Prop({ type: String, required: true })
     foo!: string;
     @Prop({ type: String })
     bar?: string;
 
+    _tsx!: DefineProps<Test, "foo" | "bar"> &
+      DefineEvents<{ customEvent: string }>;
+
+    $scopedSlots!: InnerScopedSlots<{ default?: string }>;
+
     emitCustomEvent(arg: string) {
-      this.onCustomEvent(arg);
+      emit(this, "customEvent", arg);
     }
 
-    private render(): VNode {
+    render(): VNode {
       const defaultSlot = this.$scopedSlots.default;
       const content = defaultSlot ? defaultSlot(this.foo) : this.foo;
       return <div>{content}</div>;
     }
-    _tsx!: DefineProps<Test, "foo" | "bar", "onCustomEvent">;
-    $scopedSlots!: InnerScopedSlots<{ default?: string }>;
   }
   describe("create", () => {
     it("render", () => {

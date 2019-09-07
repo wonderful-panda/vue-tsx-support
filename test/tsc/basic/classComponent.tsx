@@ -1,18 +1,18 @@
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { EmitWithoutPrefix as Emit } from "vue-tsx-support/lib/decorator";
 import {
   DefineProps,
   InnerScopedSlots,
   DefineExtendedComponentProps,
   ExposeAllPublicMembers,
-  DefineEvents
+  DefineEvents,
+  emit
 } from "vue-tsx-support";
 
 @Component
 class Test extends Vue {
   _tsx!: DefineProps<Test, "foo" | "bar", "baz">
-       & DefineEvents<{ foo: string, bar: (p1: string, p2: number) => void }>;
+       & DefineEvents<{ e1: string, e2: (p1: string, p2: number) => void }>;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;
@@ -20,19 +20,37 @@ class Test extends Vue {
 
   bra!: number;
 
-  @Emit onCustomEvent() {}
-
   $scopedSlots!: InnerScopedSlots<{
     default: { ssprops: string },
     optional?: string
   }>;
+
+  emitEvents() {
+    emit(this, "e1", "value");
+    emit(this, "e1", 1);  //// TS2345: not assignable
+
+    emit(this, "e2", "value", 1);
+    emit(this, "e2", "value");  //// TS2554: Expected 4 arguments
+  }
+
 }
 
 class Test2 extends Test {
   piyo!: string[];
-  _tsx!: DefineExtendedComponentProps<Test2, Test, "piyo"> & DefineEvents<{ baz: [] }>;
+  _tsx!: DefineExtendedComponentProps<Test2, Test, "piyo"> & DefineEvents<{ e3: () => void }>;
   $scopedSlots!:
     Test["$scopedSlots"] & InnerScopedSlots<{ additional: { foo: string, bar: number }}>;
+
+  emitEvents2() {
+    emit(this, "e1", "value");
+    emit(this, "e1", 1);  //// TS2345: not assignable
+
+    emit(this, "e2", "value", 1);
+    emit(this, "e2", "value");  //// TS2554: Expected 4 arguments
+
+    emit(this, "e3");
+    emit(this, "e3", "value");  //// TS2554: Expected 2 arguments
+  }
 }
 
 // OK
@@ -45,8 +63,8 @@ class Test2 extends Test {
 <Test foo="value" on={{}} />;
 // OK
 <Test foo="value" on={{
-  foo: p => console.log(p.toLocaleLowerCase()),
-  bar: (p1, p2) => console.log(p1.toLocaleLowerCase(), p2.toFixed())
+  e1: p => console.log(p.toLocaleLowerCase()),
+  e2: (p1, p2) => console.log(p1.toLocaleLowerCase(), p2.toFixed())
 }} />;
 // NG
 <Test foo="value" bar={1} bra={1} />; //// TS2322 | TS2339 | TS2769: 'bra' does not exist
@@ -55,7 +73,7 @@ class Test2 extends Test {
 
 // NG
 <Test foo="value" on={{
-  fooo: (p: any) => console.log(p)   //// TS2322 | TS2769: 'fooo' does not exist
+  e3: (p: any) => console.log(p)   //// TS2322 | TS2769: 'e3' does not exist
 }} />;
 
 <Test foo="value" scopedSlots={{
@@ -77,8 +95,8 @@ class Test2 extends Test {
 <Test2 foo="value" bar={1} piyo={["foo"]} />;
 // OK
 <Test2 foo="value" piyo={[]} on={{
-  foo: p => console.log(p.toLocaleLowerCase()),
-  baz: () => console.log("baz")
+  e1: p => console.log(p.toLocaleLowerCase()),
+  e2: () => console.log("baz")
 }} />;
 
 // NG

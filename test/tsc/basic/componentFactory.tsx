@@ -266,7 +266,14 @@ function extendFrom() {
 
 function withXXX() {
   const Base = tsx.componentFactoryOf<{ onOk: { value: string } }, { default: { value: string }}>().create({
-    props: { foo: { type: String, required: true as true }}
+    props: { foo: { type: String, required: true as true }},
+    methods: {
+      emitOk() {
+        tsx.emitOn(this, "onOk", { value: "foo" });
+        tsx.emitOn(this, "onNg", { value: "foo" });  //// TS2345: not assignable
+        tsx.emitOn(this, "onOk", { value: 1 });      //// TS2322 | TS2326: not assignable
+      }
+    }
   });
   const Ext = tsx.withNativeOn(Base);
   <Ext foo="a" />;
