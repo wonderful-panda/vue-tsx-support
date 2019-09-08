@@ -18,21 +18,29 @@ import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 export type _TsxComponentInstance<
   V extends Vue,
   Props,
-  EventsWithOn,
+  EventsWithPrefix,
+  EventsWithoutPrefix,
   ScopedSlotArgs
 > = {
-  _tsx: TsxComponentTypeInfo<Props, EventsWithOn, {}, {}>;
+  _tsx: TsxComponentTypeInfo<Props, EventsWithPrefix, EventsWithoutPrefix, {}>;
   $scopedSlots: InnerScopedSlots<ScopedSlotArgs>;
 } & V;
 
 export type _TsxComponent<
   V extends Vue,
-  Props = {},
-  EventsWithOn = {},
-  ScopedSlotArgs = {},
-  AdditionalThisAttrs = {}
+  Props,
+  EventsWithPrefix,
+  EventsWithoutPrefix,
+  ScopedSlotArgs,
+  AdditionalThisAttrs
 > = VueConstructor<
-  _TsxComponentInstance<V, Props, EventsWithOn, ScopedSlotArgs> &
+  _TsxComponentInstance<
+    V,
+    Props,
+    EventsWithPrefix,
+    EventsWithoutPrefix,
+    ScopedSlotArgs
+  > &
     AdditionalThisAttrs
 >;
 
@@ -48,19 +56,42 @@ export class Component<
 /**
  * Create component from component options (Compatible with Vue.extend)
  */
-export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(
+export function createComponent<
+  TProps,
+  TEventsWithPrefix = {},
+  TScopedSlots = {}
+>(
   opts: ComponentOptions<Vue> | FunctionalComponentOptions
-): _TsxComponent<Vue, TProps, TEvents, TScopedSlots> {
+): _TsxComponent<Vue, TProps, TEventsWithPrefix, {}, TScopedSlots, {}> {
   return Vue.extend(opts as any) as any;
 }
 
-export interface Factory<TProps, TEvents, TScopedSlots> {
+export interface Factory<
+  TProps,
+  TEventsWithPrefix,
+  TEventsWithoutPrefix,
+  TScopedSlots
+> {
   convert<V extends Vue>(
     componentType: new (...args: any[]) => V
-  ): _TsxComponent<V, TProps, TEvents, TScopedSlots>;
+  ): _TsxComponent<
+    V,
+    TProps,
+    TEventsWithPrefix,
+    TEventsWithoutPrefix,
+    TScopedSlots,
+    {}
+  >;
   extendFrom<VC extends typeof Vue>(
     componentType: VC
-  ): _TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
+  ): _TsxComponent<
+    InstanceType<VC>,
+    TProps,
+    TEventsWithPrefix,
+    TEventsWithoutPrefix,
+    TScopedSlots,
+    {}
+  >;
 }
 
 const factoryImpl = {
@@ -75,29 +106,45 @@ const factoryImpl = {
  *  // Get TSX-supported component with props(`name`, `value`) and event(`onInput`)
  *  const NewComponent = tsx.ofType<{ name: string, value: string }, { onInput: string }>.convert(Component);
  */
-export function ofType<TProps, TEvents = {}, TScopedSlots = {}>(): Factory<
+export function ofType<
   TProps,
-  TEvents,
-  TScopedSlots
-> {
+  TEventsWithPrefix = {},
+  TScopedSlots = {},
+  TEventsWithoutPrefix = {}
+>(): Factory<TProps, TEventsWithPrefix, TEventsWithoutPrefix, TScopedSlots> {
   return factoryImpl;
 }
 
 export function withNativeOn<VC extends typeof Vue>(
   componentType: VC
-): _TsxComponent<InstanceType<VC>, {}, EventsNativeOn, {}> {
+): _TsxComponent<InstanceType<VC>, {}, EventsNativeOn, {}, {}, {}> {
   return componentType as any;
 }
 
 export function withHtmlAttrs<VC extends typeof Vue>(
   componentType: VC
-): _TsxComponent<InstanceType<VC>, AllHTMLAttributes, {}, {}> {
+): _TsxComponent<InstanceType<VC>, AllHTMLAttributes, {}, {}, {}, {}> {
   return componentType as any;
 }
 
 export function withUnknownProps<VC extends typeof Vue>(
   componentType: VC
-): _TsxComponent<InstanceType<VC>, { [key: string]: any }, {}, {}> {
+): _TsxComponent<InstanceType<VC>, { [key: string]: any }, {}, {}, {}, {}> {
+  return componentType as any;
+}
+
+export function withPropsObject<VC extends typeof Vue>(
+  componentType: VC
+): _TsxComponent<
+  InstanceType<VC>,
+  {},
+  {},
+  {},
+  {},
+  {
+    _tsx_allowPropsObject: true;
+  }
+> {
   return componentType as any;
 }
 
@@ -120,7 +167,8 @@ export type PropsForOutside<Props, RequiredPropNames extends keyof Props> = {
 
 export interface ComponentFactory<
   BaseProps,
-  EventsWithOn,
+  EventsWithPrefix,
+  EventsWithoutPrefix,
   ScopedSlotArgs,
   AdditionalThisAttrs,
   Super extends Vue
@@ -139,7 +187,8 @@ export interface ComponentFactory<
   ): _TsxComponent<
     Super,
     PropsForOutside<Props, RequiredProps> & BaseProps,
-    EventsWithOn,
+    EventsWithPrefix,
+    EventsWithoutPrefix,
     ScopedSlotArgs,
     Props
   >;
@@ -166,7 +215,8 @@ export interface ComponentFactory<
   ): _TsxComponent<
     Super,
     PropsForOutside<Props, RequiredProps> & BaseProps,
-    EventsWithOn,
+    EventsWithPrefix,
+    EventsWithoutPrefix,
     ScopedSlotArgs,
     Data & Methods & Computed & Props
   >;
@@ -175,7 +225,8 @@ export interface ComponentFactory<
     mixinObject: ThisTypedComponentOptions<Vue, Data, Methods, Computed, Props>
   ): ComponentFactory<
     BaseProps & Props,
-    EventsWithOn,
+    EventsWithPrefix,
+    EventsWithoutPrefix,
     ScopedSlotArgs,
     AdditionalThisAttrs & Data & Methods & Computed & Props,
     Super
@@ -185,7 +236,8 @@ export interface ComponentFactory<
     mixinObject: VC
   ): ComponentFactory<
     BaseProps,
-    EventsWithOn,
+    EventsWithPrefix,
+    EventsWithoutPrefix,
     ScopedSlotArgs,
     AdditionalThisAttrs & { $scopedSlots: InnerScopedSlots<ScopedSlotArgs> },
     InstanceType<VC> & Super
@@ -194,14 +246,16 @@ export interface ComponentFactory<
 
 export interface ExtendableComponentFactory<
   BaseProps,
-  EventsWithOn,
+  EventsWithPrefix,
+  EventsWithoutPrefix,
   ScopedSlotArgs,
   AdditionalThisAttrs,
   Super extends Vue
 >
   extends ComponentFactory<
       BaseProps,
-      EventsWithOn,
+      EventsWithPrefix,
+      EventsWithoutPrefix,
       ScopedSlotArgs,
       AdditionalThisAttrs,
       Super
@@ -210,7 +264,8 @@ export interface ExtendableComponentFactory<
     componentType: VC
   ): ComponentFactory<
     BaseProps,
-    EventsWithOn,
+    EventsWithPrefix,
+    EventsWithoutPrefix,
     ScopedSlotArgs,
     AdditionalThisAttrs & { $scopedSlots: InnerScopedSlots<ScopedSlotArgs> },
     InstanceType<VC>
@@ -220,7 +275,7 @@ export interface ExtendableComponentFactory<
 function createComponentFactory(
   base: typeof Vue,
   mixins: any[]
-): ComponentFactory<any, any, any, any, Vue> {
+): ComponentFactory<any, any, any, any, any, Vue> {
   return {
     create(options: any): any {
       const mergedMixins = options.mixins
@@ -235,6 +290,7 @@ function createComponentFactory(
 }
 
 function createExtendableComponentFactory(): ExtendableComponentFactory<
+  any,
   any,
   any,
   any,
@@ -259,18 +315,21 @@ export const componentFactory: ExtendableComponentFactory<
   {},
   {},
   {},
+  {},
   Vue
 > = createExtendableComponentFactory();
 
 export function componentFactoryOf<
-  EventsWithOn = {},
-  ScopedSlotArgs = {}
+  EventsWithPrefix = {},
+  ScopedSlotArgs = {},
+  EventsWithoutPrefix = {}
 >(): ComponentFactory<
   {},
-  EventsWithOn,
+  EventsWithPrefix,
+  EventsWithoutPrefix,
   ScopedSlotArgs,
   {
-    _tsx: TsxComponentTypeInfo<{}, EventsWithOn, {}, {}>;
+    _tsx: TsxComponentTypeInfo<{}, EventsWithPrefix, EventsWithoutPrefix, {}>;
     $scopedSlots: InnerScopedSlots<ScopedSlotArgs>;
   },
   Vue
