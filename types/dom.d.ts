@@ -626,7 +626,7 @@ export interface IntrinsicElementAttributes {
   wbr: HTMLAttributes;
 }
 
-export interface Events {
+export interface Events<E = Element> {
   // clipboard events
   copy: ClipboardEvent;
   cut: ClipboardEvent;
@@ -648,15 +648,15 @@ export interface Events {
   drop: DragEvent;
 
   // focus events
-  focus: FocusEvent;
-  blur: FocusEvent;
+  focus: SyntheticEvent<E, FocusEvent>;
+  blur: SyntheticEvent<E, FocusEvent>;
 
   // form events
-  change: Event;
-  input: Event;
-  reset: Event;
-  submit: Event;
-  invalid: Event;
+  change: SyntheticEvent<E>;
+  input: SyntheticEvent<E>;
+  reset: SyntheticEvent<E>;
+  submit: SyntheticEvent<E>;
+  invalid: SyntheticEvent<E>;
 
   // image events
   load: Event;

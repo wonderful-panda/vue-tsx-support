@@ -20,6 +20,8 @@ function intrinsicElements() {
     <a href="example.com" />;
     // OK
     <a onClick={ noop } />;
+    // OK
+    <a on={ { click: noop } } />;
     // OK: kebab-case attribute have not to be defined
     <a domProp-innerHTML="foo" />;
     // OK: unknown element

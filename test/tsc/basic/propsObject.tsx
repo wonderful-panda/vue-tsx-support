@@ -16,7 +16,7 @@ function standardComponent() {
     <MyComponent foo="foo" bar={0} />;
     // bar is optional
     <MyComponent foo="foo" />;
-    <MyComponent { ...{ props: { foo: "foo", bar: 0 } } } />; //// TS2322: 'foo' is missing
+    <MyComponent { ...{ props: { foo: "foo", bar: 0 } } } />; //// TS2322 | TS2769: 'foo' is missing
 
     const MyComponent2 = tsx.withPropsObject(MyComponent);
     /* OK */
@@ -24,6 +24,6 @@ function standardComponent() {
     <MyComponent2 foo="foo" />;
     <MyComponent2 { ...{ props: { foo: "foo", bar: 0 } } } />;
     <MyComponent2 { ...{ props: { foo: "foo" } } } />;
-    <MyComponent2 { ...{ props: { bar: 0 } } } />;  //// TS2322: 'foo' is missing
+    <MyComponent2 { ...{ props: { bar: 0 } } } />;  //// TS2322 | TS2769: 'foo' is missing
 }
 

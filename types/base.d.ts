@@ -85,8 +85,9 @@ type CombinedTsxComponentAttrs<
 
 export type ElementAttrs<T> = T &
   KnownAttrs &
-  EventHandlers<dom.EventsOn<T>> &
-  ElementAdditionalAttrs;
+  EventHandlers<dom.EventsOn<T>> & {
+    on?: EventHandlers<dom.Events<T>>;
+  } & ElementAdditionalAttrs;
 
 export interface Element extends VNode {}
 
