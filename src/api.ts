@@ -15,7 +15,7 @@ import {
 } from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
 
-export type TsxComponentInstance<
+export type _TsxComponentInstance<
   V extends Vue,
   Props,
   EventsWithOn,
@@ -25,14 +25,14 @@ export type TsxComponentInstance<
   $scopedSlots: InnerScopedSlots<ScopedSlotArgs>;
 } & V;
 
-export type TsxComponent<
+export type _TsxComponent<
   V extends Vue,
   Props = {},
   EventsWithOn = {},
   ScopedSlotArgs = {},
   AdditionalThisAttrs = {}
 > = VueConstructor<
-  TsxComponentInstance<V, Props, EventsWithOn, ScopedSlotArgs> &
+  _TsxComponentInstance<V, Props, EventsWithOn, ScopedSlotArgs> &
     AdditionalThisAttrs
 >;
 
@@ -50,17 +50,17 @@ export class Component<
  */
 export function createComponent<TProps, TEvents = {}, TScopedSlots = {}>(
   opts: ComponentOptions<Vue> | FunctionalComponentOptions
-): TsxComponent<Vue, TProps, TEvents, TScopedSlots> {
+): _TsxComponent<Vue, TProps, TEvents, TScopedSlots> {
   return Vue.extend(opts as any) as any;
 }
 
 export interface Factory<TProps, TEvents, TScopedSlots> {
   convert<V extends Vue>(
     componentType: new (...args: any[]) => V
-  ): TsxComponent<V, TProps, TEvents, TScopedSlots>;
+  ): _TsxComponent<V, TProps, TEvents, TScopedSlots>;
   extendFrom<VC extends typeof Vue>(
     componentType: VC
-  ): TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
+  ): _TsxComponent<InstanceType<VC>, TProps, TEvents, TScopedSlots>;
 }
 
 const factoryImpl = {
@@ -85,19 +85,19 @@ export function ofType<TProps, TEvents = {}, TScopedSlots = {}>(): Factory<
 
 export function withNativeOn<VC extends typeof Vue>(
   componentType: VC
-): TsxComponent<InstanceType<VC>, {}, EventsNativeOn, {}> {
+): _TsxComponent<InstanceType<VC>, {}, EventsNativeOn, {}> {
   return componentType as any;
 }
 
 export function withHtmlAttrs<VC extends typeof Vue>(
   componentType: VC
-): TsxComponent<InstanceType<VC>, AllHTMLAttributes, {}, {}> {
+): _TsxComponent<InstanceType<VC>, AllHTMLAttributes, {}, {}> {
   return componentType as any;
 }
 
 export function withUnknownProps<VC extends typeof Vue>(
   componentType: VC
-): TsxComponent<InstanceType<VC>, { [key: string]: any }, {}, {}> {
+): _TsxComponent<InstanceType<VC>, { [key: string]: any }, {}, {}> {
   return componentType as any;
 }
 
@@ -136,7 +136,7 @@ export interface ComponentFactory<
       PropsDef & RecordPropsDefinition<Props>
     >,
     requiredProps?: RequiredProps[]
-  ): TsxComponent<
+  ): _TsxComponent<
     Super,
     PropsForOutside<Props, RequiredProps> & BaseProps,
     EventsWithOn,
@@ -163,7 +163,7 @@ export interface ComponentFactory<
       props?: PropsDef;
     },
     requiredPropsNames?: RequiredProps[]
-  ): TsxComponent<
+  ): _TsxComponent<
     Super,
     PropsForOutside<Props, RequiredProps> & BaseProps,
     EventsWithOn,
