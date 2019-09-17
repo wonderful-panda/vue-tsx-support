@@ -16,7 +16,8 @@ declare global {
               V extends { $scopedSlots: infer X } ? X : {},
               V extends { _tsx_allowPropsObject: true } ? true : false
             >
-          : base.CombinedTsxComponentAttrs<{}, {}, {}, {}, {}, true>)
+          : base.CombinedTsxComponentAttrs<{}, {}, {}, {}, {}, true>) &
+          (V extends { _tsxattrs: infer T } ? T : {})
       : P;
 
     interface IntrinsicElements extends base.IntrinsicElements {
