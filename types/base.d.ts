@@ -3,7 +3,8 @@ import Vue, {
   VNode,
   VNodeData,
   VNodeChildrenArrayContents,
-  ComponentOptions
+  ComponentOptions,
+  VueConstructor
 } from "vue";
 import { ScopedSlot } from "vue/types/vnode";
 
@@ -104,26 +105,27 @@ type ExcludedKey<V extends Vue = Vue> =
   | keyof ComponentOptions<Vue>
   | "_tsx";
 
-export type DefineProps<
+export type DefineProps<P> = { props: P };
+
+export type DefinePropsByNames<
   V extends Vue,
   Names extends Exclude<keyof V, ExcludedKey<Vue>>,
   ForceOptionals extends Exclude<keyof V, ExcludedKey<Vue>> = never
-> = {
-  props: Pick<V, Exclude<Names, ForceOptionals>> &
-    Partial<Pick<V, ForceOptionals>>;
-};
+> = DefineProps<
+  Pick<V, Exclude<Names, ForceOptionals>> & Partial<Pick<V, ForceOptionals>>
+>;
 
 export type DefineExtendedComponentProps<
   V extends Parent,
   Parent extends Vue,
   Names extends Exclude<keyof V, ExcludedKey<Parent>>,
   ForceOptionals extends Exclude<keyof V, ExcludedKey<Parent>> = never
-> = {
-  props: Pick<V, Exclude<Names, ForceOptionals>> &
-    Partial<Pick<V, ForceOptionals>>;
-} & (Parent extends { _tsx: infer PA } ? PA : {});
+> = DefineProps<
+  Pick<V, Exclude<Names, ForceOptionals>> & Partial<Pick<V, ForceOptionals>>
+> &
+  (Parent extends { _tsx: infer PA } ? PA : {});
 
-export type ExposeAllPublicMembers<
+export type DefinePropsFromAllPublicMembers<
   V extends Parent,
   Parent extends Vue,
   Excludes extends Exclude<keyof V, ExcludedKey<Parent>> = never,
@@ -131,12 +133,10 @@ export type ExposeAllPublicMembers<
     keyof V,
     ExcludedKey<Parent> | Excludes
   > = never
-> = {
-  props: Pick<
-    V,
-    Exclude<keyof V, ForceOptionals | Excludes | ExcludedKey<Parent>>
-  > &
-    Partial<Pick<V, ForceOptionals>>;
-} & (Parent extends { _tsx: infer PA } ? PA : {});
+> = DefineProps<
+  Pick<V, Exclude<keyof V, ForceOptionals | Excludes | ExcludedKey<Parent>>> &
+    Partial<Pick<V, ForceOptionals>>
+> &
+  (Parent extends { _tsx: infer PA } ? PA : {});
 
 export type DefineEvents<T> = { on: T };

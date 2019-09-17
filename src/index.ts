@@ -2,9 +2,9 @@ export * from "./api";
 export * from "../types/v2-compat";
 export { modifiers } from "./modifiers";
 export {
-  DefineProps,
+  DefinePropsByNames,
   DefineExtendedComponentProps,
-  ExposeAllPublicMembers,
+  DefinePropsFromAllPublicMembers,
   DefineEvents,
   ScopedSlotHandlers,
   InnerScopedSlot,

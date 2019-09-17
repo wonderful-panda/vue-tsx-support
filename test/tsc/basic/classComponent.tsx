@@ -1,17 +1,17 @@
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import {
-  DefineProps,
+  DefinePropsByNames,
   InnerScopedSlots,
   DefineExtendedComponentProps,
-  ExposeAllPublicMembers,
+  DefinePropsFromAllPublicMembers,
   DefineEvents,
   emit
 } from "vue-tsx-support";
 
 @Component
 class Test extends Vue {
-  _tsx!: DefineProps<Test, "foo" | "bar", "baz">
+  _tsx!: DefinePropsByNames<Test, "foo" | "bar", "baz">
        & DefineEvents<{ e1: string, e2: (p1: string, p2: number) => void }>;
 
   @Prop(String) foo!: string;
@@ -111,7 +111,7 @@ class Test2 extends Test {
 
 @Component
 class GenericTest<T> extends Vue {
-  _tsx!: DefineProps<GenericTest<T>, "foo" | "bar">;
+  _tsx!: DefinePropsByNames<GenericTest<T>, "foo" | "bar">;
 
   @Prop() foo!: T;
   @Prop(Function) bar!: (value: T) => string;
@@ -138,7 +138,7 @@ class GenericParent<T> extends Vue {
 
 @Component
 class Test3 extends Vue {
-  _tsx!: ExposeAllPublicMembers<Test3, Vue, "bra" | "test">;
+  _tsx!: DefinePropsFromAllPublicMembers<Test3, Vue, "bra" | "test">;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;

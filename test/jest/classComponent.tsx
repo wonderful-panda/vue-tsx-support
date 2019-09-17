@@ -2,7 +2,7 @@ import { mount } from "@vue/test-utils";
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import {
-  DefineProps,
+  DefinePropsByNames,
   InnerScopedSlots,
   DefineEvents,
   emit
@@ -16,7 +16,7 @@ describe("classComponent", () => {
     @Prop({ type: String })
     bar?: string;
 
-    _tsx!: DefineProps<Test, "foo" | "bar"> &
+    _tsx!: DefinePropsByNames<Test, "foo" | "bar"> &
       DefineEvents<{ customEvent: string }>;
 
     $scopedSlots!: InnerScopedSlots<{ default?: string }>;
