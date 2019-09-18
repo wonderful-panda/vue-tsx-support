@@ -1,6 +1,7 @@
 {
   "extends": "../base",
   "include": [
+    "*.ts",
     "*.tsx",
     "../../../enable-check.d.ts"
   ]
