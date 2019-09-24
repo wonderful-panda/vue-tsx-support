@@ -50,39 +50,66 @@ export type EventHandler<E> = E extends (...args: any[]) => any
   : (payload: E) => void;
 export type EventHandlers<E> = { [K in keyof E]?: EventHandler<E[K]> };
 
-export type TsxComponentTypeInfo<Props, Events, On, NativeOn> = {
-  props: Props;
-  prefixedEvents: Events;
-  on: On;
-  nativeOn: NativeOn;
-};
+export type DeclareProps<P> = { props: P };
+export type DeclarePrefixedEvents<E> = { prefixedEvents: E };
+export type DeclareOn<E> = { on: E };
+export type DeclareAttributes<A> = { attributes: A };
+
+export type TsxComponentTypeInfo<
+  Attributes,
+  Props,
+  PrefixedEvents,
+  On
+> = DeclareProps<Props> &
+  DeclarePrefixedEvents<PrefixedEvents> &
+  DeclareOn<On> &
+  DeclareAttributes<Attributes>;
+
+export type TsxTypeInfoOf<V> = V extends { _tsx: infer T } ? T : {};
+
+export type PropsOf<T> = T extends DeclareProps<infer X> ? X : {};
+export type PrefixedEventsOf<T> = T extends DeclarePrefixedEvents<infer X>
+  ? X
+  : {};
+export type OnOf<T> = T extends DeclareOn<infer X> ? X : {};
+export type AttributesOf<T> = T extends DeclareAttributes<infer X> ? X : {};
 
 type CombinedTsxComponentAttrsOtherThanProps<
-  Events,
+  Attributes,
+  PrefixedEvents,
   On,
-  NativeOn,
   InnerSS
 > = KnownAttrs &
-  EventHandlers<Events> & {
+  Attributes &
+  EventHandlers<PrefixedEvents> & {
     on?: EventHandlers<On>;
-    nativeOn?: EventHandlers<NativeOn>;
     scopedSlots?: ScopedSlotHandlers<InnerSS>;
   };
 
 type CombinedTsxComponentAttrs<
+  Attributes,
   Props,
-  Events,
+  PrefixedEvents,
   On,
-  NativeOn,
   InnerSS,
   AllowPropsObject extends boolean
 > =
   | (AllowPropsObject extends true
       ? { props: Props } & Partial<Props> &
-          CombinedTsxComponentAttrsOtherThanProps<Events, On, NativeOn, InnerSS>
+          CombinedTsxComponentAttrsOtherThanProps<
+            Attributes,
+            PrefixedEvents,
+            On,
+            InnerSS
+          >
       : never)
   | Props &
-      CombinedTsxComponentAttrsOtherThanProps<Events, On, NativeOn, InnerSS>;
+      CombinedTsxComponentAttrsOtherThanProps<
+        Attributes,
+        PrefixedEvents,
+        On,
+        InnerSS
+      >;
 
 export type ElementAttrs<T> = T &
   KnownAttrs &
@@ -105,27 +132,24 @@ type ExcludedKey<V extends Vue = Vue> =
   | keyof ComponentOptions<Vue>
   | "_tsx";
 
-export type DefineProps<P> = { props: P };
-
-export type DefinePropsByNames<
+export type DeclarePropsByNames<
   V extends Vue,
   Names extends Exclude<keyof V, ExcludedKey<Vue>>,
   ForceOptionals extends Exclude<keyof V, ExcludedKey<Vue>> = never
-> = DefineProps<
+> = DeclareProps<
   Pick<V, Exclude<Names, ForceOptionals>> & Partial<Pick<V, ForceOptionals>>
 >;
 
-export type DefineExtendedComponentProps<
+export type DeclareExtendedComponentProps<
   V extends Parent,
   Parent extends Vue,
   Names extends Exclude<keyof V, ExcludedKey<Parent>>,
   ForceOptionals extends Exclude<keyof V, ExcludedKey<Parent>> = never
-> = DefineProps<
+> = DeclareProps<
   Pick<V, Exclude<Names, ForceOptionals>> & Partial<Pick<V, ForceOptionals>>
-> &
-  (Parent extends { _tsx: infer PA } ? PA : {});
+>;
 
-export type DefinePropsFromAllPublicMembers<
+export type DeclarePropsFromAllPublicMembers<
   V extends Parent,
   Parent extends Vue,
   Excludes extends Exclude<keyof V, ExcludedKey<Parent>> = never,
@@ -133,10 +157,7 @@ export type DefinePropsFromAllPublicMembers<
     keyof V,
     ExcludedKey<Parent> | Excludes
   > = never
-> = DefineProps<
+> = DeclareProps<
   Pick<V, Exclude<keyof V, ForceOptionals | Excludes | ExcludedKey<Parent>>> &
     Partial<Pick<V, ForceOptionals>>
-> &
-  (Parent extends { _tsx: infer PA } ? PA : {});
-
-export type DefineEvents<T> = { on: T };
+>;

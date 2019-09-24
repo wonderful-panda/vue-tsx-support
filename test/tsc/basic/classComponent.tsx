@@ -1,18 +1,19 @@
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import {
-  DefinePropsByNames,
+  DeclarePropsByNames,
   InnerScopedSlots,
-  DefineExtendedComponentProps,
-  DefinePropsFromAllPublicMembers,
-  DefineEvents,
+  DeclareExtendedComponentProps,
+  DeclarePropsFromAllPublicMembers,
+  DeclareOn,
+  TsxTypeInfoOf,
   emit
 } from "vue-tsx-support";
 
 @Component
 class Test extends Vue {
-  _tsx!: DefinePropsByNames<Test, "foo" | "bar", "baz">
-       & DefineEvents<{ e1: string, e2: (p1: string, p2: number) => void }>;
+  _tsx!: DeclarePropsByNames<Test, "foo" | "bar", "baz">
+       & DeclareOn<{ e1: string, e2: (p1: string, p2: number) => void }>;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;
@@ -37,7 +38,9 @@ class Test extends Vue {
 
 class Test2 extends Test {
   piyo!: string[];
-  _tsx!: DefineExtendedComponentProps<Test2, Test, "piyo"> & DefineEvents<{ e3: () => void }>;
+  _tsx!: TsxTypeInfoOf<Test> &
+          DeclareExtendedComponentProps<Test2, Test, "piyo"> &
+           DeclareOn<{ e3: () => void }>
   $scopedSlots!:
     Test["$scopedSlots"] & InnerScopedSlots<{ additional: { foo: string, bar: number }}>;
 
@@ -111,7 +114,7 @@ class Test2 extends Test {
 
 @Component
 class GenericTest<T> extends Vue {
-  _tsx!: DefinePropsByNames<GenericTest<T>, "foo" | "bar">;
+  _tsx!: DeclarePropsByNames<GenericTest<T>, "foo" | "bar">;
 
   @Prop() foo!: T;
   @Prop(Function) bar!: (value: T) => string;
@@ -138,7 +141,7 @@ class GenericParent<T> extends Vue {
 
 @Component
 class Test3 extends Vue {
-  _tsx!: DefinePropsFromAllPublicMembers<Test3, Vue, "bra" | "test">;
+  _tsx!: DeclarePropsFromAllPublicMembers<Test3, Vue, "bra" | "test">;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;

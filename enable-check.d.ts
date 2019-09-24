@@ -9,10 +9,10 @@ declare global {
     type LibraryManagedAttributes<C, P> = C extends new () => infer V
       ? (V extends { _tsx: infer T }
           ? base.CombinedTsxComponentAttrs<
-              T extends { props: infer X } ? X : {},
-              T extends { prefixedEvents: infer X } ? X : {},
-              T extends { on: infer X } ? X : {},
-              T extends { nativeOn: infer X } ? X : {},
+              base.AttributesOf<T>,
+              base.PropsOf<T>,
+              base.PrefixedEventsOf<T>,
+              base.OnOf<T>,
               V extends { $scopedSlots: infer X } ? X : {},
               V extends { _tsx_allowPropsObject: true } ? true : false
             >
