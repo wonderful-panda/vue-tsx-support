@@ -11,12 +11,7 @@ export type TsxComponentAttrs<TProps = {}, TEvents = {}, TScopedSlots = {}> =
         scopedSlots?: ScopedSlotHandlers<TScopedSlots>;
       } & EventHandlers<TEvents>);
 
-export type TsxComponentInstance<
-  V extends Vue,
-  Props,
-  EventsWithOn,
-  ScopedSlotArgs
-> = {
+export type TsxComponentInstance<V extends Vue, Props, EventsWithOn, ScopedSlotArgs> = {
   _tsxattrs: TsxComponentAttrs<Props, EventsWithOn, ScopedSlotArgs>;
 } & V;
 
@@ -27,6 +22,5 @@ export type TsxComponent<
   ScopedSlotArgs = {},
   AdditionalThisAttrs = {}
 > = VueConstructor<
-  TsxComponentInstance<V, Props, EventsWithOn, ScopedSlotArgs> &
-    AdditionalThisAttrs
+  TsxComponentInstance<V, Props, EventsWithOn, ScopedSlotArgs> & AdditionalThisAttrs
 >;

@@ -23,16 +23,14 @@ describe("componentFactory", () => {
     });
 
     it("scoped slot", () => {
-      const ChildComponent = tsx
-        .componentFactoryOf<{}, { default: string }>()
-        .create({
-          props: {
-            foo: String
-          },
-          render(): VNode {
-            return <div>{this.$scopedSlots.default(this.foo)}</div>;
-          }
-        });
+      const ChildComponent = tsx.componentFactoryOf<{}, { default: string }>().create({
+        props: {
+          foo: String
+        },
+        render(): VNode {
+          return <div>{this.$scopedSlots.default(this.foo)}</div>;
+        }
+      });
 
       const ParentComponent = tsx.component({
         render(): VNode {

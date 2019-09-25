@@ -14,12 +14,7 @@ export type KeyModifierName =
   | "left"
   | "right";
 export type MouseModifierName = "left" | "right" | "middle";
-export type ModKeyModifierName =
-  | ModKey
-  | "noctrl"
-  | "noshift"
-  | "noalt"
-  | "nometa";
+export type ModKeyModifierName = ModKey | "noctrl" | "noshift" | "noalt" | "nometa";
 export type StandaloneModifierName = "prevent" | "stop" | "self";
 export type ModifierName =
   | KeyModifierName
@@ -50,11 +45,7 @@ export type Modifier<Keys extends ModifierName> = {
       : Modifier<NextKeys<Keys, K>>
 };
 
-function handleEvent(
-  event: Event,
-  filters: EventFilter[],
-  handler?: EventHandler<Event>
-) {
+function handleEvent(event: Event, filters: EventFilter[], handler?: EventHandler<Event>) {
   for (let filter of filters) {
     if (!filter(event)) {
       return;
@@ -144,13 +135,7 @@ function defineKeyCodeModifiers(
     }
     const code = keyCodes[keyName];
     if (typeof code === "number") {
-      defineChildModifier(
-        target,
-        filters,
-        keyName,
-        (e: any) => e.keyCode === code,
-        children
-      );
+      defineChildModifier(target, filters, keyName, (e: any) => e.keyCode === code, children);
     } else {
       const [c1, c2] = code;
       defineChildModifier(
@@ -164,11 +149,7 @@ function defineKeyCodeModifiers(
   }
 }
 
-function defineKeys(
-  target: Function,
-  filters: EventFilter[],
-  children: ChildModifierFilter
-) {
+function defineKeys(target: Function, filters: EventFilter[], children: ChildModifierFilter) {
   Object.defineProperty(target, "keys", {
     get() {
       const keysFunction = (...args: (KeyModifierName | number)[]) => {
@@ -192,11 +173,7 @@ function defineKeys(
   });
 }
 
-function defineExact(
-  target: Function,
-  filters: EventFilter[],
-  children: ChildModifierFilter
-) {
+function defineExact(target: Function, filters: EventFilter[], children: ChildModifierFilter) {
   Object.defineProperty(target, "exact", {
     get() {
       const exactFunction = (...args: ModKey[]) => {
@@ -252,13 +229,7 @@ function createModifier(
       defineKeys(m, filters, nextChildren);
     }
     if (children.mouse) {
-      defineChildModifier(
-        m,
-        filters,
-        "middle",
-        (e: any) => e.button === 1,
-        nextChildren
-      );
+      defineChildModifier(m, filters, "middle", (e: any) => e.button === 1, nextChildren);
     }
     defineChildModifier(
       m,
@@ -281,57 +252,15 @@ function createModifier(
   }
   if (children.modkey) {
     const nextChildren = { ...children, exact: false };
-    defineChildModifier(
-      m,
-      filters,
-      "ctrl",
-      (e: any) => e.ctrlKey,
-      nextChildren
-    );
-    defineChildModifier(
-      m,
-      filters,
-      "shift",
-      (e: any) => e.shiftKey,
-      nextChildren
-    );
+    defineChildModifier(m, filters, "ctrl", (e: any) => e.ctrlKey, nextChildren);
+    defineChildModifier(m, filters, "shift", (e: any) => e.shiftKey, nextChildren);
     defineChildModifier(m, filters, "alt", (e: any) => e.altKey, nextChildren);
-    defineChildModifier(
-      m,
-      filters,
-      "meta",
-      (e: any) => e.metaKey,
-      nextChildren
-    );
+    defineChildModifier(m, filters, "meta", (e: any) => e.metaKey, nextChildren);
 
-    defineChildModifier(
-      m,
-      filters,
-      "noctrl",
-      (e: any) => !e.ctrlKey,
-      nextChildren
-    );
-    defineChildModifier(
-      m,
-      filters,
-      "noshift",
-      (e: any) => !e.shiftKey,
-      nextChildren
-    );
-    defineChildModifier(
-      m,
-      filters,
-      "noalt",
-      (e: any) => !e.altKey,
-      nextChildren
-    );
-    defineChildModifier(
-      m,
-      filters,
-      "nometa",
-      (e: any) => !e.metaKey,
-      nextChildren
-    );
+    defineChildModifier(m, filters, "noctrl", (e: any) => !e.ctrlKey, nextChildren);
+    defineChildModifier(m, filters, "noshift", (e: any) => !e.shiftKey, nextChildren);
+    defineChildModifier(m, filters, "noalt", (e: any) => !e.altKey, nextChildren);
+    defineChildModifier(m, filters, "nometa", (e: any) => !e.metaKey, nextChildren);
   }
   defineChildModifier(
     m,
@@ -353,13 +282,7 @@ function createModifier(
     },
     children
   );
-  defineChildModifier(
-    m,
-    filters,
-    "self",
-    e => e.target === e.currentTarget,
-    children
-  );
+  defineChildModifier(m, filters, "self", e => e.target === e.currentTarget, children);
   return m as Modifier<ModifierName>;
 }
 

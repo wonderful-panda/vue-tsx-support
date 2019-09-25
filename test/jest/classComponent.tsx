@@ -1,12 +1,7 @@
 import { mount } from "@vue/test-utils";
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import {
-  DeclarePropsByNames,
-  InnerScopedSlots,
-  DeclareOn,
-  emit
-} from "vue-tsx-support";
+import { DeclarePropsByNames, InnerScopedSlots, DeclareOn, emit } from "vue-tsx-support";
 
 describe("classComponent", () => {
   @Component
@@ -16,8 +11,7 @@ describe("classComponent", () => {
     @Prop({ type: String })
     bar?: string;
 
-    _tsx!: DeclarePropsByNames<Test, "foo" | "bar"> &
-      DeclareOn<{ customEvent: string }>;
+    _tsx!: DeclarePropsByNames<Test, "foo" | "bar"> & DeclareOn<{ customEvent: string }>;
 
     $scopedSlots!: InnerScopedSlots<{ default?: string }>;
 
@@ -48,9 +42,7 @@ describe("classComponent", () => {
         propsData: { foo: "fooValue" }
       });
       w.vm.emitCustomEvent("emit-test");
-      expect(w.emittedByOrder()).toStrictEqual([
-        { name: "customEvent", args: ["emit-test"] }
-      ]);
+      expect(w.emittedByOrder()).toStrictEqual([{ name: "customEvent", args: ["emit-test"] }]);
     });
   });
 });

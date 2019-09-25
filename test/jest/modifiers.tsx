@@ -21,11 +21,7 @@ describe("modifiers", () => {
     const spy = jest.fn();
     const Comp = Vue.extend({
       render(): VNode {
-        return (
-          <div
-            onKeydown={m.keys("up", "left")(e => spy(keyNames[e.keyCode]))}
-          />
-        );
+        return <div onKeydown={m.keys("up", "left")(e => spy(keyNames[e.keyCode]))} />;
       }
     });
     const w = mount(Comp);
@@ -119,10 +115,7 @@ describe("modifiers", () => {
       render(): VNode {
         return (
           <div onKeydown={e => propagated(keyNames[e.keyCode])}>
-            <div
-              class="inner"
-              onKeydown={m.stop.enter(e => spy(keyNames[e.keyCode]))}
-            />
+            <div class="inner" onKeydown={m.stop.enter(e => spy(keyNames[e.keyCode]))} />
           </div>
         );
       }
@@ -159,11 +152,7 @@ describe("modifiers", () => {
     const spy = jest.fn();
     const Comp = Vue.extend({
       render(): VNode {
-        return (
-          <div
-            onKeydown={m.exact("ctrl", "alt")(e => spy(keyNames[e.keyCode]))}
-          />
-        );
+        return <div onKeydown={m.exact("ctrl", "alt")(e => spy(keyNames[e.keyCode]))} />;
       }
     });
     const w = mount(Comp);

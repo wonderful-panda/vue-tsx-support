@@ -7,12 +7,12 @@ const noop = () => {};
  * Components written by standard way
  */
 function standardComponent() {
-    const MyComponent = Vue.extend({});
+  const MyComponent = Vue.extend({});
 
-    // NG
-    <MyComponent a="value" />;      //// TS2322 | TS2339 | TS2769: 'a' does not exist
-    // OK
-    <MyComponent accesskey="akey" />;
-    // NG
-    <MyComponent nativeOnClick={ noop } />;      //// TS2322 | TS2339 | TS2769: 'nativeOnClick' does not exist
+  // NG
+  <MyComponent a="value" />; //// TS2322 | TS2339 | TS2769: 'a' does not exist
+  // OK
+  <MyComponent accesskey="akey" />;
+  // NG
+  <MyComponent nativeOnClick={noop} />; //// TS2322 | TS2339 | TS2769: 'nativeOnClick' does not exist
 }

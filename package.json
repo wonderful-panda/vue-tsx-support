@@ -8,8 +8,8 @@
     "clean": "rimraf lib",
     "build": "tsc",
     "watch": "tsc -w",
-    "prettier": "prettier --list-different \"{src,types,options,test/jest}/**/*.ts\"",
-    "prettier:fix": "prettier --write \"{src,types,options,test/jest}/**/*.ts\"",
+    "prettier": "prettier --list-different \"{src,types,options,test}/**/*.{ts,tsx}\"",
+    "prettier:fix": "prettier --write \"{src,types,options,test}/**/*.{ts,tsx}\"",
     "jest": "jest",
     "tsc-test": "node test/tsc/runner.js",
     "test": "npm-run-all prettier tsc-test jest"
@@ -58,6 +58,9 @@
   "peerDependencies": {
     "typescript": ">=3.4.5",
     "vue": ">=2.5.13"
+  },
+  "prettier": {
+    "printWidth": 100
   },
   "jest": {
     "moduleFileExtensions": [
