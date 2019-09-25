@@ -75,8 +75,13 @@ class Test2 extends Test {
 <Test />;   //// TS2322 | TS2326 | TS2769: 'foo' is missing
 
 // NG
+<Test foo="value" on={{   //// TS2322 | TS2326 | TS2769: 'e1' are incompatible
+  e1: (p: number) => console.log(p)
+}} />;
+
+// OK
 <Test foo="value" on={{
-  e3: (p: any) => console.log(p)   //// TS2322 | TS2769: 'e3' does not exist
+  "!e1": (p: string) => console.log(p)
 }} />;
 
 <Test foo="value" scopedSlots={{

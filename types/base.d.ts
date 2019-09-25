@@ -82,7 +82,7 @@ type CombinedTsxComponentAttrsOtherThanProps<
 > = KnownAttrs &
   Attributes &
   EventHandlers<PrefixedEvents> & {
-    on?: EventHandlers<On>;
+    on?: EventHandlers<On> & Record<string, Function>;
     scopedSlots?: ScopedSlotHandlers<InnerSS>;
   };
 

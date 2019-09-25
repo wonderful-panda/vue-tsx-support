@@ -16,6 +16,11 @@ function standardComponent() {
     <MyComponent accesskey="akey" />;   //// TS2322 | TS2339 | TS2769: 'accesskey' does not exist
     // OK
     <MyComponent nativeOnClick={ noop } />;
+    // OK
+    <MyComponent nativeOn={ { click: noop, "!keydown": func } } />;
     // NG
     <MyComponent nativeOnClick={ func } />; //// TS2322 | TS2326 | TS2769: /Types of .* are incompatible/
+    // NG
+    <MyComponent nativeOn={ { click: func } } />; //// TS2322 | TS2326 | TS2769: /Types of .* are incompatible/
+
 }
