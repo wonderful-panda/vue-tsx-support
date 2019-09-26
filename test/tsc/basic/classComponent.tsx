@@ -130,6 +130,14 @@ class Test2 extends Test {
     e2: () => console.log("baz")
   }}
 />;
+// OK
+<Test2
+  foo="value"
+  piyo={[]}
+  on={{
+    e1: [p => console.log(p.toLocaleLowerCase())]
+  }}
+/>;
 
 // NG
 <Test2 piyo={["foo"]} />; //// TS2322 | TS2326 | TS2769: 'foo' is missing

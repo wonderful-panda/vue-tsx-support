@@ -1,4 +1,4 @@
-import Vue, { ComponentOptions, FunctionalComponentOptions, VueConstructor } from "vue";
+import Vue, { ComponentOptions, FunctionalComponentOptions, VueConstructor, VNodeData } from "vue";
 import {
   RecordPropsDefinition,
   ThisTypedComponentOptionsWithRecordProps as ThisTypedComponentOptions
@@ -12,7 +12,7 @@ import {
   DeclarePrefixedEvents,
   DeclareOn
 } from "../types/base";
-import { EventsNativeOn, AllHTMLAttributes } from "../types/dom";
+import { EventsNativeOn, AllHTMLAttributes, Events } from "../types/dom";
 
 export type _TsxComponentInstanceV3<
   V extends Vue,
@@ -83,7 +83,14 @@ export function ofType<Props, PrefixedEvents = {}, ScopedSlots = {}, On = {}>():
 
 export function withNativeOn<VC extends typeof Vue>(
   componentType: VC
-): _TsxComponentV3<InstanceType<VC>, EventHandlers<EventsNativeOn>, {}, {}, {}, {}> {
+): _TsxComponentV3<
+  InstanceType<VC>,
+  EventHandlers<EventsNativeOn> & { nativeOn?: EventHandlers<Events> & VNodeData["nativeOn"] },
+  {},
+  {},
+  {},
+  {}
+> {
   return componentType as any;
 }
 

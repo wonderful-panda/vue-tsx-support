@@ -42,7 +42,7 @@ export type ScopedSlotHandlers<InnerSSType> = {
 };
 
 export type EventHandler<E> = E extends (...args: any[]) => any ? E : (payload: E) => void;
-export type EventHandlers<E> = { [K in keyof E]?: EventHandler<E[K]> };
+export type EventHandlers<E> = { [K in keyof E]?: EventHandler<E[K]> | EventHandler<E[K]>[] };
 
 export type DeclareProps<P> = { props: P };
 export type DeclarePrefixedEvents<E> = { prefixedEvents: E };
@@ -64,7 +64,7 @@ export type AttributesOf<T> = T extends DeclareAttributes<infer X> ? X : {};
 type CombinedTsxComponentAttrsOtherThanProps<Attributes, PrefixedEvents, On, InnerSS> = KnownAttrs &
   Attributes &
   EventHandlers<PrefixedEvents> & {
-    on?: EventHandlers<On> & Record<string, Function>;
+    on?: EventHandlers<On> & VNodeData["on"];
     scopedSlots?: ScopedSlotHandlers<InnerSS>;
   };
 
