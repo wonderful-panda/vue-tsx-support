@@ -216,3 +216,13 @@ function knownAttrs() {
   <MyComponent attrs={{ type: "button" }} />;
   <MyComponent domProps={{ innerHTML: "xxx" }} />;
 }
+
+function functionalWrapper() {
+  const MyComponent = vuetsx.component({});
+  const Parent = vuetsx.component({
+    functional: true,
+    render(_h, { data, children }) {
+      return <MyComponent {...{ data }}>{children}</MyComponent>;
+    }
+  });
+}
