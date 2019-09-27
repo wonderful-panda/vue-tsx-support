@@ -22,6 +22,9 @@ export type KnownAttrs = {
   ref?: VNodeData["ref"];
   slot?: VNodeData["slot"];
   style?: VNodeData["style"] | string;
+  domProps?: VNodeData["domProps"];
+  attrs?: VNodeData["attrs"];
+  hook?: VNodeData["hook"];
   id?: string;
   refInFor?: boolean;
   domPropsInnerHTML?: string;

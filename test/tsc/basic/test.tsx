@@ -207,3 +207,12 @@ function vueClassComponent() {
   // NG
   <MyComponent2 a="foo" scopedSlots={{ default: p => p.xxx }} />; //// TS2322 | TS2339: 'xxx' does not exist
 }
+
+function knownAttrs() {
+  const nope = () => {};
+  const MyComponent = vuetsx.component({});
+
+  <MyComponent hook={{ activated: nope }} />;
+  <MyComponent attrs={{ type: "button" }} />;
+  <MyComponent domProps={{ innerHTML: "xxx" }} />;
+}
