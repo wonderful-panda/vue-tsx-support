@@ -1014,6 +1014,13 @@
     "@vue/babel-plugin-transform-vue-jsx" "^1.0.0"
     camelcase "^5.0.0"
 
+"@vue/composition-api@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-0.3.2.tgz#2d797028e489bf7812f08c7bb33ffd03ef23c617"
+  integrity sha512-fD4dn9cJX62QSP2TMFLXCOQOa+Bu2o7kWDjrU/FNLkNqPPcCKBLxCH/Lc+gNCRBKdEUGyI3arjAw7j0Yz1hnvw==
+  dependencies:
+    tslib "^1.9.3"
+
 "@vue/test-utils@1.0.0-beta.29":
   version "1.0.0-beta.29"
   resolved "https://registry.yarnpkg.com/@vue/test-utils/-/test-utils-1.0.0-beta.29.tgz#c942cf25e891cf081b6a03332b4ae1ef430726f0"
@@ -4535,6 +4542,11 @@ tsc-test@^0.2.0:
   dependencies:
     chalk "^2.4.2"
     meow "^5.0.0"
+
+tslib@^1.9.3:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
+  integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
 
 tunnel-agent@^0.6.0:
   version "0.6.0"
