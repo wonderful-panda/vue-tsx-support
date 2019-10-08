@@ -10,5 +10,6 @@ const MyComponent = component({
   }
 });
 
-<MyComponent foo="a" bar />;
+<MyComponent foo="a" bar />; // OK
+<MyComponent bar />; // OK
 <MyComponent foo="a" />; //// TS2322 | TS2769: 'bar' is missing

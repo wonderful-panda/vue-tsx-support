@@ -15,7 +15,7 @@ export interface ComponentFactory<PrefixedEvents> {
     RequiredProps extends keyof Props = RequiredPropNames<PropsDef> & keyof Props
   >(
     options: CompositionComponentOptions<Props, PropsDef>
-  ): _TsxComponentV3<Vue, Props, PropsForOutside<Props, RequiredProps>, PrefixedEvents, {}, {}>;
+  ): _TsxComponentV3<Vue, {}, PropsForOutside<Props, RequiredProps>, PrefixedEvents, {}, {}>;
 }
 
 const factory = {
