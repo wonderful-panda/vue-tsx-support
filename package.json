@@ -1,6 +1,6 @@
 {
   "name": "vue-tsx-support",
-  "version": "3.0.0-dev.6b",
+  "version": "3.0.0-dev.6c",
   "description": "TSX (JSX for TypeScript) support library for Vue",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
