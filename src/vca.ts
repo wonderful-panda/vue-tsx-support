@@ -14,7 +14,7 @@ export interface CompositionComponentOptions<
   ScopedSlots
 > {
   props?: PropsDef & RecordPropsDefinition<Props>;
-  setup: (props: Props, ctx: SetupContext<ScopedSlots>) => (() => VNode);
+  setup: (this: void, props: Props, ctx: SetupContext<ScopedSlots>) => (() => VNode);
 }
 
 export interface ComponentFactory<PrefixedEvents, ScopedSlots> {
@@ -35,7 +35,7 @@ const factory = {
 
 export const component = factory.create;
 
-export function componentFactoryOf<PrefixedEvents, ScopedSlots>(): ComponentFactory<
+export function componentFactoryOf<PrefixedEvents, ScopedSlots = {}>(): ComponentFactory<
   PrefixedEvents,
   ScopedSlots
 > {
