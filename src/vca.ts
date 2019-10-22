@@ -1,35 +1,31 @@
-import Vue, { VNode } from "vue";
+import Vue, { VNode, ComponentOptions } from "vue";
 import * as vca from "@vue/composition-api";
 import { _TsxComponentV3, RequiredPropNames, PropsForOutside } from "./api";
 import { RecordPropsDefinition } from "vue/types/options";
-import {
-  InnerScopedSlots,
-  TsxComponentTypeInfo,
-  EventHandler,
-  DeclareOn,
-  DeclarePrefixedEvents,
-  DeclareProps
-} from "../types/base";
+import { InnerScopedSlots, TsxComponentTypeInfo, EventHandler } from "../types/base";
 
 export type SetupContext<PrefixedEvents = {}, ScopedSlots = {}, On = {}> = vca.SetupContext & {
   slots: InnerScopedSlots<ScopedSlots>;
   _tsx?: TsxComponentTypeInfo<{}, {}, PrefixedEvents, On>;
 };
 
-export interface CompositionComponentOptions<
+export type CompositionComponentOptions<
   Props,
   PropsDef extends RecordPropsDefinition<Props>,
   PrefixedEvents,
   ScopedSlots,
   On
-> {
+> = {
   props?: PropsDef & RecordPropsDefinition<Props>;
   setup: (
     this: void,
     props: Props,
     ctx: SetupContext<PrefixedEvents, ScopedSlots, On>
   ) => (() => VNode);
-}
+} & Pick<
+  ComponentOptions<Vue>,
+  "name" | "components" | "comments" | "inheritAttrs" | "directives" | "filters"
+>;
 
 export function component<
   Props,

@@ -1,6 +1,7 @@
 import { component, SetupContext, emit, emitOn, updateEmitter } from "vue-tsx-support/lib/vca";
 
 const MyComponent = component({
+  name: "MyComponentName",
   props: {
     foo: String,
     bar: { type: Boolean, required: true }
