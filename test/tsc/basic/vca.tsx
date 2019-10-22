@@ -1,4 +1,4 @@
-import { component, SetupContext, emit, emitOn } from "vue-tsx-support/lib/vca";
+import { component, SetupContext, emit, emitOn, updateEmitter } from "vue-tsx-support/lib/vca";
 
 const MyComponent = component({
   props: {
@@ -22,6 +22,7 @@ const MyComponent2 = component({
     props,
     ctx: SetupContext<{ onCutstomEvent: string }, { ss: boolean }, { customEvent: string }>
   ) {
+    const emitUpdate = updateEmitter<typeof props>();
     const onClick = () => {
       emit(ctx, "customEvent", "value");
       emitOn(ctx, "onCutstomEvent", "value");
@@ -31,6 +32,10 @@ const MyComponent2 = component({
 
       emit(ctx, "customEvent", 1); //// TS2345
       emitOn(ctx, "onCutstomEvent", 1); //// TS2345
+
+      emitUpdate(ctx, "foo", "value");
+      emitUpdate(ctx, "fooo", "value"); //// TS2345
+      emitUpdate(ctx, "foo", 0); //// TS2345
     };
     return () => <div class={props.foo}>{ctx.slots.ss(true)}</div>;
   }

@@ -65,3 +65,9 @@ export function emitOn<Events, Name extends string & keyof Events>(
 ) {
   ctx.emit(name.replace(/^on[A-Z]/, v => v[2].toLowerCase()), ...args);
 }
+
+export function updateEmitter<Props>() {
+  return <K extends keyof Props & string>(ctx: SetupContext, name: K, value: Props[K]) => {
+    ctx.emit("update:" + name, value);
+  };
+}
