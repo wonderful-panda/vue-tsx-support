@@ -7,16 +7,14 @@ declare global {
     interface Element extends base.Element {}
     interface ElementClass extends base.ElementClass {}
     type LibraryManagedAttributes<C, P> = C extends new () => infer V
-      ? (V extends { _tsx: infer T }
-          ? base.CombinedTsxComponentAttrs<
-              base.AttributesOf<T>,
-              base.PropsOf<T>,
-              base.PrefixedEventsOf<T>,
-              base.OnOf<T>,
-              V extends { $scopedSlots: infer X } ? X : {},
-              V extends { _tsx_allowPropsObject: true } ? true : false
-            >
-          : base.CombinedTsxComponentAttrs<{}, {}, {}, {}, {}, true>) &
+      ? base.CombinedTsxComponentAttrs<
+          base.AttributesOf<V>,
+          base.PropsOf<V>,
+          base.PrefixedEventsOf<V>,
+          base.OnOf<V>,
+          V extends { $scopedSlots: infer X } ? X : {},
+          base.IsPropsObjectAllowed<V>
+        > &
           (V extends { _tsxattrs: infer T } ? T : {})
       : P;
 
@@ -25,14 +23,7 @@ declare global {
       [name: string]: any;
 
       // builtin components
-      transition: base.CombinedTsxComponentAttrs<
-        builtin.TransitionProps,
-        {},
-        {},
-        {},
-        {},
-        true
-      >;
+      transition: base.CombinedTsxComponentAttrs<builtin.TransitionProps, {}, {}, {}, {}, true>;
       "transition-group": base.CombinedTsxComponentAttrs<
         builtin.TransitionGroupProps,
         {},
@@ -41,14 +32,7 @@ declare global {
         {},
         true
       >;
-      "keep-alive": base.CombinedTsxComponentAttrs<
-        builtin.KeepAliveProps,
-        {},
-        {},
-        {},
-        {},
-        true
-      >;
+      "keep-alive": base.CombinedTsxComponentAttrs<builtin.KeepAliveProps, {}, {}, {}, {}, true>;
     }
   }
 }
