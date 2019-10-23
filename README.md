@@ -3,37 +3,208 @@
 # vue-tsx-support
 TSX (JSX for TypeScript) support library for Vue
 
-## Table of contents
+## IMPORTANT NOTE
+__This is the document for beta version (v3.0.0-beta)__
 
-<!-- toc -->
+Stable version is [here](https://github.com/wonderful-panda/vue-tsx-support/blob/v2/README.md)
 
-- [BREAKING CHANGES](#breaking-changes)
-- [Install and enable](#install-and-enable)
-- [Using intrinsic elements](#using-intrinsic-elements)
-- [Using custom component](#using-custom-component)
-  * [available APIs to add type information](#available-apis-to-add-type-information)
-    + [componentFactory](#componentfactory)
-    + [component](#component)
-    + [extendFrom](#extendfrom)
-    + [mixin](#mixin)
-    + [componentFactoryOf](#componentfactoryof)
-    + [Component](#component)
-    + [ofType](#oftype)
-  * [Other attributes](#other-attributes)
-    + [Native event listeners and dom properties](#native-event-listeners-and-dom-properties)
-    + [HTML attributes attached to the root element](#html-attributes-attached-to-the-root-element)
-- [Options](#options)
-  * [allow-element-unknown-attrs](#allow-element-unknown-attrs)
-  * [allow-unknown-props](#allow-unknown-props)
-  * [enable-html-attrs](#enable-html-attrs)
-  * [enable-nativeon](#enable-nativeon)
-  * [enable-vue-router](#enable-vue-router)
-- [Utility](#utility)
-  * [modifiers](#modifiers)
-    + [Available modifiers](#available-modifiers)
-- [LICENSE](#license)
+## TABLE OF CONTENTS
 
-<!-- tocstop -->
+## NEW FEATURES
+
+- Typesafe emit for declared events
+- @vue/composition-api support (experimental)
+- vue-property-decorator support
+
+## INSTALLATION
+
+1. Create Vue project with TypeScript and babel support.
+
+vue-tsx-support is a type checker for TypeScript, not a transpiler.  
+You must install babel presets (@vue/babel-preset-app or @vue/babel-preset-jsx) separatedly.
+
+Vue CLI may help you.
+
+- [Installation - Vue.js](https://vuejs.org/v2/guide/installation.html)
+- [Vue CLI](https://cli.vuejs.org/)
+- [vuejs/jsx](https://github.com/vuejs/jsx)
+
+2. Install vue-tsx-support from npm
+
+    ```
+    yarn add vue-tsx-support@beta -D
+    ```
+
+3. In `tsconfig.json`, set `"preserve"` to `jsx` and `"VueTsxSupport"` to `jsxFactory`
+
+    ```json
+    {
+      "compilerOptions": {
+        "jsx": "preserve",
+        "jsxFactory": "VueTsxSupport",
+        "...": "..."
+      },
+      "include": [
+        "..."
+      ]
+    }
+    ```
+
+4. import `vue-tsx-support/enable-check.d.ts` somewhere, 
+
+    ```typescript
+    import "vue-tsx-support/enable-check"
+    ```
+
+   or add it to "include" in `tsconfig.json`
+
+    ```json
+    {
+      "compilerOptions": {
+        "...": "..."
+      },
+      "include": [
+        "node_modules/vue-tsx-support/enable-check.d.ts",
+        "..."
+      ]
+    }
+    ```
+
+### Miguration from V2
+
+If your project already uses vue-tsx-support v2, you may need only following steps.
+
+1. In `tsconfig.json`, set `"VueTsxSupport"` to `jsxFactory`
+
+2. Enable `allow-props-object` option (Optional)
+
+
+## USAGE
+
+### Using intrinsic elements
+
+Standard HTML elements are defined as intrinsic elements.
+So, compiler can check attribute names and attribute types of them:
+
+```jsx
+// OK
+<div id="title" />;
+// OK
+<input type="number" min={ 0 } max={ 100 } />;
+// OK
+<a href={ SOME_LINK } />;
+// NG: because `href` is not a valid attribute of `div`
+<div href={ SOME_LINK } />;
+// NG: because `id` must be a number
+<div id={ 1 } />;
+```
+
+Lower case tags are treated as unknown intrinsic element.
+TypeScript checks nothing for such tags.
+
+```jsx
+// OK
+<foo id="unknown" unknownattr={ 1 } />
+```
+
+### Using existing components
+
+By default, `vue-tsx-support` does not allow unknown props.  
+For example, below code causes compilation error.
+
+  ```jsx
+  import Vue from "vue";
+  import AwesomeButton from "third-party-library/awesome-button";
+
+  export default Vue.extend({
+    render() {
+      // ERROR: because TypeScript does not know AwesomeButton has 'text' prop.
+      return <AwesomeButton text="Click Me!" />;
+    }
+  });
+  ```
+
+You must add type information to existing components like below:
+
+  ```typescript
+  import AwesomeButtonOrig from "third-party-library/awesome-button";
+  import * as tsx from "vue-tsx-support";
+
+  type AwesomeButtonProps = {
+    text: string;
+    raised?: boolean;
+    rounded?: boolean;
+  }
+
+  // Now, AwesomeButton has 1 required prop(text) and 2 optional props(raised, rounded)
+  export const AwesomeButton = tsx.ofType<AwesomeButtonProps>().convert(AwesomeButtonOrig);
+  ```
+
+If your component has custom events or scoped slots, specify their types as 2nd and 3rd type parameter.
+
+For example:
+
+  ```typescript
+  import AwesomeListOrig from "third-party-library/awesome-list";
+  import * as tsx from "vue-tsx-support";
+
+  type Item = { id: string, text: string };
+
+  type AwesomeListProps = {
+    items: ReadonlyArray<Item>;
+    rowHeight: number;
+  }
+
+  type AwesomeListEvents = {
+    onRowClicked: { item: Item, index: number };
+  }
+
+  type AwesomeListScopedSlots = {
+    row: { item: Item }
+  }
+
+  export const AwesomeList = tsx.ofType<
+    AwesomeListProps,
+    AwesomeListEvents,
+    AwesomeListScopedSlots
+  >().convert(AwesomeListOrig);
+  ```
+
+Then you can use AwesomeList like below:
+
+  ```jsx
+  const App = Vue.extend({
+  render(): VNode {
+    return (
+      <AwesomeList
+        items={this.items}
+        rowHeight={32}
+        onRowClicked={p => console.log(`${p.item.text} clicked!`)}
+        scopedSlots={{
+          row: item => <div>{item.text}</div>
+        }}
+      />
+    );
+  }
+  });
+  ```
+
+### Writing your own components
+
+#### Object style (Normal component)
+#### Object style (Functional component)
+#### Class style
+#### Object style with composition api
+
+## OPTIONS
+
+## APIS
+
+## LICENSE
+
+MIT
+
+<!--
 
 ## BREAKING CHANGES
 - V2.2.0
@@ -722,3 +893,5 @@ import { modifiers as m } from "vue-tsx-support";
 
 ## LICENSE
 MIT
+
+-->
