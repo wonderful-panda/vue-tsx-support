@@ -3,7 +3,8 @@
 # vue-tsx-support
 TSX (JSX for TypeScript) support library for Vue
 
-## IMPORTANT NOTE
+## :warning: CAUTION
+
 __This is the document for beta version (v3.0.0-beta)__
 
 Stable version is [here](https://github.com/wonderful-panda/vue-tsx-support/blob/v2/README.md)
@@ -81,7 +82,7 @@ If your project already uses vue-tsx-support v2, you may need only following ste
 
 ## USAGE
 
-### Using intrinsic elements
+### Intrinsic elements
 
 Standard HTML elements are defined as intrinsic elements.
 So, compiler can check attribute names and attribute types of them:
@@ -107,7 +108,24 @@ TypeScript checks nothing for such tags.
 <foo id="unknown" unknownattr={ 1 } />
 ```
 
-### Using existing components
+### Components
+
+Basically, `vue-tsx-support` uses three types for each component.
+
+- __Prop types__  
+   Determine name, type, and required or optional of each props  
+   When using existing component as-is, you must specify prop types manually.  
+   When writing component with APIs of `vue-tsx-support`, prop types are automatically obtained from component definition.  
+
+- __Custom event types (optional)__  
+   If the component has custom events, you can specify custom event types additionally,  
+   and `vue-tsx-support` will check if event names and argument types are correct or not.
+
+- __Scoped slot types (optional)__  
+   If the component has uses scoped slots, you can specify scoped slot types additionally,  
+   and `vue-tsx-support` will check if scoped slot names and argument types are correct or not.
+
+#### Make existing components tsx-ready.
 
 By default, `vue-tsx-support` does not allow unknown props.  
 For example, below code causes compilation error.
@@ -118,13 +136,13 @@ For example, below code causes compilation error.
 
   export default Vue.extend({
     render() {
-      // ERROR: because TypeScript does not know AwesomeButton has 'text' prop.
+      // ERROR: because TypeScript does not know that AwesomeButton has 'text' prop.
       return <AwesomeButton text="Click Me!" />;
     }
   });
   ```
 
-You must add type information to existing components like below:
+You can add type information to existing component without modifying component itself, like below:
 
   ```typescript
   import AwesomeButtonOrig from "third-party-library/awesome-button";
@@ -140,7 +158,7 @@ You must add type information to existing components like below:
   export const AwesomeButton = tsx.ofType<AwesomeButtonProps>().convert(AwesomeButtonOrig);
   ```
 
-If your component has custom events or scoped slots, specify their types as 2nd and 3rd type parameter.
+You also can specify custom event types as second type parameter, and scoped slot types as third type parameter.
 
 For example:
 
@@ -156,6 +174,7 @@ For example:
   }
 
   type AwesomeListEvents = {
+    // member name must be ['on' + event name(with capitalizing first charactor)]
     onRowClicked: { item: Item, index: number };
   }
 
@@ -189,12 +208,95 @@ Then you can use AwesomeList like below:
   });
   ```
 
-### Writing your own components
+#### Writing components by object-style API (Like `Vue.extend`)
 
-#### Object style (Normal component)
-#### Object style (Functional component)
-#### Class style
-#### Object style with composition api
+If you use `Vue.extend()`, just replace it by `componentFactory.create` and your component becomes TSX-ready.
+
+Props type is infered from props definition automatically.  
+For example, props type will be `{ text: string, important?: boolean }` in below code.
+
+:warning: In some environment, `as const` may be needed to make prop required properly.
+
+  ```jsx
+  import * as tsx from "vue-tsx-support";
+  const MyComponent = tsx.componentFactory.create({
+    props: {
+      text: { type: String, required: true },
+      important: Boolean,
+    } as const, // `as const` is needed in some cases.
+    computed: {
+      className(): string {
+        return this.important ? "label-important" : "label-normal";
+      }
+    },
+    methods: {
+      onClick(event) { this.$emit("ok", event); }
+    },
+    render(): VNode {
+      return <span class={this.className} onClick={this.onClick}>{this.text}</span>;
+    }
+  });
+  ```
+
+:bulb: You can use `component` as as shorthand of `componentFactory.create`.
+
+  ```jsx
+  import * as tsx from "vue-tsx-support";
+  const MyComponent = tsx.component({
+    /* snip */
+  });
+  ```
+
+If your component has custom events or scoped slots, use `componentFactoryOf` instead.
+
+  ```typescript
+  import * as tsx from "vue-tsx-support";
+
+  type AwesomeListEvents = {
+    onRowClicked: { item: {}, index: number };
+  }
+
+  type AwesomeListScopedSlots = {
+    row: { item: {} }
+  }
+
+  export const AwesomeList = tsx.componentFactoryOf<
+    AwesomeListEvents,
+    AwesomListScopedSlots
+  >().create({
+    name: "AwesomeList",
+    props: {
+      items: { type: Array, required: true },
+      rowHeight: { type: Number, required: true }
+    },
+    computed: { /* ... */},
+    method: {
+      emitRowClicked(item: {}, index: number): void {
+        // Equivalent to `this.$emit("rowClicked", { item, index })`,
+        // And event name and payload type are statically checked.
+        tsx.emitOn(this, "onRowClicked", { item, index });
+      }
+    },
+    render(): VNode {
+      return (
+        <div class={style.container}>
+          {
+            this.visibleItems.map((item, index) => (
+              <div style={this.rowStyle} onClick={() => this.$emit("rowClicked", { item, index })}>
+                // slot name ('row') and argument types are statically checked.
+                { this.$scopedSlots.row({ item }) }
+              <div>
+            )
+          }
+        </div>
+      );
+    }
+  });
+  ```
+
+#### Writing component by class-style API (`vue-class-component` and/or `vue-property-decorator`)
+
+#### Writing component by composition api (`@vue/composition-api`)
 
 ## OPTIONS
 
