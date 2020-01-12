@@ -1,18 +1,20 @@
 import Vue, { VNode } from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import {
-  DeclarePropsByNames,
   InnerScopedSlots,
-  DeclareExtendedComponentProps,
-  DeclarePropsFromAllPublicMembers,
   DeclareOn,
   TsxTypeInfoOf,
-  emit
+  emit,
+  PickProps,
+  DeclareProps,
+  PickOwnProps,
+  MakeOptional,
+  AutoProps
 } from "vue-tsx-support";
 
 @Component
 class Test extends Vue {
-  _tsx!: DeclarePropsByNames<Test, "foo" | "bar", "baz"> &
+  _tsx!: DeclareProps<MakeOptional<PickProps<Test, "foo" | "bar" | "baz">, "baz">> &
     DeclareOn<{ e1: string; e2: (p1: string, p2: number) => void }>;
 
   @Prop(String) foo!: string;
@@ -39,7 +41,7 @@ class Test extends Vue {
 class Test2 extends Test {
   piyo!: string[];
   _tsx!: TsxTypeInfoOf<Test> &
-    DeclareExtendedComponentProps<Test2, Test, "piyo"> &
+    DeclareProps<PickOwnProps<Test2, Test, "piyo">> &
     DeclareOn<{ e3: () => void }>;
   $scopedSlots!: Test["$scopedSlots"] &
     InnerScopedSlots<{ additional: { foo: string; bar: number } }>;
@@ -154,7 +156,7 @@ class Test2 extends Test {
 
 @Component
 class GenericTest<T> extends Vue {
-  _tsx!: DeclarePropsByNames<GenericTest<T>, "foo" | "bar">;
+  _tsx!: DeclareProps<PickProps<GenericTest<T>, "foo" | "bar">>;
 
   @Prop() foo!: T;
   @Prop(Function) bar!: (value: T) => string;
@@ -187,7 +189,7 @@ class GenericParent<T> extends Vue {
 
 @Component
 class Test3 extends Vue {
-  _tsx!: DeclarePropsFromAllPublicMembers<Test3, Vue, "bra" | "test">;
+  _tsx!: DeclareProps<Omit<AutoProps<Test3, Vue>, "bra" | "test">>;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;

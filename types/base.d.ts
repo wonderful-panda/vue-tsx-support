@@ -100,27 +100,20 @@ export type IntrinsicElements = {
   [K in keyof dom.IntrinsicElementAttributes]: ElementAttrs<dom.IntrinsicElementAttributes[K]>
 };
 
-type ExcludedKey<V extends Vue = Vue> = keyof V | keyof ComponentOptions<Vue> | "_tsx";
-
-export type DeclarePropsByNames<
-  V extends Vue,
-  Names extends Exclude<keyof V, ExcludedKey<Vue>>,
-  ForceOptionals extends Exclude<keyof V, ExcludedKey<Vue>> = never
-> = DeclareProps<Pick<V, Exclude<Names, ForceOptionals>> & Partial<Pick<V, ForceOptionals>>>;
-
-export type DeclareExtendedComponentProps<
-  V extends Parent,
-  Parent extends Vue,
-  Names extends Exclude<keyof V, ExcludedKey<Parent>>,
-  ForceOptionals extends Exclude<keyof V, ExcludedKey<Parent>> = never
-> = DeclareProps<Pick<V, Exclude<Names, ForceOptionals>> & Partial<Pick<V, ForceOptionals>>>;
-
-export type DeclarePropsFromAllPublicMembers<
-  V extends Parent,
-  Parent extends Vue,
-  Excludes extends Exclude<keyof V, ExcludedKey<Parent>> = never,
-  ForceOptionals extends Exclude<keyof V, ExcludedKey<Parent> | Excludes> = never
-> = DeclareProps<
-  Pick<V, Exclude<keyof V, ForceOptionals | Excludes | ExcludedKey<Parent>>> &
-    Partial<Pick<V, ForceOptionals>>
+type PropNameCandidates<V extends Parent, Parent extends Vue = Vue> = Exclude<
+  keyof V,
+  keyof Parent | keyof ComponentOptions<Vue> | "_tsx"
 >;
+
+export type PickProps<V extends Vue, Names extends PropNameCandidates<V, Vue>> = Pick<V, Names>;
+export type PickOwnProps<
+  V extends Parent,
+  Parent extends Vue,
+  Names extends PropNameCandidates<V, Parent>
+> = Pick<V, Names>;
+export type AutoProps<V extends Parent, Parent extends Vue = Vue> = Pick<
+  V,
+  PropNameCandidates<V, Parent>
+>;
+export type MakeOptional<P, Optionals extends keyof P> = Omit<P, Optionals> &
+  Partial<Pick<P, Optionals>>;
