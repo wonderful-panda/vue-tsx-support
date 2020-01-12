@@ -3,8 +3,10 @@ import { Component, Prop } from "vue-property-decorator";
 import {
   InnerScopedSlots,
   DeclareOn,
+  DeclareOnEvents,
   TsxTypeInfoOf,
   emit,
+  emitOn,
   PickProps,
   DeclareProps,
   PickOwnProps,
@@ -15,7 +17,8 @@ import {
 @Component
 class Test extends Vue {
   _tsx!: DeclareProps<MakeOptional<PickProps<Test, "foo" | "bar" | "baz">, "baz">> &
-    DeclareOn<{ e1: string; e2: (p1: string, p2: number) => void }>;
+    DeclareOn<{ e1: string; e2: (p1: string, p2: number) => void }> &
+    DeclareOnEvents<{ onE1: string; onE2: (p1: string, p2: number) => void }>;
 
   @Prop(String) foo!: string;
   @Prop(Number) bar?: number;
@@ -35,6 +38,14 @@ class Test extends Vue {
 
     emit(this, "e2", "value", 1);
     emit(this, "e2", "value"); //// TS2554: Expected 4 arguments
+  }
+
+  emitOnEvents() {
+    emitOn(this, "onE1", "value");
+    emitOn(this, "onE1", 1); //// TS2345: not assignable
+
+    emitOn(this, "onE2", "value", 1);
+    emitOn(this, "onE2", "value"); //// TS2554: Expected 4 arguments
   }
 }
 

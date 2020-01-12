@@ -9,7 +9,7 @@ import {
   TsxComponentTypeInfo,
   EventHandler,
   EventHandlers,
-  DeclarePrefixedEvents,
+  DeclareOnEvents,
   DeclareOn,
   DeclareProps
 } from "../types/base";
@@ -307,7 +307,7 @@ export function emit<Events, Name extends string & keyof Events>(
 }
 
 export function emitOn<Events, Name extends string & keyof Events>(
-  vm: Vue & { _tsx: DeclarePrefixedEvents<Events> },
+  vm: Vue & { _tsx: DeclareOnEvents<Events> },
   name: Name,
   ...args: Parameters<EventHandler<Events[Name]>>
 ) {

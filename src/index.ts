@@ -3,7 +3,7 @@ export * from "../types/v2-compat";
 export { modifiers } from "./modifiers";
 export {
   DeclareProps,
-  DeclarePrefixedEvents,
+  DeclareOnEvents,
   DeclareOn,
   DeclareAttributes,
   PickProps,

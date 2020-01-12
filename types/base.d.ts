@@ -48,19 +48,19 @@ export type EventHandler<E> = E extends (...args: any[]) => any ? E : (payload: 
 export type EventHandlers<E> = { [K in keyof E]?: EventHandler<E[K]> | EventHandler<E[K]>[] };
 
 export type DeclareProps<P> = { props: P };
-export type DeclarePrefixedEvents<E> = { prefixedEvents: E };
-export type DeclareOn<E> = { on: E };
+export type DeclareOnEvents<E> = { onEvents: E };
+export type DeclareOn<E> = { events: E };
 export type DeclareAttributes<A> = { attributes: A };
 
 export type TsxComponentTypeInfo<Attributes, Props, PrefixedEvents, On> = DeclareProps<Props> &
-  DeclarePrefixedEvents<PrefixedEvents> &
+  DeclareOnEvents<PrefixedEvents> &
   DeclareOn<On> &
   DeclareAttributes<Attributes>;
 
 export type TsxTypeInfoOf<V> = V extends { _tsx: infer T } ? T : {};
 
 export type PropsOf<V> = TsxTypeInfoOf<V> extends DeclareProps<infer X> ? X : {};
-export type PrefixedEventsOf<V> = TsxTypeInfoOf<V> extends DeclarePrefixedEvents<infer X> ? X : {};
+export type PrefixedEventsOf<V> = TsxTypeInfoOf<V> extends DeclareOnEvents<infer X> ? X : {};
 export type OnOf<V> = TsxTypeInfoOf<V> extends DeclareOn<infer X> ? X : {};
 export type AttributesOf<V> = TsxTypeInfoOf<V> extends DeclareAttributes<infer X> ? X : {};
 export type IsPropsObjectAllowed<V> = V extends { _tsx_allowPropsObject: true } ? true : false;
