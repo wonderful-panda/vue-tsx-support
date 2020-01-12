@@ -10,7 +10,8 @@ import {
   EventHandler,
   EventHandlers,
   DeclarePrefixedEvents,
-  DeclareOn
+  DeclareOn,
+  DeclareProps
 } from "../types/base";
 import { EventsNativeOn, AllHTMLAttributes, Events } from "../types/dom";
 
@@ -169,7 +170,16 @@ export interface ComponentFactory<
     PropsDef extends RecordPropsDefinition<Props>,
     RequiredProps extends keyof Props = RequiredPropNames<PropsDef> & keyof Props
   >(
-    options: ThisTypedComponentOptions<Super & Vue, Data, Methods, Computed, Props> & {
+    options: ThisTypedComponentOptions<
+      Super &
+        Vue & {
+          _tsx: DeclareProps<PropsForOutside<Props, RequiredProps> & BaseProps>;
+        },
+      Data,
+      Methods,
+      Computed,
+      Props
+    > & {
       props?: PropsDef;
     },
     requiredPropsNames?: RequiredProps[]
@@ -302,4 +312,12 @@ export function emitOn<Events, Name extends string & keyof Events>(
   ...args: Parameters<EventHandler<Events[Name]>>
 ) {
   vm.$emit(name.replace(/^on[A-Z]/, v => v[2].toLowerCase()), ...args);
+}
+
+export function emitUpdate<Props, Name extends string & keyof Props>(
+  vm: Vue & { _tsx: DeclareProps<Props> },
+  name: Name,
+  value: Props[Name]
+) {
+  vm.$emit("update:" + name, value);
 }

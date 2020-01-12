@@ -59,10 +59,11 @@ export type TsxComponentTypeInfo<Attributes, Props, PrefixedEvents, On> = Declar
 
 export type TsxTypeInfoOf<V> = V extends { _tsx: infer T } ? T : {};
 
-export type PropsOf<T> = T extends DeclareProps<infer X> ? X : {};
-export type PrefixedEventsOf<T> = T extends DeclarePrefixedEvents<infer X> ? X : {};
-export type OnOf<T> = T extends DeclareOn<infer X> ? X : {};
-export type AttributesOf<T> = T extends DeclareAttributes<infer X> ? X : {};
+export type PropsOf<V> = TsxTypeInfoOf<V> extends DeclareProps<infer X> ? X : {};
+export type PrefixedEventsOf<V> = TsxTypeInfoOf<V> extends DeclarePrefixedEvents<infer X> ? X : {};
+export type OnOf<V> = TsxTypeInfoOf<V> extends DeclareOn<infer X> ? X : {};
+export type AttributesOf<V> = TsxTypeInfoOf<V> extends DeclareAttributes<infer X> ? X : {};
+export type IsPropsObjectAllowed<V> = V extends { _tsx_allowPropsObject: true } ? true : false;
 
 type CombinedTsxComponentAttrsOtherThanProps<Attributes, PrefixedEvents, On, InnerSS> = KnownAttrs &
   Attributes &
