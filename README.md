@@ -22,16 +22,16 @@ If your project already uses vue-tsx-support v2, see [Migration from V2](#migrat
 
 1. Create Vue project with TypeScript and babel support.
 
-vue-tsx-support is a type checker for TypeScript, not a transpiler.  
-You must install babel presets (@vue/babel-preset-app or @vue/babel-preset-jsx) separatedly.
+    vue-tsx-support is a type checker for TypeScript, not a transpiler.  
+    You must install babel presets (@vue/babel-preset-app or @vue/babel-preset-jsx) separatedly.
 
-Vue CLI may help you.
+    Vue CLI may help you.
 
-- [Installation - Vue.js](https://vuejs.org/v2/guide/installation.html)
-- [Vue CLI](https://cli.vuejs.org/)
-- [vuejs/jsx](https://github.com/vuejs/jsx)
+    - [Installation - Vue.js](https://vuejs.org/v2/guide/installation.html)
+    - [Vue CLI](https://cli.vuejs.org/)
+    - [vuejs/jsx](https://github.com/vuejs/jsx)
 
-:bulb: If you want use @vue/composition-api, [babel-preset-vue-vca](https://github.com/luwanquan/babel-preset-vca-jsx) is also needed.
+    :bulb: If you want use @vue/composition-api, [babel-preset-vue-vca](https://github.com/luwanquan/babel-preset-vca-jsx) is also needed.
 
 2. Install vue-tsx-support from npm
 
@@ -60,7 +60,7 @@ Vue CLI may help you.
     import "vue-tsx-support/enable-check"
     ```
 
-   or add it to "include" in `tsconfig.json`
+    or add it to "include" in `tsconfig.json`
 
     ```json
     {
