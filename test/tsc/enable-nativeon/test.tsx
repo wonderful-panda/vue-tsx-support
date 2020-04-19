@@ -19,7 +19,7 @@ function standardComponent() {
   // OK
   <MyComponent nativeOn={{ click: noop, "!keydown": func }} />;
   // NG
-  <MyComponent nativeOnClick={func} />; //// TS2322 | TS2326 | TS2769: /Types of .* are incompatible/
+  <MyComponent nativeOnClick={func} />; //// TS2322 | TS2326 | TS2769
   // NG
-  <MyComponent nativeOn={{ click: func }} />; //// TS2322 | TS2326 | TS2769: /Types of .* are incompatible/
+  <MyComponent nativeOn={{ click: func }} />; //// TS2322 | TS2326 | TS2769
 }

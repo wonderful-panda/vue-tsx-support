@@ -94,9 +94,7 @@ class Test2 extends Test {
 // prettier-ignore
 <Test
   foo="value"
-  on={{ //// TS2322 | TS2326 | TS2769: 'e1' are incompatible
-    e1: (p: number) => console.log(p)
-  }}
+  on={{ e1: (p: number) => console.log(p) }} //// TS2322 | TS2326 | TS2769
 />;
 
 // OK
