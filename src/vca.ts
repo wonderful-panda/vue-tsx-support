@@ -44,7 +44,7 @@ export function component<
   On,
   ScopedSlots
 > {
-  return vca.createComponent(options as any) as any;
+  return vca.defineComponent(options as any) as any;
 }
 export function emit<Events, Name extends string & keyof Events>(
   ctx: SetupContext<any, any, Events>,
