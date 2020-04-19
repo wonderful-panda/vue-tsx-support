@@ -122,7 +122,7 @@ function withWrongRequiredPropNames() {
 
 function componentFactoryOf() {
   const factory = tsx.componentFactoryOf<
-    { onChange: number; onOk(target: any, id: string): void },
+    { onChange: number | string; onOk(target: any, id: string): void },
     { content: string }
   >();
   const MyComponent = factory.create({
@@ -150,8 +150,9 @@ function componentFactoryOf() {
 
   /* checking type of custom event handler */
   <MyComponent onChange={_v => {}} />;
-  <MyComponent onChange={(_v: number) => {}} />;
-  <MyComponent onChange={(_v: string) => {}} />; //// TS2322 | TS2326 | TS2769: 'number' is not assignable
+  <MyComponent onChange={(_v: string | number) => {}} />;
+  <MyComponent onChange={(_v: number) => {}} />; //// TS2322 | TS2326 | TS2769: '(_v: number) => void' is not assignable
+  <MyComponent onChange={(_v: string) => {}} />; //// TS2322 | TS2326 | TS2769: '(_v: string) => void' is not assignable
   <MyComponent
     onOk={(_, id) => {
       console.log(id);
@@ -289,13 +290,14 @@ function withXXX() {
 }
 
 function emitHelper() {
-  const Component = tsx.componentFactoryOf<{ onOk: { value: string } }>().create({
+  const Component = tsx.componentFactoryOf<{ onOk: string | number }>().create({
     props: { foo: { type: String, required: true } },
     methods: {
       emitOk() {
-        tsx.emitOn(this, "onOk", { value: "foo" });
+        tsx.emitOn(this, "onOk", "foo");
+        tsx.emitOn(this, "onOk", 1);
+        tsx.emitOn(this, "onOk", true); //// TS2345: not assignable
         tsx.emitOn(this, "onNg", { value: "foo" }); //// TS2345: not assignable
-        tsx.emitOn(this, "onOk", "foo"); //// TS2345: not assignable
       },
       updateFoo() {
         tsx.emitUpdate(this, "foo", "value");

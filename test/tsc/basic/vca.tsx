@@ -21,25 +21,36 @@ const MyComponent2 = component({
   },
   setup(
     props,
-    ctx: SetupContext<{ onCutstomEvent: string }, { ss: boolean }, { customEvent: string }>
+    ctx: SetupContext<
+      { onCutstomEvent: string | number },
+      { ss: string | boolean },
+      { customEvent: string | number }
+    >
   ) {
     const emitUpdate = updateEmitter<typeof props>();
     const onClick = () => {
       emit(ctx, "customEvent", "value");
       emitOn(ctx, "onCutstomEvent", "value");
+      emit(ctx, "customEvent", 1);
+      emitOn(ctx, "onCutstomEvent", 1);
 
       emit(ctx, "customEvent2", "value"); //// TS2345
       emitOn(ctx, "onCutstomEvent2", "value"); //// TS2345
 
-      emit(ctx, "customEvent", 1); //// TS2345
-      emitOn(ctx, "onCutstomEvent", 1); //// TS2345
+      emit(ctx, "customEvent", true); //// TS2345
+      emitOn(ctx, "onCutstomEvent", true); //// TS2345
 
       emitUpdate(ctx, "foo", "value");
       emitUpdate(ctx, "fooo", "value"); //// TS2345
       emitUpdate(ctx, "foo", 0); //// TS2345
     };
-    return () => <div class={props.foo}>{ctx.slots.ss(true)}</div>;
+    return () => (
+      <div class={props.foo}>
+        {ctx.slots.ss(true)}
+        {ctx.slots.ss("value")}
+      </div>
+    );
   }
 });
 
-<MyComponent2 foo="a" onCutstomEvent={v => console.log(v.toUpperCase())} />; // OK
+<MyComponent2 foo="a" onCutstomEvent={v => console.log(v.toUpperCase())} />; //// TS2339: 'string | number'
