@@ -19,7 +19,7 @@ export type KnownAttrs = {
   class?: VNodeData["class"];
   staticClass?: VNodeData["staticClass"];
   key?: VNodeData["key"];
-  ref?: VNodeData["ref"];
+  ref?: VNodeData["ref"] | { value: unknown };
   slot?: VNodeData["slot"];
   style?: VNodeData["style"] | string;
   domProps?: VNodeData["domProps"];

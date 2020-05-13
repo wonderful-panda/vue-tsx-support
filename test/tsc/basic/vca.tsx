@@ -1,4 +1,5 @@
 import { component, SetupContext, emit, emitOn, updateEmitter } from "vue-tsx-support/lib/vca";
+import { ref } from "@vue/composition-api";
 
 const MyComponent = component({
   name: "MyComponentName",
@@ -7,7 +8,12 @@ const MyComponent = component({
     bar: { type: Boolean, required: true }
   },
   setup(props, ctx) {
-    return () => <div class={props.foo}>{ctx.slots.default()}</div>;
+    const el = ref<HTMLElement | null>(null);
+    return () => (
+      <div ref={el} class={props.foo}>
+        {ctx.slots.default()}
+      </div>
+    );
   }
 });
 
