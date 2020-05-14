@@ -1,6 +1,6 @@
 {
   "name": "vue-tsx-support",
-  "version": "2.3.3",
+  "version": "3.0.0-beta.6",
   "description": "TSX (JSX for TypeScript) support library for Vue",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -8,8 +8,8 @@
     "clean": "rimraf lib",
     "build": "tsc",
     "watch": "tsc -w",
-    "prettier": "prettier --list-different \"{src,types,options,test/jest}/**/*.ts\"",
-    "prettier:fix": "prettier --write \"{src,types,options,test/jest}/**/*.ts\"",
+    "prettier": "prettier --list-different \"{src,types,options,test}/**/*.{ts,tsx}\"",
+    "prettier:fix": "prettier --write \"{src,types,options,test}/**/*.{ts,tsx}\"",
     "jest": "jest",
     "tsc-test": "node test/tsc/runner.js",
     "test": "npm-run-all prettier tsc-test jest"
@@ -37,7 +37,8 @@
     "@types/jest": "^25.2.1",
     "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
     "@vue/babel-preset-jsx": "^1.0.0",
-    "@vue/test-utils": "1.0.0-beta.25",
+    "@vue/composition-api": "^0.5.0",
+    "@vue/test-utils": "1.0.0-beta.29",
     "babel-jest": "^25.3.0",
     "glob": "^7.1.2",
     "hoek": "^5.0.3",
@@ -49,15 +50,18 @@
     "rimraf": "^2.6.2",
     "ts-jest": "^25.4.0",
     "tsc-test": "^0.2.0",
-    "typescript": "3.5.3",
+    "typescript": "~3.5.1",
     "vue": "2.6.10",
-    "vue-class-component": "7.1.0",
+    "vue-property-decorator": "^8.2.1",
     "vue-router": "2.5.3",
     "vue-template-compiler": "2.6.10"
   },
   "peerDependencies": {
-    "typescript": ">=3.2.4",
+    "typescript": ">=3.5.1",
     "vue": ">=2.5.13"
+  },
+  "prettier": {
+    "printWidth": 100
   },
   "jest": {
     "moduleFileExtensions": [
