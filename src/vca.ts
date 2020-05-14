@@ -21,7 +21,7 @@ export type CompositionComponentOptions<
     this: void,
     props: Props,
     ctx: SetupContext<PrefixedEvents, ScopedSlots, On>
-  ) => (() => VNode);
+  ) => () => VNode;
 } & Pick<
   ComponentOptions<Vue>,
   "name" | "components" | "comments" | "inheritAttrs" | "directives" | "filters"
@@ -59,7 +59,10 @@ export function emitOn<Events, Name extends string & keyof Events>(
   name: Name,
   ...args: Parameters<EventHandler<Events[Name]>>
 ) {
-  ctx.emit(name.replace(/^on[A-Z]/, v => v[2].toLowerCase()), ...args);
+  ctx.emit(
+    name.replace(/^on[A-Z]/, v => v[2].toLowerCase()),
+    ...args
+  );
 }
 
 export function updateEmitter<Props>() {

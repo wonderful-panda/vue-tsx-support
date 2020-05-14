@@ -108,7 +108,7 @@ function defineChildModifier(
   children: ChildModifierFilter
 ) {
   Object.defineProperty(target, name, {
-    get: function() {
+    get: function () {
       // call this getter at most once.
       // reuse created instance after next time.
       const ret = createModifier([...currentFilters, filter], children);

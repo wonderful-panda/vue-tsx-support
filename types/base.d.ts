@@ -30,7 +30,7 @@ export type KnownAttrs = {
   domPropsInnerHTML?: string;
 };
 
-export type Arg1<T> = T extends ((arg1: infer A1) => any | undefined) ? A1 : never;
+export type Arg1<T> = T extends (arg1: infer A1) => any | undefined ? A1 : never;
 
 export type InnerScopedSlotReturnType = Vue["$scopedSlots"] extends {
   [name: string]: ((...args: any[]) => infer T) | undefined;
@@ -41,7 +41,7 @@ export type InnerScopedSlot<T> = (props: T) => InnerScopedSlotReturnType;
 export type InnerScopedSlots<T> = { [K in keyof T]: InnerScopedSlot<Exclude<T[K], undefined>> };
 
 export type ScopedSlotHandlers<InnerSSType> = {
-  [K in keyof InnerSSType]: TypedScopedSlot<Arg1<InnerSSType[K]>>
+  [K in keyof InnerSSType]: TypedScopedSlot<Arg1<InnerSSType[K]>>;
 };
 
 export type EventHandler<E> = [E] extends [(...args: any[]) => any] ? E : (payload: E) => void;
@@ -84,7 +84,7 @@ type CombinedTsxComponentAttrs<
       ? { props: Props } & Partial<Props> &
           CombinedTsxComponentAttrsOtherThanProps<Attributes, PrefixedEvents, On, InnerSS>
       : never)
-  | Props & CombinedTsxComponentAttrsOtherThanProps<Attributes, PrefixedEvents, On, InnerSS>;
+  | (Props & CombinedTsxComponentAttrsOtherThanProps<Attributes, PrefixedEvents, On, InnerSS>);
 
 export type ElementAttrs<T> = T &
   KnownAttrs &
@@ -97,7 +97,7 @@ export interface Element extends VNode {}
 export interface ElementClass extends Vue {}
 
 export type IntrinsicElements = {
-  [K in keyof dom.IntrinsicElementAttributes]: ElementAttrs<dom.IntrinsicElementAttributes[K]>
+  [K in keyof dom.IntrinsicElementAttributes]: ElementAttrs<dom.IntrinsicElementAttributes[K]>;
 };
 
 type PropNameCandidates<V extends Parent, Parent extends Vue = Vue> = Exclude<

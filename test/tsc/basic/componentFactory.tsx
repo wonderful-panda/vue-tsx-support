@@ -185,8 +185,8 @@ function optionalScopedSlot() {
 
 function extendFrom() {
   /*
-     * extend from tsx component
-     */
+   * extend from tsx component
+   */
   const Base1 = tsx.component(
     {
       props: { foo: String },
@@ -211,8 +211,8 @@ function extendFrom() {
   <Ext1 foo="a" bar="b" baz="c" />; //// TS2322 | TS2339 | TS2769: 'baz' does not exist
 
   /*
-     * extend from class base tsx component
-     */
+   * extend from class base tsx component
+   */
   class Base2 extends tsx.Component<{ foo: string }, { onOk: string }> {
     get fooUpper() {
       return this.$props.foo.toUpperCase();
@@ -231,8 +231,8 @@ function extendFrom() {
   <Ext2 foo="a" bar="b" baz="c" />; //// TS2322 | TS2339 | TS2769: 'baz' does not exist
 
   /*
-     * extend from standard component
-     */
+   * extend from standard component
+   */
   const Base3 = Vue.extend({
     data() {
       return { foo: "fooValue" };
@@ -253,8 +253,8 @@ function extendFrom() {
   <Ext3 bar="b" baz="c" />; //// TS2322 | TS2339 | TS2769: 'baz' does not exist
 
   /*
-     * extend from standard class base component
-     */
+   * extend from standard class base component
+   */
   class Base4 extends Vue {
     get foo() {
       return "fooValue";

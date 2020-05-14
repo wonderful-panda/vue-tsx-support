@@ -42,7 +42,7 @@ describe("classComponent", () => {
         propsData: { foo: "fooValue" }
       });
       w.vm.emitCustomEvent("emit-test");
-      expect(w.emittedByOrder()).toStrictEqual([{ name: "customEvent", args: ["emit-test"] }]);
+      expect(w.emitted()).toEqual({ customEvent: [["emit-test"]] });
     });
   });
 });

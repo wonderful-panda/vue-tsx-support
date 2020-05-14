@@ -130,12 +130,12 @@ export function withPropsObject<VC extends typeof Vue>(
 // If props is
 //   `{ foo: String, bar: String, baz: { type: String, required: true as true} }`
 // then, `RequiredPropNames<typeof props>` is "baz",
-export type RequiredPropNames<PropsDef extends RecordPropsDefinition<any>> = ({
-  [K in keyof PropsDef]: PropsDef[K] extends { required: true } ? K : never
-})[Extract<keyof PropsDef, string>];
+export type RequiredPropNames<PropsDef extends RecordPropsDefinition<any>> = {
+  [K in keyof PropsDef]: PropsDef[K] extends { required: true } ? K : never;
+}[Extract<keyof PropsDef, string>];
 
 export type PropsForOutside<Props, RequiredPropNames extends keyof Props> = {
-  [K in RequiredPropNames]: Props[K]
+  [K in RequiredPropNames]: Props[K];
 } &
   { [K in Exclude<keyof Props, RequiredPropNames>]?: Props[K] };
 
@@ -221,12 +221,12 @@ export interface ExtendableComponentFactory<
   Super extends Vue
 >
   extends ComponentFactory<
-      BaseProps,
-      EventsWithPrefix,
-      EventsWithoutPrefix,
-      ScopedSlotArgs,
-      Super
-    > {
+    BaseProps,
+    EventsWithPrefix,
+    EventsWithoutPrefix,
+    ScopedSlotArgs,
+    Super
+  > {
   extendFrom<VC extends typeof Vue>(
     componentType: VC
   ): ComponentFactory<
@@ -311,7 +311,10 @@ export function emitOn<Events, Name extends string & keyof Events>(
   name: Name,
   ...args: Parameters<EventHandler<Events[Name]>>
 ) {
-  vm.$emit(name.replace(/^on[A-Z]/, v => v[2].toLowerCase()), ...args);
+  vm.$emit(
+    name.replace(/^on[A-Z]/, v => v[2].toLowerCase()),
+    ...args
+  );
 }
 
 export function emitUpdate<Props, Name extends string & keyof Props>(
