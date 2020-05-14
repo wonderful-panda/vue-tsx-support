@@ -3422,9 +3422,9 @@ mixin-deep@^1.2.0:
     is-extendable "^1.0.1"
 
 mixin-deep@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/mixin-deep/-/mixin-deep-2.0.0.tgz#9dfd525156720ec6cbee14fcb4b968253ba358ee"
-  integrity sha512-2tAhDtV+OCFCeknyf2cJD5rD+xfvM2ax/RZ3iI1G67Eh6x5UxKJlGDVpmCX27y7WvuXpAkMHQs9ooaxIHIit+A==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/mixin-deep/-/mixin-deep-2.0.1.tgz#9a6946bef4a368401b784970ae3caaaa6bab02fa"
+  integrity sha512-imbHQNRglyaplMmjBLL3V5R6Bfq5oM+ivds3SKgc6oRtzErEnBUUc5No11Z2pilkUvl42gJvi285xTNswcKCMA==
 
 mkdirp@1.x:
   version "1.0.4"
