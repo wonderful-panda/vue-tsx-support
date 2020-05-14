@@ -12,6 +12,36 @@ Stable version is [here](https://github.com/wonderful-panda/vue-tsx-support/blob
 If your project already uses vue-tsx-support v2, see [Migration from V2](#migration-from-v2) section.
 
 ## TABLE OF CONTENTS
+<!-- TOC -->
+
+- [vue-tsx-support](#vue-tsx-support)
+    - [:warning: CAUTION](#warning-caution)
+    - [TABLE OF CONTENTS](#table-of-contents)
+    - [NEW FEATURES](#new-features)
+    - [INSTALLATION](#installation)
+        - [Migration from V2](#migration-from-v2)
+    - [USAGE](#usage)
+        - [Intrinsic elements](#intrinsic-elements)
+        - [Components](#components)
+            - [Make existing components tsx-ready.](#make-existing-components-tsx-ready)
+            - [Writing components by object-style API (Like `Vue.extend`)](#writing-components-by-object-style-api-like-vueextend)
+            - [Writing component by class-style API (`vue-class-component` and/or `vue-property-decorator`)](#writing-component-by-class-style-api-vue-class-component-andor-vue-property-decorator)
+                - [1. Extends from `Component` class provided by `vue-tsx-support`](#1-extends-from-component-class-provided-by-vue-tsx-support)
+                - [2. Add `_tsx` field to tell type information to TypeScript.](#2-add-_tsx-field-to-tell-type-information-to-typescript)
+            - [Writing component by composition api (`@vue/composition-api`)](#writing-component-by-composition-api-vuecomposition-api)
+    - [OPTIONS](#options)
+        - [allow-element-unknown-attrs](#allow-element-unknown-attrs)
+        - [allow-unknown-props](#allow-unknown-props)
+        - [enable-html-attrs](#enable-html-attrs)
+        - [enable-nativeon](#enable-nativeon)
+        - [enable-vue-router](#enable-vue-router)
+        - [allow-props-object](#allow-props-object)
+    - [APIS](#apis)
+        - [modifiers](#modifiers)
+            - [Available modifiers](#available-modifiers)
+    - [LICENSE](#license)
+
+<!-- /TOC -->
 
 ## NEW FEATURES
 
