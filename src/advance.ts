@@ -3,8 +3,8 @@ import { _TsxComponentV3 } from "./api";
 import { PropsOf, PrefixedEventsOf } from "../types/base";
 
 export type ComponentProps<V extends typeof Vue> = PropsOf<InstanceType<V>>;
-export type ComponentEventsOn<V extends typeof Vue> = PrefixedEventsOf<InstanceType<V>>;
-export type ReplaceComponentProps<V extends typeof Vue, NewProps> = V extends _TsxComponentV3<
+export type ComponentEvents<V extends typeof Vue> = PrefixedEventsOf<InstanceType<V>>;
+export type WithProps<V extends typeof Vue, NewProps> = V extends _TsxComponentV3<
   infer V,
   infer Attributes,
   any,
@@ -14,3 +14,14 @@ export type ReplaceComponentProps<V extends typeof Vue, NewProps> = V extends _T
 >
   ? _TsxComponentV3<V, Attributes, NewProps, PrefixedEvents, On, ScopedSlotArgs>
   : _TsxComponentV3<Vue, {}, NewProps, {}, {}, {}>;
+
+export type WithEvents<V extends typeof Vue, NewEvents> = V extends _TsxComponentV3<
+  infer V,
+  infer Attributes,
+  infer Props,
+  any,
+  infer On,
+  infer ScopedSlotArgs
+>
+  ? _TsxComponentV3<V, Attributes, Props, NewEvents, On, ScopedSlotArgs>
+  : _TsxComponentV3<Vue, {}, {}, NewEvents, {}, {}>;
