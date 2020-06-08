@@ -25,6 +25,8 @@ export type KnownAttrs = {
   domProps?: VNodeData["domProps"];
   attrs?: VNodeData["attrs"];
   hook?: VNodeData["hook"];
+  on?: VNodeData["on"];
+  nativeOn?: VNodeData["nativeOn"];
   id?: string;
   refInFor?: boolean;
   domPropsInnerHTML?: string;
