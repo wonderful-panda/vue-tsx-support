@@ -127,7 +127,7 @@ So, compiler can check attribute names and attribute types of them:
 <a href={ SOME_LINK } />;
 // NG: because `href` is not a valid attribute of `div`
 <div href={ SOME_LINK } />;
-// NG: because `id` must be a number
+// NG: because `id` must be a string
 <div id={ 1 } />;
 ```
 
