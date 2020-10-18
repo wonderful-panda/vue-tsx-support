@@ -3,11 +3,7 @@
 # vue-tsx-support
 TSX (JSX for TypeScript) support library for Vue
 
-## :warning: CAUTION
-
-__This is the document for beta version (v3.0.0-beta)__
-
-Stable version is [here](https://github.com/wonderful-panda/vue-tsx-support/blob/v2/README.md)
+## :warning: BREAKING CHANGES
 
 If your project already uses vue-tsx-support v2, see [Migration from V2](#migration-from-v2) section.
 
@@ -15,9 +11,10 @@ If your project already uses vue-tsx-support v2, see [Migration from V2](#migrat
 <!-- TOC -->
 
 - [vue-tsx-support](#vue-tsx-support)
-    - [:warning: CAUTION](#warning-caution)
+    - [:warning: BREAKING CHANGES](#warning-breaking-changes)
     - [TABLE OF CONTENTS](#table-of-contents)
     - [NEW FEATURES](#new-features)
+    - [PREREQUISITE](#prerequisite)
     - [INSTALLATION](#installation)
         - [Migration from V2](#migration-from-v2)
     - [USAGE](#usage)
@@ -48,6 +45,15 @@ If your project already uses vue-tsx-support v2, see [Migration from V2](#migrat
 - Typesafe emit for declared events
 - @vue/composition-api support (experimental)
 
+## PREREQUISITE
+
+- Vue >= 2.6.0, < 3.0.0
+- TypeScript >= 3.8.0
+
+  `vue-tsx-support` does not support Vue 3 because Vue 3 has it's own JSX type checker and there are some incompatibilities with Vue 2.
+
+  If you want to use composition API with `vue-tsx-support`, you can use [@vue/composition-api](https://github.com/vuejs/composition-api).
+
 ## INSTALLATION
 
 1. Create Vue project with TypeScript and babel support.
@@ -61,7 +67,7 @@ If your project already uses vue-tsx-support v2, see [Migration from V2](#migrat
     - [Vue CLI](https://cli.vuejs.org/)
     - [vuejs/jsx](https://github.com/vuejs/jsx)
 
-    :bulb: If you want use @vue/composition-api, [babel-preset-vue-vca](https://github.com/luwanquan/babel-preset-vca-jsx) is also needed.
+    :bulb: If you want use @vue/composition-api, `@vue/babel-preset-jsx` >= 1.2.1 or [babel-preset-vue-vca](https://github.com/luwanquan/babel-preset-vca-jsx) is needed.
 
 2. Install vue-tsx-support from npm
 
@@ -490,9 +496,14 @@ there are some options to make it tsx-ready.
 
 #### Writing component by composition api (`@vue/composition-api`)
 
-At this point, `vue-next` is not supported, `@vue/composition-api` and `babel-preset-vca-jsx` are needed instead.
+Vue 3 is not supported.
+To use composition api with Vue 2, You can use `@vue/composition-api`.
 
-To make TSX-ready component by composition api, use `component` of `vue-tsx-support/lib/vca` instead of `createComponent` of `@vue/composition-api`.
+There are 2 babel presets which support JSX syntax with `@vue/composition-api`.
+- `@vue/babel-preset-jsx` >= 1.2.1  (You must enable composition-api support explicitly by specifying `{ compositionAPI: true }`)
+- `babel-preset-vca-jsx`
+
+To make TSX-ready component by composition api, use `component` of `vue-tsx-support/lib/vca` instead of `defineComponent` of `@vue/composition-api`.
 
   ```jsx
   import { computed } from "@vue/composition-api";
