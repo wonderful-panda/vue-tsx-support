@@ -135,7 +135,7 @@ function componentFactoryOf() {
         return <div>{this.$scopedSlots.content("foo")}</div>;
       },
       ngNode(): VNode {
-        return <div>{this.$scopedSlots.content(0)}</div>; //// TS2345: '0' is not assignable
+        return <div>{this.$scopedSlots.content(0)}</div>; //// TS2345: /'0|number' is not assignable/
       }
     },
     render(): VNode {
