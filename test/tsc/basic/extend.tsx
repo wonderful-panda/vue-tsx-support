@@ -1,6 +1,5 @@
 import Vue from "vue";
 import * as vuetsx from "vue-tsx-support";
-import component from "vue-class-component";
 
 const noop = () => {};
 

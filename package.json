@@ -50,15 +50,16 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^25.5.1",
     "tsc-test": "^0.3.1",
-    "typescript": "~3.5.1",
-    "vue": "2.6.10",
-    "vue-property-decorator": "^8.2.1",
-    "vue-router": "2.5.3",
-    "vue-template-compiler": "2.6.10"
+    "typescript": "~3.8.0",
+    "vue": "2.6.12",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.0.2",
+    "vue-router": "^3.4.7",
+    "vue-template-compiler": "2.6.12"
   },
   "peerDependencies": {
-    "typescript": ">=3.5.1",
-    "vue": ">=2.5.13"
+    "typescript": ">=3.8.0",
+    "vue": ">=2.6.0"
   },
   "prettier": {
     "printWidth": 100,
