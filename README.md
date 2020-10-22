@@ -43,7 +43,7 @@ If your project already uses vue-tsx-support v2, see [Migration from V2](#migrat
 ## NEW FEATURES
 
 - Typesafe emit for declared events
-- @vue/composition-api support (experimental)
+- @vue/composition-api support
 
 ## PREREQUISITE
 
@@ -72,7 +72,7 @@ If your project already uses vue-tsx-support v2, see [Migration from V2](#migrat
 2. Install vue-tsx-support from npm
 
     ```
-    yarn add vue-tsx-support@beta -D
+    yarn add vue-tsx-support -D
     ```
 
 3. In `tsconfig.json`, set `"preserve"` to `jsx` and `"VueTsxSupport"` to `jsxFactory`
