@@ -1,10 +1,10 @@
 import Vue, { VNode, ComponentOptions } from "vue";
-import * as vca from "@vue/composition-api";
+import { defineComponent, SetupContext as SetupContext_ } from "@vue/composition-api";
 import { _TsxComponentV3, RequiredPropNames, PropsForOutside } from "./api";
 import { RecordPropsDefinition } from "vue/types/options";
 import { InnerScopedSlots, TsxComponentTypeInfo, EventHandler } from "../types/base";
 
-export type SetupContext<PrefixedEvents = {}, ScopedSlots = {}, On = {}> = vca.SetupContext & {
+export type SetupContext<PrefixedEvents = {}, ScopedSlots = {}, On = {}> = SetupContext_ & {
   slots: InnerScopedSlots<ScopedSlots>;
   _tsx?: TsxComponentTypeInfo<{}, {}, PrefixedEvents, On>;
 };
@@ -44,7 +44,7 @@ export function component<
   On,
   ScopedSlots
 > {
-  return vca.defineComponent(options as any) as any;
+  return defineComponent(options as any) as any;
 }
 export function emit<Events, Name extends string & keyof Events>(
   ctx: SetupContext<any, any, Events>,
