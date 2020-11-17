@@ -219,8 +219,7 @@ export interface ExtendableComponentFactory<
   EventsWithoutPrefix,
   ScopedSlotArgs,
   Super extends Vue
->
-  extends ComponentFactory<
+> extends ComponentFactory<
     BaseProps,
     EventsWithPrefix,
     EventsWithoutPrefix,
