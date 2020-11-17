@@ -32,12 +32,12 @@ function intrinsicElements() {
   <div style={{ display: "flex" }} />;
   <div style={[{ display: "flex" }]} />;
 
-  // NG
-  <div id={0} />; //// TS2322 | TS2326: /Type '(0|number)' is not assignable to/
-  // NG
-  <div href="example.com" />; //// TS2322 | TS2339: Property 'href' does not exist
-  // NG
-  <a domPropInnerHTML="foo" />; //// TS2322 | TS2339: Property 'domPropInnerHTML' does not exist
+  // @ts-expect-error
+  <div id={0} />;
+  // @ts-expect-error
+  <div href="example.com" />;
+  // @ts-expect-error
+  <a domPropInnerHTML="foo" />;
 }
 
 /*
@@ -60,14 +60,15 @@ function standardComponent() {
   // OK: unknown attributes are allowed in JSX spread.
   <MyComponent {...{ attrs: { min: 0, max: 100 } }} />;
 
-  // NG: prop
-  <MyComponent a="value" />; //// TS2322 | TS2339 | TS2769: Property 'a' does not exist
+  // @ts-expect-error
+  <MyComponent a="value" />;
 
-  // NG: HTML element
-  <MyComponent accesskey="akey" />; //// TS2322 | TS2339 | TS2769: Property 'accesskey' does not exist
+  // @ts-expect-error
+  <MyComponent accesskey="akey" />;
 
   // NG: native event handler
-  <MyComponent nativeOnClick={noop} />; //// TS2322 | TS2339 | TS2769: Property 'nativeOnClick' does not exist
+  // @ts-expect-error
+  <MyComponent nativeOnClick={noop} />;
 
   // OK: specify style in 3 patterns
   <MyComponent style="display: flex;" />;
@@ -101,7 +102,8 @@ function convert() {
   const MyComponent3 = vuetsx.ofType<Props, Events>().convert({} as any);
 
   // NG: `a` is required
-  <MyComponent1 />; //// TS2322 | TS2326 | TS2769: 'a' is missing
+  // @ts-expect-error: 'a' is missing
+  <MyComponent1 />;
 
   let vm!: InstanceType<typeof MyComponent1>;
   vm.greet(); // OK
@@ -111,35 +113,70 @@ function convert() {
   // OK
   <MyComponent1 a="foo" b={0} onChange={value => console.log(value.toUpperCase())} />;
   // NG: `c` is not defined
-  <MyComponent1 a="foo" c="bar" />; //// TS2322 | TS2339 | TS2769: 'c' does not exist
+  <MyComponent1
+    a="foo"
+    // @ts-expect-error
+    c="bar"
+  />;
   // NG: `a` must be string
-  <MyComponent1 a={0} />; //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
+  <MyComponent1
+    // @ts-expect-error
+    a={0}
+  />;
   // NG: `b` must be number
-  <MyComponent1 a="foo" b="bar" />; //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
+  <MyComponent1
+    a="foo"
+    // @ts-expect-error
+    b="bar"
+  />;
 
   // OK
   <MyComponent2 a="foo" scopedSlots={{ default: props => props.ssprops }} />;
   // NG
-  <MyComponent2 a="foo" scopedSlots={{}} />; //// TS2322 | TS2326 | TS2741 | TS2769: 'default' is missing
+  <MyComponent2
+    a="foo"
+    // @ts-expect-error: 'default' is missing
+    scopedSlots={{}}
+  />;
   // NG
-  <MyComponent2 a="foo" scopedSlots={{ default: props => props.xxx }} />; //// TS2322 | TS2339 | TS2769: 'xxx' does not exist
+  <MyComponent2
+    a="foo"
+    scopedSlots={{
+      default: props =>
+        // @ts-expect-error: 'xxx' does not exist
+        props.xxx
+    }}
+  />;
 
   // NG: `a` is required
-  <MyComponent3 />; //// TS2322 | TS2769
+  // @ts-expect-error
+  <MyComponent3 />;
 
   // OK
   <MyComponent3 a="foo" b={0} />;
   // OK
   <MyComponent3 a="foo" b={0} onChange={value => console.log(value.toUpperCase())} />;
   // NG: `c` is not defined
-  <MyComponent3 a="foo" c="bar" />; //// TS2322 | TS2339 | TS2769
+  <MyComponent3
+    a="foo"
+    // @ts-expect-error
+    c="bar"
+  />;
   // NG: `a` must be string
-  <MyComponent3 a={0} />; //// TS2322 | TS2326 | TS2769
+  <MyComponent3
+    // @ts-expect-error
+    a={0}
+  />;
   // NG: `b` must be number
-  <MyComponent3 a="foo" b="bar" />; //// TS2322 | TS2326 | TS2769
+  <MyComponent3
+    a="foo"
+    // @ts-expect-error
+    b="bar"
+  />;
 
   // NG: props object does not allow by default
-  <MyComponent1 {...{ props: { a: "foo", b: 0 } }} />; //// TS2322 | TS2769: 'a' is missing
+  // @ts-expect-error
+  <MyComponent1 {...{ props: { a: "foo", b: 0 } }} />;
 }
 
 /*
@@ -149,17 +186,29 @@ function createComponent() {
   const MyComponent = vuetsx.createComponent<Props>({});
 
   // NG: `a` is required
-  <MyComponent />; //// TS2322 | TS2769
+  // @ts-expect-error
+  <MyComponent />;
   // OK
   <MyComponent a="foo" />;
   // OK
   <MyComponent a="foo" b={0} />;
   // NG: `c` is not defined
-  <MyComponent a="foo" c="bar" />; //// TS2322 | TS2339 | TS2769: 'c' does not exist
+  <MyComponent
+    a="foo"
+    // @ts-expect-error
+    c="bar"
+  />;
   // NG: `a` must be string
-  <MyComponent a={0} />; //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
+  <MyComponent
+    // @ts-expect-error
+    a={0}
+  />;
   // NG: `b` must be number
-  <MyComponent a="foo" b="bar" />; //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
+  <MyComponent
+    a="foo"
+    // @ts-expect-error
+    b="bar"
+  />;
 }
 
 /*
@@ -179,12 +228,20 @@ function vueClassComponent() {
   @component
   class MyComponent3 extends vuetsx.Component<Props, Events, ScopedSlots> {
     render() {
-      return <div>{this.$scopedSlots.default({ ssprops: 1 })}</div>; //// TS2322 | TS2345: 'number' is not assignable
+      return (
+        <div>
+          {this.$scopedSlots.default({
+            // @ts-expect-error: 'number' is not assignable
+            ssprops: 1
+          })}
+        </div>
+      );
     }
   }
 
   // NG: `a` is required
-  <MyComponent />; //// TS2322 | TS2769
+  // @ts-expect-error
+  <MyComponent />;
 
   // OK
   <MyComponent a="foo" />;
@@ -194,18 +251,36 @@ function vueClassComponent() {
   <MyComponent a="foo" scopedSlots={{ default: (p: any) => [<span>{p.xxx}</span>] }} />;
 
   // NG: `c` is not defined
-  <MyComponent a="foo" c="bar" />; //// TS2322 | TS2339 | TS2769: 'c' does not exist
+  <MyComponent
+    a="foo"
+    // @ts-expect-error
+    c="bar"
+  />;
   // NG: `a` must be string
-  <MyComponent a={0} />; //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
+  <MyComponent
+    // @ts-expect-error
+    a={0}
+  />;
   // NG: `b` must be number
-  <MyComponent a="foo" b="bar" />; //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
+  <MyComponent
+    a="foo"
+    // @ts-expect-error
+    b="bar"
+  />;
 
   // OK
   <MyComponent2 a="foo" scopedSlots={{ default: p => p.ssprops }} />;
   // OK (unfortunately)
   <MyComponent2 a="foo" />;
   // NG
-  <MyComponent2 a="foo" scopedSlots={{ default: p => p.xxx }} />; //// TS2322 | TS2339: 'xxx' does not exist
+  <MyComponent2
+    a="foo"
+    scopedSlots={{
+      default: p =>
+        // @ts-expect-error: 'xxx' is not exist
+        p.xxx
+    }}
+  />;
 }
 
 function knownAttrs() {

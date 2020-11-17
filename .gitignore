@@ -60,3 +60,4 @@ typings/
 # project specific
 lib
 .vscode
+.temp

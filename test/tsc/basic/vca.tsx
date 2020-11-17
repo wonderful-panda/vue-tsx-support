@@ -19,7 +19,8 @@ const MyComponent = component({
 
 <MyComponent foo="a" bar />; // OK
 <MyComponent bar />; // OK
-<MyComponent foo="a" />; //// TS2322 | TS2769: 'bar' is missing
+// @ts-expect-error
+<MyComponent foo="a" />;
 
 const MyComponent2 = component({
   props: {
@@ -40,14 +41,20 @@ const MyComponent2 = component({
       emit(ctx, "customEvent", 1);
       emitOn(ctx, "onCutstomEvent", 1);
 
+      // @ts-expect-error
       emit(ctx, "customEvent2", "value"); //// TS2345
+      // @ts-expect-error
       emitOn(ctx, "onCutstomEvent2", "value"); //// TS2345
 
+      // @ts-expect-error
       emit(ctx, "customEvent", true); //// TS2345
+      // @ts-expect-error
       emitOn(ctx, "onCutstomEvent", true); //// TS2345
 
       emitUpdate(ctx, "foo", "value");
+      // @ts-expect-error
       emitUpdate(ctx, "fooo", "value"); //// TS2345
+      // @ts-expect-error
       emitUpdate(ctx, "foo", 0); //// TS2345
     };
     return () => (
@@ -59,4 +66,12 @@ const MyComponent2 = component({
   }
 });
 
-<MyComponent2 foo="a" onCutstomEvent={v => console.log(v.toUpperCase())} />; //// TS2339: 'string | number'
+<MyComponent2
+  foo="a"
+  onCutstomEvent={v =>
+    console.log(
+      // @ts-expect-error: 'toUpperCase' does not exist on type 'string | number'
+      v.toUpperCase()
+    )
+  }
+/>;

@@ -42,5 +42,6 @@ function basicFunctionary() {
   });
 
   <Component foo="foo" bar="bar" bra={1} />;
-  <Component foo="foo" bra={1} />; //// TS2322 | TS2326 | TS2769: Property 'bar' is missing
+  // @ts-expect-error: 'bar' is missing
+  <Component foo="foo" bra={1} />;
 }

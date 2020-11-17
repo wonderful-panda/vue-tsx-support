@@ -1,32 +1,23 @@
 const path = require("path");
 const glob = require("glob");
-const { Tester, formatFailureMessage } = require("tsc-test");
+const { spawnSync } = require("child_process");
 
 const projects = glob.sync(path.join(__dirname, "**/tsconfig.json"));
-const errors = [];
-projects.forEach(p => {
-    const tester = Tester.fromConfigFile(p);
-    let failed = false;
-    tester.testAll((fileName, failures) => {
-        if (failures.length > 0) {
-            errors.push([fileName, formatFailureMessage(...failures)]);
-            failed = true;
-        }
+
+const runAll = () => {
+  let hasError = false;
+  for (const p of projects) {
+    console.info(`testing ${p} ...`);
+    const outDir = path.join(path.dirname(p), ".temp");
+    const { status } = spawnSync("tsc", ["-p", p, "--outDir", outDir], {
+      shell: true,
+      stdio: "inherit"
     });
-    if (failed) {
-        console.info("NG:", p);
+    if (status !== 0) {
+      hasError = true;
     }
-    else {
-        console.info("OK:", p);
-    }
-});
+  }
+  return hasError ? 1 : 0;
+};
 
-if (errors.length > 0) {
-    console.error("");
-    errors.forEach(e => {
-        console.error(e[0] + "\n" + e[1] + "\n");
-    });
-}
-
-process.exit(errors.length === 0 ? 0 : 1);
-
+process.exit(runAll());

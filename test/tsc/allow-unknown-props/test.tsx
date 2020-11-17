@@ -9,10 +9,10 @@ const noop = () => {};
 function intrinsicElements() {
   // unknown attributes of intrinsic element are rejected
 
-  // NG
-  <a domPropInnerHTML="foo" />; //// TS2322 | TS2339: Property 'domPropInnerHTML' does not exist
-  // NG
-  <div href="example.com" />; //// TS2322 | TS2339: Property 'href' does not exist
+  // @ts-expect-error: domPropInnerHTML does not exist
+  <a domPropInnerHTML="foo" />;
+  // @ts-expect-error: href does not exist
+  <div href="example.com" />;
 }
 
 /*
@@ -45,7 +45,9 @@ function convert() {
   // OK
   <MyComponent a="value" nativeOnClick={noop} />;
   // NG
-  <MyComponent />; //// TS2322 | TS2326 | TS2769: Property 'a' is missing
+  // @ts-expect-error: property 'a' is missing
+  <MyComponent />;
   // NG
-  <MyComponent a={0} />; //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
+  // @ts-expect-error: property 'a' must be string
+  <MyComponent a={0} />;
 }

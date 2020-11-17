@@ -34,18 +34,22 @@ class Test extends Vue {
 
   emitEvents() {
     emit(this, "e1", "value");
-    emit(this, "e1", 1); //// TS2345: not assignable
+    // @ts-expect-error: '(number | 1)' is not assignable
+    emit(this, "e1", 1);
 
     emit(this, "e2", "value", 1);
-    emit(this, "e2", "value"); //// TS2554: Expected 4 arguments
+    // @ts-expect-error: Expected 4 arguments
+    emit(this, "e2", "value");
   }
 
   emitOnEvents() {
     emitOn(this, "onE1", "value");
-    emitOn(this, "onE1", 1); //// TS2345: not assignable
+    // @ts-expect-error: Expected 4 arguments
+    emitOn(this, "onE1", 1);
 
     emitOn(this, "onE2", "value", 1);
-    emitOn(this, "onE2", "value"); //// TS2554: Expected 4 arguments
+    // @ts-expect-error: Expected 4 arguments
+    emitOn(this, "onE2", "value");
   }
 }
 
@@ -59,13 +63,16 @@ class Test2 extends Test {
 
   emitEvents2() {
     emit(this, "e1", "value");
-    emit(this, "e1", 1); //// TS2345: not assignable
+    // @ts-expect-error: Expected 4 arguments
+    emit(this, "e1", 1);
 
     emit(this, "e2", "value", 1);
-    emit(this, "e2", "value"); //// TS2554: Expected 4 arguments
+    // @ts-expect-error: Expected 4 arguments
+    emit(this, "e2", "value");
 
     emit(this, "e3");
-    emit(this, "e3", "value"); //// TS2554: Expected 2 arguments
+    // @ts-expect-error: Expected 2 arguments
+    emit(this, "e3", "value");
   }
 }
 
@@ -85,16 +92,15 @@ class Test2 extends Test {
     e2: (p1, p2) => console.log(p1.toLocaleLowerCase(), p2.toFixed())
   }}
 />;
-// NG
-<Test foo="value" bar={1} bra={1} />; //// TS2322 | TS2339 | TS2769: 'bra' does not exist
-// NG
-<Test />; //// TS2322 | TS2326 | TS2769: 'foo' is missing
+// @ts-expect-error: 'bra' does not exist
+<Test foo="value" bar={1} bra={1} />;
+// @ts-expect-error: 'foo' is missing
+<Test />;
 
-// NG
-// prettier-ignore
 <Test
   foo="value"
-  on={{ e1: (p: number) => console.log(p) }} //// TS2322 | TS2326 | TS2769
+  // @ts-expect-error
+  on={{ e1: (p: number) => console.log(p) }}
 />;
 
 // OK
@@ -120,10 +126,10 @@ class Test2 extends Test {
   }}
 />;
 
-// prettier-ignore
 <Test
   foo="value"
-  scopedSlots={{ //// TS2322 | TS2326 | TS2741 | TS2769: 'default' is missing
+  // @ts-expect-error: 'default' is missing
+  scopedSlots={{
     optional: props => props.toUpperCase()
   }}
 />;
@@ -150,7 +156,7 @@ class Test2 extends Test {
   }}
 />;
 
-// NG
+// @ts-expect-error: 'foo' is missing
 <Test2 piyo={["foo"]} />; //// TS2322 | TS2326 | TS2769: 'foo' is missing
 // OK
 <Test2
@@ -212,7 +218,8 @@ class Test3 extends Vue {
 <Test3 foo="fooValue" />;
 // OK
 <Test3 foo="fooValue" bar={1} />;
-// NG
-<Test3 bar={1} />; //// TS2322 | TS2769: 'foo' is missing
+// @ts-expect-error: 'foo' is missing
+<Test3 bar={1} />;
 // OK
-<Test3 foo="fooValue" bra={1} />; //// TS2322 | TS2769: 'bra' does not exist
+// @ts-expect-error: 'bra' does not exist
+<Test3 foo="fooValue" bra={1} />;

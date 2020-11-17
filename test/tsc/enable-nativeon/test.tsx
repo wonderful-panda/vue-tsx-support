@@ -11,15 +11,29 @@ function standardComponent() {
   const MyComponent = Vue.extend({});
 
   // NG
-  <MyComponent a="value" />; //// TS2322 | TS2339 | TS2769: 'a' does not exist
+  <MyComponent
+    // @ts-expect-error
+    a="value"
+  />;
   // NG
-  <MyComponent accesskey="akey" />; //// TS2322 | TS2339 | TS2769: 'accesskey' does not exist
+  <MyComponent
+    // @ts-expect-error
+    accesskey="akey"
+  />;
   // OK
   <MyComponent nativeOnClick={noop} />;
   // OK
   <MyComponent nativeOn={{ click: noop, "!keydown": func }} />;
   // NG
-  <MyComponent nativeOnClick={func} />; //// TS2322 | TS2326 | TS2769
+  <MyComponent
+    // @ts-expect-error
+    nativeOnClick={func}
+  />;
   // NG
-  <MyComponent nativeOn={{ click: func }} />; //// TS2322 | TS2326 | TS2769
+  <MyComponent
+    nativeOn={{
+      // @ts-expect-error
+      click: func
+    }}
+  />;
 }

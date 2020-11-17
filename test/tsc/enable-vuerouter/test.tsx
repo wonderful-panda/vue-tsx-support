@@ -13,5 +13,10 @@ function standardComponent() {
   <router-link to="." />;
   <router-link to={{ name: "main" }} />;
   // NG
-  <router-link to={{ name: 0 }} />; //// TS2322 | TS2326: 'number' is not assignable
+  <router-link
+    to={{
+      // @ts-expect-error: name must be string
+      name: 0
+    }}
+  />;
 }

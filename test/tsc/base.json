@@ -6,7 +6,7 @@
     "jsxFactory": "VueTsxSupport",
     "module": "commonjs",
     "moduleResolution": "node",
-    "noEmit": true,
+    "incremental": true,
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,

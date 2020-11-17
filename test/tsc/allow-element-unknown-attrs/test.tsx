@@ -16,7 +16,7 @@ function intrinsicElements() {
 
   // OK: unknown attrs are allowed
   <a domPropInnerHTML="foo" />;
-  // NG
+  // @ts-expect-error
   <div id={0} />; //// TS2322 | TS2326: /Type '(0|number)' is not assignable to/
   // OK: unknown attrs are allowed
   <div href="example.com" />;
@@ -36,11 +36,14 @@ function standardComponent() {
   // Component unknown props are still rejected
 
   // NG: prop
-  <MyComponent a="value" />; //// TS2322 | TS2339 | TS2769: Property 'a' does not exist
+  // @ts-expect-error: a does not exist
+  <MyComponent a="value" />;
 
   // NG: HTML element
+  // @ts-expect-error: accesskey does not exist
   <MyComponent accesskey="akey" />; //// TS2322 | TS2339 | TS2769: Property 'accesskey' does not exist
 
   // NG: native event handler
-  <MyComponent nativeOnClick={noop} />; //// TS2322 | TS2339 | TS2769: Property 'nativeOnClick' does not exist
+  // @ts-expect-error: nativeOnClick does not exist
+  <MyComponent nativeOnClick={noop} />;
 }

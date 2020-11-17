@@ -23,13 +23,32 @@ function standardComponent() {
   // other known attributes
   <MyComponent foo="foo" bar={0} key="xxx" id="xxx" />;
 
-  /* NG */
-  <MyComponent />; //// TS2322 | TS2326 | TS2769
-  <MyComponent foo="foo" />; //// TS2322 | TS2326 | TS2769: Property 'bar' is missing
-  <MyComponent foo={0} bar={1} />; //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
-  <MyComponent foo="foo" bar="bar" />; //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
-  <MyComponent foo="foo" bar={0} baz={1} />; //// TS2322 | TS2326 | TS2769: /'(1|number)' is not assignable/
-  <MyComponent foo="foo" bar={0} unknown="unknown" />; //// TS2322 | TS2339 | TS2769: Property 'unknown' does not exist
+  // @ts-expect-error
+  <MyComponent />;
+  // @ts-expect-error: 'bar' is missing
+  <MyComponent foo="foo" />;
+  <MyComponent
+    // @ts-expect-error: 'number' is not assignable'
+    foo={0}
+    bar={1}
+  />;
+  <MyComponent
+    foo="foo"
+    // @ts-expect-error: 'string' is not assignable
+    bar="bar"
+  />;
+  <MyComponent
+    foo="foo"
+    bar={0}
+    // @ts-expect-error: 'number' is not assignable
+    baz={1}
+  />;
+  <MyComponent
+    foo="foo"
+    bar={0}
+    // @ts-expect-error: 'unknown' does not exist
+    unknown="unknown"
+  />;
 }
 
 function functionalComponent() {
@@ -55,12 +74,18 @@ function functionalComponent() {
   <MyComponent foo="foo" bar={0} key="xxx" id="xxx" />;
 
   /* NG */
-  <MyComponent />; //// TS2322 | TS2326 | TS2769
-  <MyComponent foo="foo" />; //// TS2322 | TS2326 | TS2769: Property 'bar' is missing
-  <MyComponent foo={0} bar={1} />; //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
-  <MyComponent foo="foo" bar="bar" />; //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
-  <MyComponent foo="foo" bar={0} baz={1} />; //// TS2322 | TS2326 | TS2769: /'(1|number)' is not assignable/
-  <MyComponent foo="foo" bar={0} unknown="unknown" />; //// TS2322 | TS2339 | TS2769: Property 'unknown' does not exist
+  // @ts-expect-error
+  <MyComponent />;
+  // @ts-expect-error: 'bar' is missing
+  <MyComponent foo="foo" />;
+  // @ts-expect-error: '(0|number)' is not assignable
+  <MyComponent foo={0} bar={1} />;
+  // @ts-expect-error: '("bar"|string)' is not assignable'
+  <MyComponent foo="foo" bar="bar" />;
+  // @ts-expect-error: '(1|number)' is not assignable
+  <MyComponent foo="foo" bar={0} baz={1} />;
+  // @ts-expect-error: 'unknown' does not exist
+  <MyComponent foo="foo" bar={0} unknown="unknown" />;
 }
 
 function withoutRequiredPropNames() {
@@ -82,11 +107,14 @@ function withoutRequiredPropNames() {
   // other known attributes
   <MyComponent key="xxx" id="xxx" />;
 
-  /* NG */
-  <MyComponent foo={0} />; //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
-  <MyComponent bar="bar" />; //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
-  <MyComponent baz={1} />; //// TS2322 | TS2326 | TS2769: /'(1|number)' is not assignable/
-  <MyComponent unknown="unknown" />; //// TS2322 | TS2339 | TS2769: Property 'unknown' does not exist
+  // @ts-expect-error: '(0|number)' is not assignable
+  <MyComponent foo={0} />;
+  // @ts-expect-error: '("bar"|string)' is not assignable
+  <MyComponent bar="bar" />;
+  // @ts-expect-error: '(1|number)' is not assignable
+  <MyComponent baz={1} />;
+  // @ts-expect-error: 'unknown' does not exist
+  <MyComponent unknown="unknown" />;
 }
 
 function inferRequiredPropNames() {
@@ -105,19 +133,41 @@ function inferRequiredPropNames() {
   <MyComponent foo="foo" bar={0} baz="baz" />;
   // foo is required, bar and baz are optional
   <MyComponent foo="foo" />;
-  <MyComponent />; //// TS2322 | TS2326 | TS2769: Property 'foo' is missing
   // other known attributes
   <MyComponent foo="foo" key="xxx" id="xxx" />;
 
   /* NG */
-  <MyComponent foo={0} />; //// TS2322 | TS2326 | TS2769: /'(0|number)' is not assignable/
-  <MyComponent foo="a" bar="bar" />; //// TS2322 | TS2326 | TS2769: /'("bar"|string)' is not assignable/
-  <MyComponent foo="a" baz={1} />; //// TS2322 | TS2326 | TS2769: /'(1|number)' is not assignable/
-  <MyComponent foo="a" unknown="unknown" />; //// TS2322 | TS2339 | TS2769: Property 'unknown' does not exist
+  // @ts-expect-error: 'foo' is missing
+  <MyComponent />;
+  <MyComponent
+    // @ts-expect-error: 'number' is not assignable
+    foo={0}
+  />;
+  <MyComponent
+    foo="a"
+    // @ts-expect-error: 'string' is not assignable
+    bar="bar"
+  />;
+  <MyComponent
+    foo="a"
+    // @ts-expect-error: 'number' is not assignable
+    baz={1}
+  />;
+  <MyComponent
+    foo="a"
+    // @ts-expect-error: 'unknown' does not exist
+    unknown="unknown"
+  />;
 }
 
 function withWrongRequiredPropNames() {
-  const MyComponent = tsx.component({ props: { foo: String } }, ["foo", "unknown"]); //// TS2345 | TS2769
+  // @ts-expect-error
+  const MyComponent = tsx.component(
+    {
+      props: { foo: String }
+    },
+    ["foo", "unknown"]
+  );
 }
 
 function componentFactoryOf() {
@@ -135,7 +185,14 @@ function componentFactoryOf() {
         return <div>{this.$scopedSlots.content("foo")}</div>;
       },
       ngNode(): VNode {
-        return <div>{this.$scopedSlots.content(0)}</div>; //// TS2345: /'0|number' is not assignable/
+        return (
+          <div>
+            {
+              // @ts-expect-error: ('0'|number) is not assignable
+              this.$scopedSlots.content(0)
+            }
+          </div>
+        );
       }
     },
     render(): VNode {
@@ -145,14 +202,26 @@ function componentFactoryOf() {
 
   /* checking type of scopedSlots */
   <MyComponent scopedSlots={{ content: p => p }} />;
-  <MyComponent scopedSlots={{ content: (p: number) => p.toString() }} />; //// TS2322 | TS2326 | TS2769: 'string' is not assignable
-  <MyComponent scopedSlots={{}} />; //// TS2322 | TS2326 | TS2741 | TS2769: Property 'content' is missing
+  <MyComponent
+    // @ts-expect-error: 'string' is not assiblable
+    scopedSlots={{ content: (p: number) => p.toString() }}
+  />;
+  <MyComponent
+    // @ts-expect-error: 'content' is missing
+    scopedSlots={{}}
+  />;
 
   /* checking type of custom event handler */
   <MyComponent onChange={_v => {}} />;
   <MyComponent onChange={(_v: string | number) => {}} />;
-  <MyComponent onChange={(_v: number) => {}} />; //// TS2322 | TS2326 | TS2769: '(_v: number) => void' is not assignable
-  <MyComponent onChange={(_v: string) => {}} />; //// TS2322 | TS2326 | TS2769: '(_v: string) => void' is not assignable
+  <MyComponent
+    // @ts-expect-error
+    onChange={(_v: number) => {}}
+  />;
+  <MyComponent
+    // @ts-expect-error
+    onChange={(_v: string) => {}}
+  />;
   <MyComponent
     onOk={(_, id) => {
       console.log(id);
@@ -170,8 +239,11 @@ function optionalScopedSlot() {
     render(): VNode {
       return (
         <div>
-          {this.$scopedSlots.optional!(1)} // OK
-          {this.$scopedSlots.optional(1)} //// TS2722: possibly 'undefined'
+          {this.$scopedSlots.optional!(1)}
+          {
+            // @ts-expect-error: possibly 'undefined'
+            this.$scopedSlots.optional(1)
+          }
         </div>
       );
     }
@@ -180,7 +252,10 @@ function optionalScopedSlot() {
   /* checking type of scopedSlots */
   <MyComponent scopedSlots={{ required: p => p.toUpperCase() }} />;
   <MyComponent scopedSlots={{ required: p => p.toUpperCase(), optional: p => p.toString() }} />;
-  <MyComponent scopedSlots={{ optional: p => p.toString() }} />; //// TS2322 | TS2741 | TS2769: 'required' is missing
+  <MyComponent
+    // @ts-expect-error: 'required' is missing
+    scopedSlots={{ optional: p => p.toString() }}
+  />;
 }
 
 function extendFrom() {
@@ -207,8 +282,14 @@ function extendFrom() {
   });
 
   <Ext1 foo="a" bar="b" />;
-  <Ext1 bar="b" />; //// TS2322 | TS2326 | TS2769: 'foo' is missing
-  <Ext1 foo="a" bar="b" baz="c" />; //// TS2322 | TS2339 | TS2769: 'baz' does not exist
+  // @ts-expect-error: 'foo' is missing
+  <Ext1 bar="b" />;
+  <Ext1
+    foo="a"
+    bar="b"
+    // @ts-expect-error: 'baz' does not exist
+    baz="c"
+  />;
 
   /*
    * extend from class base tsx component
@@ -227,8 +308,14 @@ function extendFrom() {
   });
 
   <Ext2 foo="a" bar="b" />;
-  <Ext2 bar="b" />; //// TS2322 | TS2326 | TS2769: 'foo' is missing
-  <Ext2 foo="a" bar="b" baz="c" />; //// TS2322 | TS2339 | TS2769: 'baz' does not exist
+  // @ts-expect-error: 'foo' is missing
+  <Ext2 bar="b" />;
+  <Ext2
+    foo="a"
+    bar="b"
+    // @ts-expect-error: 'baz' does not exisit
+    baz="c"
+  />;
 
   /*
    * extend from standard component
@@ -250,7 +337,11 @@ function extendFrom() {
 
   <Ext3 />;
   <Ext3 bar="b" />;
-  <Ext3 bar="b" baz="c" />; //// TS2322 | TS2339 | TS2769: 'baz' does not exist
+  <Ext3
+    bar="b"
+    // @ts-expect-error: 'baz' does not exist
+    baz="c"
+  />;
 
   /*
    * extend from standard class base component
@@ -272,7 +363,11 @@ function extendFrom() {
 
   <Ext4 />;
   <Ext4 bar="b" />;
-  <Ext4 bar="b" baz="c" />; //// TS2322 | TS2339 | TS2769: 'baz' does not exist
+  <Ext4
+    bar="b"
+    // @ts-expect-error: 'baz' does not exist
+    baz="c"
+  />;
 }
 
 function withXXX() {
@@ -286,7 +381,8 @@ function withXXX() {
   <Ext foo="a" onOk={v => console.log(v.value)} />;
   <Ext foo="a" scopedSlots={{ default: v => v.value }} />;
   <Ext foo="a" nativeOnClick={() => {}} />;
-  <Ext />; //// TS2322 | TS2326 | TS2769: 'foo' is missing
+  // @ts-expect-error: 'foo' is missing
+  <Ext />;
 }
 
 function emitHelper() {
@@ -296,13 +392,17 @@ function emitHelper() {
       emitOk() {
         tsx.emitOn(this, "onOk", "foo");
         tsx.emitOn(this, "onOk", 1);
-        tsx.emitOn(this, "onOk", true); //// TS2345: not assignable
-        tsx.emitOn(this, "onNg", { value: "foo" }); //// TS2345: not assignable
+        // @ts-expect-error
+        tsx.emitOn(this, "onOk", true);
+        // @ts-expect-error
+        tsx.emitOn(this, "onNg", { value: "foo" });
       },
       updateFoo() {
         tsx.emitUpdate(this, "foo", "value");
-        tsx.emitUpdate(this, "fooo", "value"); //// TS2345: not assignable
-        tsx.emitUpdate(this, "foo", 0); //// TS2345: not assignable
+        // @ts-expect-error
+        tsx.emitUpdate(this, "fooo", "value");
+        // @ts-expect-error
+        tsx.emitUpdate(this, "foo", 0);
       }
     }
   });

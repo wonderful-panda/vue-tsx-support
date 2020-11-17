@@ -16,35 +16,142 @@ function modifiers() {
   <div onKeydown={m.exact("ctrl", "alt", "shift", "meta")(e => console.log(e.keyCode))} />;
 
   // each modifiers can be specified only once
-  <div onClick={m.prevent.prevent} />; //// TS2339: 'prevent' does not exist
-  <div onClick={m.left.left} />; //// TS2339: 'left' does not exist
-  <div onClick={m.left.alt.left} />; //// TS2339: 'left' does not exist
-  <div onClick={m.enter.enter} />; //// TS2339: 'enter' does not exist
+  <div
+    onClick={
+      // @ts-expect-error
+      m.prevent.prevent
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.left.left
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.left.alt.left
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.enter.enter
+    }
+  />;
 
   // key modifier can be specified only once
-  <div onKeydown={m.enter.esc} />; //// TS2339: 'esc' does not exist
-  <div onKeydown={m.enter.keys("esc")} />; //// TS2339: 'keys' does not exist
-  <div onKeydown={m.keys("up", "down", "left", "right").enter} />; //// TS2339: 'enter' does not exist
+  <div
+    onKeydown={
+      // @ts-expect-error
+      m.enter.esc
+    }
+  />;
+  <div
+    onKeydown={m.enter
+      // @ts-expect-error
+      .keys("esc")}
+  />;
+  <div
+    onKeydown={
+      // @ts-expect-error
+      m.keys("up", "down", "left", "right").enter
+    }
+  />;
 
   // mouse button modifier can be specified only once
-  <div onClick={m.left.right} />; //// TS2339: 'right' does not exist
-  <div onClick={m.middle.left} />; //// TS2339: 'left' does not exist
+  <div
+    onClick={
+      // @ts-expect-error
+      m.left.right
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.middle.left
+    }
+  />;
 
   // key modifier and mouse button modifier can't be specified together
-  <div onClick={m.enter.middle} />; //// TS2339: 'middle' does not exist
-  <div onClick={m.middle.enter} />; //// TS2339: 'enter' does not exist
+  <div
+    onClick={
+      // @ts-expect-error
+      m.enter.middle
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.middle.enter
+    }
+  />;
 
   // xxx and noxxx can't be specified together
-  <div onClick={m.ctrl.noctrl} />; //// TS2339: 'noctrl' does not exist
-  <div onClick={m.noctrl.ctrl} />; //// TS2339: 'ctrl' does not exist
-  <div onClick={m.shift.noshift} />; //// TS2339: 'noshift' does not exist
-  <div onClick={m.noshift.shift} />; //// TS2339: 'shift' does not exist
-  <div onClick={m.alt.noalt} />; //// TS2339: 'noalt' does not exist
-  <div onClick={m.noalt.alt} />; //// TS2339: 'alt' does not exist
-  <div onClick={m.meta.nometa} />; //// TS2339: 'nometa' does not exist
-  <div onClick={m.nometa.meta} />; //// TS2339: 'meta' does not exist
+  <div
+    onClick={
+      // @ts-expect-error
+      m.ctrl.noctrl
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.noctrl.ctrl
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.shift.noshift
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.noshift.shift
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.alt.noalt
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.noalt.alt
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.meta.nometa
+    }
+  />;
+  <div
+    onClick={
+      // @ts-expect-error
+      m.nometa.meta
+    }
+  />;
   // 'exact' and other modkey can't be specified together
-  <div onClick={m.exact("ctrl", "alt").ctrl} />; //// TS2339: 'ctrl' does not exist
-  <div onClick={m.ctrl.exact("ctrl", "alt")} />; //// TS2339: 'exact' does not exist
-  <div onClick={m.ctrl.shift.exact("ctrl", "alt")} />; //// TS2339: 'exact' does not exist
+  <div
+    onClick={
+      // @ts-expect-error
+      m.exact("ctrl", "alt").ctrl
+    }
+  />;
+  <div
+    onClick={m.ctrl
+      // @ts-expect-error
+      .exact("ctrl", "alt")}
+  />;
+  <div
+    onClick={m.ctrl.shift
+      // @ts-expect-error
+      .exact("ctrl", "alt")}
+  />;
 }
