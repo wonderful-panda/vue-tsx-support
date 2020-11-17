@@ -1,5 +1,5 @@
 export * from "./api";
-export * from "../types/v2-compat";
+export { TsxComponent, TsxComponentAttrs, TsxComponentInstance } from "../types/v2-compat";
 export { modifiers } from "./modifiers";
 export {
   DeclareProps,
