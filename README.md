@@ -48,7 +48,7 @@ If your project already uses vue-tsx-support v2, see [Migration from V2](#migrat
 ## PREREQUISITE
 
 - Vue >= 2.6.0, < 3.0.0
-- TypeScript >= 3.8.0
+- TypeScript >= 3.8.0 (3.9.2 or later recommended)
 
   `vue-tsx-support` does not support Vue 3 because Vue 3 has it's own JSX type checker and there are some incompatibilities with Vue 2.
 
