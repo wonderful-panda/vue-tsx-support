@@ -173,7 +173,7 @@ export interface ComponentFactory<
     options: ThisTypedComponentOptions<
       Super &
         Vue & {
-          _tsx: DeclareProps<PropsForOutside<Props, RequiredProps> & BaseProps>;
+          _tsx?: DeclareProps<PropsForOutside<Props, RequiredProps> & BaseProps>;
         },
       Data,
       Methods,

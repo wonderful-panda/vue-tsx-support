@@ -51,6 +51,25 @@ function standardComponent() {
   />;
 }
 
+function standardComponentWithDataAndWatch() {
+  const MyComponent = tsx.component({
+    props: {
+      foo: String
+    },
+    data() {
+      return { a: "a" };
+    },
+    watch: {
+      a(value: string) {
+        console.log(value);
+      }
+    },
+    render(): VNode {
+      return <span>{this.foo + this.a}</span>;
+    }
+  });
+}
+
 function functionalComponent() {
   const MyComponent = tsx.component(
     {
