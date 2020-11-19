@@ -229,6 +229,7 @@ For example:
 Then you can use AwesomeList like below:
 
   ```jsx
+  import { VNode } from "vue";
   const App = Vue.extend({
   render(): VNode {
     return (
@@ -255,6 +256,7 @@ For example, props type will be `{ text: string, important?: boolean }` in below
 :warning: In some environment, `as const` may be needed to make prop required properly.
 
   ```jsx
+  import { VNode } from "vue";
   import * as tsx from "vue-tsx-support";
   const MyComponent = tsx.componentFactory.create({
     props: {
@@ -267,7 +269,7 @@ For example, props type will be `{ text: string, important?: boolean }` in below
       }
     },
     methods: {
-      onClick(event) { this.$emit("ok", event); }
+      onClick(event: Event) { this.$emit("ok", event); }
     },
     render(): VNode {
       return <span class={this.className} onClick={this.onClick}>{this.text}</span>;
@@ -287,6 +289,7 @@ For example, props type will be `{ text: string, important?: boolean }` in below
 If your component has custom events or scoped slots, use `componentFactoryOf` instead.
 
   ```typescript
+  import { VNode } from "vue";
   import * as tsx from "vue-tsx-support";
 
   type AwesomeListEvents = {
@@ -341,6 +344,7 @@ there are some options to make it tsx-ready.
 ##### 1. Extends from `Component` class provided by `vue-tsx-support`
 
   ```jsx
+  import { VNode } from "vue";
   import { Component, Prop } from "vue-property-decorator";
   import * as tsx from "vue-tsx-support";
 
@@ -373,6 +377,7 @@ there are some options to make it tsx-ready.
 ##### 2. Add `_tsx` field to tell type information to TypeScript.
 
   ```jsx
+  import { VNode } from "vue";
   import { Component, Prop } from "vue-property-decorator";
   import * as tsx from "vue-tsx-support";
 
