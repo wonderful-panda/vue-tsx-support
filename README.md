@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wonderful-panda/vue-tsx-support.svg?branch=master)](https://travis-ci.org/wonderful-panda/vue-tsx-support)
+![![build](https://github.com/wonderful-panda/vue-tsx-support/actions?query=workflow%3Abuild)](https://github.com/wonderful-panda/vue-tsx-support/workflows/build/badge.svg)
 
 # vue-tsx-support
 TSX (JSX for TypeScript) support library for Vue
