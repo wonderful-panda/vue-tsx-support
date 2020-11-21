@@ -1,0 +1,27 @@
+name: build
+
+on:
+  push:
+    branches: [master]
+    tags: [v*]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+          registry-url: "https://registry.npmjs.org"
+      - run: yarn
+      - run: yarn build
+      - run: yarn test
+      # rerun tests with latest vue and typescript
+      - run: yarn upgrade vue vue-class-component vue-template-compiler typescript --latest
+      - run: yarn test
+      # deploy
+      - if: startsWith( github.ref, 'refs/tags/v' )
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
