@@ -4,7 +4,11 @@ import { _TsxComponentV3, RequiredPropNames, PropsForOutside } from "./api";
 import { RecordPropsDefinition } from "vue/types/options";
 import { InnerScopedSlots, TsxComponentTypeInfo, EventHandler } from "../types/base";
 
-export type SetupContext<PrefixedEvents = {}, ScopedSlots = {}, On = {}> = SetupContext_ & {
+export type SetupContext<
+  PrefixedEvents = unknown,
+  ScopedSlots = unknown,
+  On = unknown
+> = SetupContext_ & {
   slots: InnerScopedSlots<ScopedSlots>;
   _tsx?: TsxComponentTypeInfo<{}, {}, PrefixedEvents, On>;
 };
@@ -55,7 +59,7 @@ export function emit<Events, Name extends string & keyof Events>(
 }
 
 export function emitOn<Events, Name extends string & keyof Events>(
-  ctx: SetupContext<Events, any, {}>,
+  ctx: SetupContext<Events, any, any>,
   name: Name,
   ...args: Parameters<EventHandler<Events[Name]>>
 ) {

@@ -425,4 +425,16 @@ function emitHelper() {
       }
     }
   });
+  const Component2 = tsx.component({
+    props: { foo: { type: String, required: true } },
+    methods: {
+      updateFoo() {
+        tsx.emitUpdate(this, "foo", "value");
+        // @ts-expect-error
+        tsx.emitUpdate(this, "fooo", "value");
+        // @ts-expect-error
+        tsx.emitUpdate(this, "foo", 0);
+      }
+    }
+  });
 }

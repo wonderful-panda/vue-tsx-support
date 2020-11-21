@@ -9,6 +9,14 @@ const MyComponent = component({
   },
   setup(props, ctx) {
     const el = ref<HTMLElement | null>(null);
+
+    const emitUpdate = updateEmitter<typeof props>();
+    emitUpdate(ctx, "foo", "value");
+    // @ts-expect-error
+    emitUpdate(ctx, "fooo", "value"); //// TS2345
+    // @ts-expect-error
+    emitUpdate(ctx, "foo", 0); //// TS2345
+
     return () => (
       <div ref={el} class={props.foo}>
         {ctx.slots.default()}
@@ -35,34 +43,57 @@ const MyComponent2 = component({
     >
   ) {
     const emitUpdate = updateEmitter<typeof props>();
-    const onClick = () => {
-      emit(ctx, "customEvent", "value");
-      emitOn(ctx, "onCutstomEvent", "value");
-      emit(ctx, "customEvent", 1);
-      emitOn(ctx, "onCutstomEvent", 1);
+    emit(ctx, "customEvent", "value");
+    emitOn(ctx, "onCutstomEvent", "value");
+    emit(ctx, "customEvent", 1);
+    emitOn(ctx, "onCutstomEvent", 1);
 
-      // @ts-expect-error
-      emit(ctx, "customEvent2", "value"); //// TS2345
-      // @ts-expect-error
-      emitOn(ctx, "onCutstomEvent2", "value"); //// TS2345
+    // @ts-expect-error
+    emit(ctx, "customEvent2", "value"); //// TS2345
+    // @ts-expect-error
+    emitOn(ctx, "onCutstomEvent2", "value"); //// TS2345
 
-      // @ts-expect-error
-      emit(ctx, "customEvent", true); //// TS2345
-      // @ts-expect-error
-      emitOn(ctx, "onCutstomEvent", true); //// TS2345
+    // @ts-expect-error
+    emit(ctx, "customEvent", true); //// TS2345
+    // @ts-expect-error
+    emitOn(ctx, "onCutstomEvent", true); //// TS2345
 
-      emitUpdate(ctx, "foo", "value");
-      // @ts-expect-error
-      emitUpdate(ctx, "fooo", "value"); //// TS2345
-      // @ts-expect-error
-      emitUpdate(ctx, "foo", 0); //// TS2345
-    };
+    emitUpdate(ctx, "foo", "value");
+    // @ts-expect-error
+    emitUpdate(ctx, "fooo", "value"); //// TS2345
+    // @ts-expect-error
+    emitUpdate(ctx, "foo", 0); //// TS2345
+
     return () => (
       <div class={props.foo}>
         {ctx.slots.ss(true)}
         {ctx.slots.ss("value")}
       </div>
     );
+  }
+});
+
+const MyComponent3 = component({
+  props: {
+    foo: String
+  },
+  setup(props, ctx: SetupContext<{ onCutstomEvent: string | number }, { ss: string | boolean }>) {
+    const emitUpdate = updateEmitter<typeof props>();
+
+    emitOn(ctx, "onCutstomEvent", "value");
+    emitOn(ctx, "onCutstomEvent", 1);
+    // @ts-expect-error
+    emitOn(ctx, "onCutstomEvent2", "value"); //// TS2345
+    // @ts-expect-error
+    emitOn(ctx, "onCutstomEvent", true); //// TS2345
+
+    emitUpdate(ctx, "foo", "value");
+    // @ts-expect-error
+    emitUpdate(ctx, "fooo", "value"); //// TS2345
+    // @ts-expect-error
+    emitUpdate(ctx, "foo", 0); //// TS2345
+
+    return () => <div class={props.foo} />;
   }
 });
 

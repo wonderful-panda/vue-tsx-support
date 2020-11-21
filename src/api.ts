@@ -317,7 +317,7 @@ export function emitOn<Events, Name extends string & keyof Events>(
 }
 
 export function emitUpdate<Props, Name extends string & keyof Props>(
-  vm: Vue & { _tsx: DeclareProps<Props> },
+  vm: Vue & { _tsx?: DeclareProps<Props> },
   name: Name,
   value: Props[Name]
 ) {
