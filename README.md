@@ -1,6 +1,5 @@
-![![build](https://github.com/wonderful-panda/vue-tsx-support/actions?query=workflow%3Abuild)](https://github.com/wonderful-panda/vue-tsx-support/workflows/build/badge.svg)
-
 [![npm version](https://badge.fury.io/js/vue-tsx-support.svg)](https://badge.fury.io/js/vue-tsx-support)
+![![build](https://github.com/wonderful-panda/vue-tsx-support/actions?query=workflow%3Abuild)](https://github.com/wonderful-panda/vue-tsx-support/workflows/build/badge.svg)
 
 # vue-tsx-support
 TSX (JSX for TypeScript) support library for Vue
