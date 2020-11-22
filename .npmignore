@@ -1,3 +1,5 @@
 test
 src
 tsconfig.json
+.github
+.vscode
