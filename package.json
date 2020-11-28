@@ -65,6 +65,13 @@
     "trailingComma": "none",
     "arrowParens": "avoid"
   },
+  "babel": {
+    "env": {
+      "test": {
+        "presets": ["@babel/env"]
+      }
+    }
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",
@@ -77,6 +84,7 @@
     },
     "testRegex": "test/jest/(.*)\\.tsx?$",
     "transform": {
+      "^.+\\.jsx?$": "babel-jest",
       "^.+\\.tsx?$": "ts-jest"
     },
     "globals": {
