@@ -59,44 +59,5 @@
   "peerDependencies": {
     "typescript": ">=3.8.0",
     "vue": ">=2.6.0"
-  },
-  "prettier": {
-    "printWidth": 100,
-    "trailingComma": "none",
-    "arrowParens": "avoid"
-  },
-  "babel": {
-    "env": {
-      "test": {
-        "presets": ["@babel/env"]
-      }
-    }
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "ts",
-      "tsx",
-      "json"
-    ],
-    "moduleNameMapper": {
-      "^vue$": "<rootDir>/node_modules/vue/dist/vue.js"
-    },
-    "testRegex": "test/jest/(.*)\\.tsx?$",
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest",
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "test/jest/tsconfig.json",
-        "babelConfig": {
-          "presets": [
-            "@babel/env",
-            "@vue/babel-preset-jsx"
-          ]
-        }
-      }
-    }
   }
 }
