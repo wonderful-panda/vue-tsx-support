@@ -2,6 +2,8 @@ import { component, SetupContext, emit, emitOn, updateEmitter } from "vue-tsx-su
 import { ref } from "@vue/composition-api";
 import { VNode } from "vue";
 
+const nope = () => undefined;
+
 const MyComponent = component({
   name: "MyComponentName",
   props: {
@@ -20,7 +22,7 @@ const MyComponent = component({
 
     return () => (
       <div ref={el} class={props.foo}>
-        {ctx.slots.default()}
+        {(ctx.slots.default || nope)()}
       </div>
     );
   }
@@ -119,7 +121,7 @@ const MyComponentWithRender = component({
     const greet = () => console.log("hello");
     const render_ = () => (
       <div ref={el} class={props.foo}>
-        {ctx.slots.default()}
+        {(ctx.slots.default || nope)()}
       </div>
     );
     return {
