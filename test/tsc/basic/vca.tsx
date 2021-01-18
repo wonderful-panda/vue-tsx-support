@@ -116,7 +116,7 @@ const MyComponentWithRender = component({
   },
   setup(props, ctx) {
     const el = ref<HTMLElement | null>(null);
-    const greet = () => console.log("hello")
+    const greet = () => console.log("hello");
     const render_ = () => (
       <div ref={el} class={props.foo}>
         {ctx.slots.default()}
@@ -125,14 +125,12 @@ const MyComponentWithRender = component({
     return {
       greet,
       render_
-    }
+    };
   },
   render(): VNode {
-    return this.render_()
+    return this.render_();
   }
 });
 
 const vm = {} as InstanceType<typeof MyComponentWithRender>;
 vm.greet();
-
-
