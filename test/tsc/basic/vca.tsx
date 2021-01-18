@@ -1,5 +1,6 @@
 import { component, SetupContext, emit, emitOn, updateEmitter } from "vue-tsx-support/lib/vca";
 import { ref } from "@vue/composition-api";
+import { VNode } from "vue";
 
 const MyComponent = component({
   name: "MyComponentName",
@@ -106,3 +107,32 @@ const MyComponent3 = component({
     )
   }
 />;
+
+const MyComponentWithRender = component({
+  name: "MyComponentName",
+  props: {
+    foo: String,
+    bar: { type: Boolean, required: true }
+  },
+  setup(props, ctx) {
+    const el = ref<HTMLElement | null>(null);
+    const greet = () => console.log("hello")
+    const render_ = () => (
+      <div ref={el} class={props.foo}>
+        {ctx.slots.default()}
+      </div>
+    );
+    return {
+      greet,
+      render_
+    }
+  },
+  render(): VNode {
+    return this.render_()
+  }
+});
+
+const vm = {} as InstanceType<typeof MyComponentWithRender>;
+vm.greet();
+
+

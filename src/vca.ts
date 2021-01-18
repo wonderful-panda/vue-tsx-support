@@ -1,5 +1,10 @@
 import Vue, { VNode, ComponentOptions } from "vue";
-import { defineComponent, SetupContext as SetupContext_ } from "@vue/composition-api";
+import {
+  defineComponent,
+  SetupContext as SetupContext_,
+  ComponentRenderProxy,
+  ShallowUnwrapRef
+} from "@vue/composition-api";
 import { _TsxComponentV3, RequiredPropNames, PropsForOutside } from "./api";
 import { RecordPropsDefinition } from "vue/types/options";
 import { InnerScopedSlots, TsxComponentTypeInfo, EventHandler } from "../types/base";
@@ -31,6 +36,27 @@ export type CompositionComponentOptions<
   "name" | "components" | "comments" | "inheritAttrs" | "directives" | "filters"
 >;
 
+export type CompositionComponentOptionsWithRender<
+  Props,
+  PropsDef extends RecordPropsDefinition<Props>,
+  PrefixedEvents,
+  ScopedSlots,
+  On,
+  RawBinding
+> = {
+  props?: PropsDef & RecordPropsDefinition<Props>;
+  setup: (
+    this: void,
+    props: Props,
+    ctx: SetupContext<PrefixedEvents, ScopedSlots, On>
+  ) => RawBinding;
+  render(): VNode;
+} & Pick<
+  ComponentOptions<Vue>,
+  "name" | "components" | "comments" | "inheritAttrs" | "directives" | "filters"
+> &
+  ThisType<ComponentRenderProxy<Props, RawBinding>>;
+
 export function component<
   Props,
   PropsDef extends RecordPropsDefinition<Props>,
@@ -40,16 +66,36 @@ export function component<
   RequiredProps extends keyof Props = RequiredPropNames<PropsDef> & keyof Props
 >(
   options: CompositionComponentOptions<Props, PropsDef, PrefixedEvents, ScopedSlots, On>
+): _TsxComponentV3<Vue, {}, PropsForOutside<Props, RequiredProps>, PrefixedEvents, On, ScopedSlots>;
+export function component<
+  Props,
+  PropsDef extends RecordPropsDefinition<Props>,
+  PrefixedEvents,
+  ScopedSlots,
+  On,
+  RawBinding,
+  RequiredProps extends keyof Props = RequiredPropNames<PropsDef> & keyof Props
+>(
+  options: CompositionComponentOptionsWithRender<
+    Props,
+    PropsDef,
+    PrefixedEvents,
+    ScopedSlots,
+    On,
+    RawBinding
+  >
 ): _TsxComponentV3<
-  Vue,
+  Vue & ShallowUnwrapRef<RawBinding>,
   {},
   PropsForOutside<Props, RequiredProps>,
   PrefixedEvents,
   On,
   ScopedSlots
-> {
-  return defineComponent(options as any) as any;
+>;
+export function component(options: any) {
+  return defineComponent(options) as any;
 }
+
 export function emit<Events, Name extends string & keyof Events>(
   ctx: SetupContext<any, any, Events>,
   name: Name,
