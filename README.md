@@ -349,7 +349,7 @@ there are some options to make it tsx-ready.
   import { Component, Prop } from "vue-property-decorator";
   import * as tsx from "vue-tsx-support";
 
-  type MyComponentProps {
+  type MyComponentProps = {
     text: string;
     important?: boolean;
   }
