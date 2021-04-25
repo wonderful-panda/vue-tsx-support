@@ -169,6 +169,7 @@ export interface InputHTMLAttributes extends HTMLAttributes {
   crossorigin?: string;
   disabled?: boolean;
   form?: string;
+  files?: FileList;
   formaction?: string;
   formenctype?: string;
   formmethod?: string;
