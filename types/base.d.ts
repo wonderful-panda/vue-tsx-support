@@ -88,10 +88,10 @@ type CombinedTsxComponentAttrs<
       : never)
   | (Props & CombinedTsxComponentAttrsOtherThanProps<Attributes, PrefixedEvents, On, InnerSS>);
 
-export type ElementAttrs<T> = T &
+export type ElementAttrs<E extends dom.ElementType> = E[1] &
   KnownAttrs &
-  EventHandlers<dom.EventsOn<T>> & {
-    on?: EventHandlers<dom.Events<T>>;
+  EventHandlers<dom.EventsOn<E[0]>> & {
+    on?: EventHandlers<dom.Events<E[0]>>;
   } & ElementAdditionalAttrs;
 
 export interface Element extends VNode {}
@@ -99,7 +99,7 @@ export interface Element extends VNode {}
 export interface ElementClass extends Vue {}
 
 export type IntrinsicElements = {
-  [K in keyof dom.IntrinsicElementAttributes]: ElementAttrs<dom.IntrinsicElementAttributes[K]>;
+  [K in keyof dom.IntrinsicElementTypes]: ElementAttrs<dom.IntrinsicElementTypes[K]>;
 };
 
 type PropNameCandidates<V extends Parent, Parent extends Vue = Vue> = Exclude<

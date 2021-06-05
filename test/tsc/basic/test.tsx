@@ -4,6 +4,10 @@ import Vue from "vue";
 
 const noop = () => {};
 
+function assertType<T>(value: T) {
+  return value;
+}
+
 /*
  * Intrinsic elements
  */
@@ -31,6 +35,17 @@ function intrinsicElements() {
   <div style="display: flex;" />;
   <div style={{ display: "flex" }} />;
   <div style={[{ display: "flex" }]} />;
+
+  // OK: inplace event handler: type of e.target is determined by containing tag.
+  <input
+    onInput={e => {
+      assertType<InputEvent>(e);
+      assertType<HTMLInputElement>(e.target);
+    }}
+  />;
+
+  const onInput = (e: InputEvent) => {};
+  <input onInput={onInput} />;
 
   // @ts-expect-error
   <div id={0} />;
