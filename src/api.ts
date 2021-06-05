@@ -58,7 +58,8 @@ export interface Factory<Props, PrefixedEvents, On, ScopedSlots> {
   ): _TsxComponentV3<V, {}, Props, PrefixedEvents, On, ScopedSlots>;
   extendFrom<VC extends typeof Vue>(
     componentType: VC
-  ): _TsxComponentV3<InstanceType<VC>, {}, Props, PrefixedEvents, On, ScopedSlots>;
+  ): _TsxComponentV3<InstanceType<VC>, {}, Props, PrefixedEvents, On, ScopedSlots> &
+    Pick<VC, keyof VC>; // take over static members of component
 }
 
 const factoryImpl = {

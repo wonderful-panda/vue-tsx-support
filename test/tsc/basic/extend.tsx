@@ -62,11 +62,15 @@ function by_createComponent() {
 
 function by_convert() {
   const Base = vuetsx.ofType<Props, Events>().convert(Vue.extend({}));
+  const BaseWithStatic: typeof Base & { staticMember: number } = Base as any;
+  BaseWithStatic.staticMember = 1;
 
   /* add more attributes */
-  const Extend = vuetsx.ofType<Props2, Events2>().extendFrom(Base);
+  const Extend = vuetsx.ofType<Props2, Events2>().extendFrom(BaseWithStatic);
   // OK
   <Extend foo="foo" bar="bar" onOk={noop} onErr={s => console.log(s)} />;
+  // OK
+  console.log(Extend.staticMember);
   // @ts-expect-error: 'bar' is missing
   <Extend foo="foo" />; //// TS2322 | TS2326 | TS2769: 'bar' is missing
   // @ts-expect-error: 'foo' is missing
