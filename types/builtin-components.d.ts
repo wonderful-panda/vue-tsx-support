@@ -28,6 +28,7 @@ export interface TransitionPropsBase {
 
 export interface TransitionProps extends TransitionPropsBase {
   mode?: string;
+  duration?: number | { enter: number; leave: number };
 }
 
 export interface TransitionGroupProps extends TransitionPropsBase {
