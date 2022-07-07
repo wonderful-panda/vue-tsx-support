@@ -129,6 +129,7 @@ export interface HtmlHTMLAttributes extends HTMLAttributes {
 }
 
 export interface IframeHTMLAttributes extends HTMLAttributes {
+  allow?: string;
   allowfullscreen?: boolean;
   allowtransparency?: boolean;
   frameborder?: number | string;
@@ -136,6 +137,7 @@ export interface IframeHTMLAttributes extends HTMLAttributes {
   marginheight?: number;
   marginwidth?: number;
   name?: string;
+  referrerpolicy?: string;
   sandbox?: string;
   scrolling?: string;
   seamless?: boolean;
